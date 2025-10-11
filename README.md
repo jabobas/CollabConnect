@@ -2,7 +2,7 @@
 
 CollabConnect is an application where users from academia and business can find potential collaborators for projects. 
 
-
+CollabConnect is an application that facilitates collaboration and connection between academics and industry professionals. It addresses the gap between wanting or needing a collaborator for a project and finding a suitable collaborator. 
 
 
 
