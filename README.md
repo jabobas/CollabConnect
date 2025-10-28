@@ -43,7 +43,7 @@ Phase 2 Project Responsibilities
 - Aubin - Presentation
 - Lucas - Work History
 	We will meet again to put these together with foreign keys
-	Add indexing scripts if necessary.
+	and then Add indexing scripts if necessary.
 
 ## Stored Procedures and Functions (Weds November 5)
 - Saved SQL queries for common activities like insert, update, delete
@@ -51,7 +51,7 @@ Phase 2 Project Responsibilities
 - We will update our own tables based on these procedures
 ## Scraping (Due Saturday November 8)
 - wyatt will try scraping the usm faculty website
-- aubin will try scraping a conference website for conference info 
+- Aubin will try scraping a conference website for conference info 
 ## Data cleanup (Due Monday November 10)
 ## Query Optimization (Due Weds November 12)
 ## Readme and video (Due Thursday November 14)
