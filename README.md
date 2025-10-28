@@ -33,27 +33,27 @@ CollabConnect is an application that facilitates collaboration and connection be
 # Team contributions Phase 2
 Phase 2 Project Responsibilities
 
-Database schema creation scripts (Deadline Sunday November 2)
-Wyatt - Person
-Abbas - Project
-Aubin - Worked on 
-Lucas - Department
-Wyatt - Institution
-Abbas - Conference
-Aubin - Presentation
-Lucas - Work History
+## Database schema creation scripts (Deadline Sunday November 2)
+- Wyatt - Person
+- Abbas - Project
+- Aubin - Worked on 
+- Lucas - Department
+- Wyatt - Institution
+- Abbas - Conference
+- Aubin - Presentation
+- Lucas - Work History
 	We will meet again to put these together with foreign keys
 	Add indexing scripts if necessary.
 
-Stored Procedures and Functions (Weds November 5)
-Saved SQL queries for common activities like insert, update, delete
-Lucas will look into this and then we will discuss
-We will update our own tables based on these procedures
-Scraping (Due Saturday November 8)
-wyatt will try scraping the usm faculty website
-aubin will try scraping a conference website for conference info 
-Data cleanup (Due Monday November 10)
-Query Optimization (Due Weds November 12)
-Readme and video (Due Thursday November 14)
+## Stored Procedures and Functions (Weds November 5)
+- Saved SQL queries for common activities like insert, update, delete
+- Lucas will look into this and then we will discuss
+- We will update our own tables based on these procedures
+## Scraping (Due Saturday November 8)
+- wyatt will try scraping the usm faculty website
+- aubin will try scraping a conference website for conference info 
+## Data cleanup (Due Monday November 10)
+## Query Optimization (Due Weds November 12)
+## Readme and video (Due Thursday November 14)
 
 
