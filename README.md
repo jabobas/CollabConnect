@@ -16,7 +16,7 @@ CollabConnect is an application that facilitates collaboration and connection be
 * Cardinalities
 * Worked on the presentation
 ## Lucas Matheson (lucas.matheson@maine.edu)
-* MAIN TASK: Collect survey results and summarize them
+* Collected survey results, summarized them
 * Designed survey
 * Interviewed David Levine
 * Analyzed/organized survey results
