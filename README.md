@@ -55,7 +55,7 @@ and then add indexing scripts if necessary.
 - Have data prepared for the table the teammember worked on.
 - If for whatever reason data is hard to acquire then generate your own data.
 ## Query Optimization (Due Wednesday November 12)
-
+- prepare python scripts to show query optimization before and after on queries.
 ## Readme and video (Due Thursday November 14)
 - Create a slideshow
 - Group up to record a video and present our work.
