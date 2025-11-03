@@ -1,18 +1,14 @@
 from flask import Flask
 from flask_mysqldb import MySQL
-from datetime import datetime
 
-# create the Flask app instance
 app = Flask(__name__)
 
-# MySQL configurations
 app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'  # default MySQL Workbench username
-app.config['MYSQL_PASSWORD'] = ''   # your MySQL Workbench password
+app.config['MYSQL_USER'] = 'root'  
+app.config['MYSQL_PASSWORD'] = ''   
 app.config['MYSQL_DB'] = 'collab_connect_db'
-app.config['MYSQL_CURSORCLASS'] = 'DictCursor'  # this will return rows as dictionaries
+app.config['MYSQL_CURSORCLASS'] = 'DictCursor'  
 
-# Initialize MySQL
 mysql = MySQL(app)
 
 def check_db():
@@ -31,6 +27,7 @@ def check_db():
         
     except Exception as e:
         print(f"Error while connecting to MySQL: {e}")
+
 # can't have a flask app without a db, so check to see if it exists before starting app
 check_db()
 
