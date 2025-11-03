@@ -1,0 +1,17 @@
+-- WorkedOn relationship table between Person and Project
+-- Requires: person (create_person_tables.sql) and project tables to exist.
+
+CREATE TABLE WorkedOn (
+    person_id BIGINT UNSIGNED NOT NULL,
+    project_id BIGINT UNSIGNED NOT NULL,
+    project_role VARCHAR(80) NOT NULL,
+    start_date DATE NOT NULL,
+    end_date DATE,
+    PRIMARY KEY (person_id, project_id),
+    FOREIGN KEY (person_id) REFERENCES Person(person_id),
+    FOREIGN KEY (project_id) REFERENCES Project(project_id)
+);
+
+-- Helpful indexes for common lookups
+CREATE INDEX IF NOT EXISTS idx_worked_on_project ON WorkedOn(project_id);
+CREATE INDEX IF NOT EXISTS idx_worked_on_person_dates ON WorkedOn(person_id, start_date DESC);
