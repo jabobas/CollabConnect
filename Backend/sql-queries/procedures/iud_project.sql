@@ -40,6 +40,6 @@ WHERE project_id = 1 AND end_date IS NULL;
 DELETE FROM Project WHERE project_id = 1;
 
 -- Proper deletion: first remove from junction table, then delete project
-DELETE FROM Project_Tag WHERE project_id = 1;
+DELETE FROM ProjectTag WHERE project_id = 1;
 DELETE FROM Project WHERE project_id = 1;
 
