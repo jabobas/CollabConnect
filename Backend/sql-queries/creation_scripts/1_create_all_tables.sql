@@ -3,10 +3,6 @@
 -- Author: Abbas Jabor
 -- Date: November 5, 2025
 
--- Code review by Lucas Matheson
--- Anything I say is either I need clarification on or suggestions for improvement, nothing is a you better change it or i will be mad kinda thing
--- I promise this is out of love no hate <3
--- This is typically done during a pull request, I'll start doing it there if yall want me to continue these
 DROP DATABASE IF EXISTS `CollabConnect`;
 CREATE DATABASE `CollabConnect`;
 USE `CollabConnect`;
