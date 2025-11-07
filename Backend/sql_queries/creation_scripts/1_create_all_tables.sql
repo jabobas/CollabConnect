@@ -1,15 +1,8 @@
 -- Filename: 1. Create Tables For CollabConnect.sql
 -- The purpose of this file is to make hte database schema of CollabConnect
 -- Author: Abbas Jabor
+-- Edited by: Lucas Matheson
 -- Date: November 5, 2025
-
--- Code review by Lucas Matheson
--- Anything I say is either I need clarification on or suggestions for improvement, nothing is a you better change it or i will be mad kinda thing
--- I promise this is out of love no hate <3
--- This is typically done during a pull request, I'll start doing it there if yall want me to continue these
-DROP DATABASE IF EXISTS `CollabConnect`;
-CREATE DATABASE `CollabConnect`;
-USE `CollabConnect`;
 
 -- 1. Institution (independent table)
 CREATE TABLE Institution (
@@ -99,11 +92,6 @@ ALTER TABLE Project
 --     FOREIGN KEY (institution_id) REFERENCES Institution(institution_id)
 --     ON DELETE RESTRICT
 --     ON UPDATE CASCADE;
-
--- If a project is deleted, set the lead person to NULL
-ALTER TABLE Project
-  ADD CONSTRAINT fk_project_leadperson FOREIGN KEY (leadperson_id) 
-  REFERENCES Person(person_id) ON DELETE SET NULL ON UPDATE CASCADE;
 
 ALTER TABLE Department
   ADD CONSTRAINT fk_department_institution FOREIGN KEY (institution_id) 

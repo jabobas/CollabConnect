@@ -1,0 +1,127 @@
+{
+	"institutions": [
+		{
+			"institution_id": 1,
+			"institution_name": "University of Southern Maine",
+			"institution_type": "University",
+			"street": "123 Gorham Rd",
+			"city": "Portland",
+			"state": "ME",
+			"zipcode": "04101",
+			"institution_phone": "207-123-4567"
+		},
+		{
+			"institution_id": 2,
+			"institution_name": "Example Research Institute",
+			"institution_type": "Research",
+			"street": "45 Science Ave",
+			"city": "Bangor",
+			"state": "ME",
+			"zipcode": "04401",
+			"institution_phone": "207-987-6543"
+		}
+	],
+
+	"departments": [
+		{
+			"department_id": 1,
+			"institution_id": 1,
+			"department_name": "Computer Science",
+			"department_email": "cs@usm.edu",
+			"department_phone": "207-111-2222"
+		},  
+		{
+			"department_id": 2,
+			"institution_id": 2,
+			"department_name": "Data Science",
+			"department_email": "datasci@exri.org",
+			"department_phone": "207-333-4444"
+		}
+	],
+
+	"people": [
+		{
+			"person_id": 1,
+			"person_name": "Alice Smith",
+			"person_email": "alice.smith@usm.edu",
+			"person_phone": "207-555-0101",
+			"bio": "Assistant Professor working on ML and applied data science.",
+			"expertise_1": "machine learning",
+			"expertise_2": "python",
+			"expertise_3": "data analysis",
+			"main_field": "Computer Science",
+			"department_id": 1
+		},
+		{
+			"person_id": 2,
+			"person_name": "Bob Jones",
+			"person_email": "bob.jones@usm.edu",
+			"person_phone": "207-555-0102",
+			"bio": "Researcher focusing on distributed systems and data pipelines.",
+			"expertise_1": "distributed systems",
+			"expertise_2": "kubernetes",
+			"expertise_3": "python",
+			"main_field": "Computer Science",
+			"department_id": 1
+		},
+		{
+			"person_id": 3,
+			"person_name": "Carol Lee",
+			"person_email": "carol.lee@exri.org",
+			"person_phone": "207-555-0103",
+			"bio": "Data scientist working on visualization and user studies.",
+			"expertise_1": "data analysis",
+			"expertise_2": "visualization",
+			"expertise_3": "R",
+			"main_field": "Data Science",
+			"department_id": 2
+		},
+		{
+			"person_id": 4,
+			"person_name": "David Kim",
+			"person_email": "david.kim@exri.org",
+			"person_phone": "207-555-0104",
+			"bio": "Postdoc working with experimental ML.",
+			"expertise_1": "deep learning",
+			"expertise_2": "python",
+			"expertise_3": "pytorch",
+			"main_field": "Data Science",
+			"department_id": 2
+		}
+	],
+
+	"tags": [
+		{ "tag_name": "machine learning" },
+		{ "tag_name": "data analysis" },
+		{ "tag_name": "python" }
+	],
+
+	"projects": [
+		{
+			"project_id": 1,
+			"project_title": "ML Collaboration Platform",
+			"project_description": "Platform to connect ML researchers across institutions.",
+			"leadperson_id": 1,
+			"tag_name": "machine learning",
+			"start_date": "2024-01-01",
+			"end_date": null,
+			"person_id": 2
+		},
+		{
+			"project_id": 2,
+			"project_title": "Interactive Data Viz",
+			"project_description": "Tools for collaborative data visualization and annotation.",
+			"leadperson_id": 3,
+			"tag_name": "data analysis",
+			"start_date": "2024-06-01",
+			"end_date": "2024-12-01",
+			"person_id": 3
+		}
+	],
+
+	"project_tags": [
+		{ "project_id": 1, "tag_name": "machine learning" },
+		{ "project_id": 1, "tag_name": "python" },
+		{ "project_id": 2, "tag_name": "data analysis" }
+	]
+}
