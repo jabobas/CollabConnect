@@ -26,6 +26,13 @@ CREATE TABLE Department (
     FOREIGN KEY (institution_id) REFERENCES Institution(institution_id)
 );
 
+{
+    institution_id : ""
+    department_name : "",
+    department_email : "",
+    department_phone : "",
+}
+
 -- 3. Person (depends on Department)
 CREATE TABLE Person (
     person_id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,

@@ -19,7 +19,6 @@ mysql = MySQL(app)
 
 def check_db() -> bool:
     try:
-
         # temporarily set no DB to check for existence
         app.config['MYSQL_DB'] = None
 
@@ -49,7 +48,7 @@ def check_db() -> bool:
 
 def create_db():
     
-    print('Creating database...')
+    print('Creating database')
     cursor = mysql.connection.cursor()
     cursor.execute("CREATE SCHEMA collab_connect_db")
     cursor.execute("USE collab_connect_db")
