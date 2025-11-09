@@ -46,7 +46,7 @@ CREATE TABLE Person (
     person_id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     person_name VARCHAR(150) NOT NULL,
     person_email VARCHAR(150) UNIQUE NOT NULL,
-    person_phone VARCHAR(30),
+    person_phone VARCHAR(11),
     bio TEXT,
     expertise_1 VARCHAR(50),
     expertise_2 VARCHAR(50),
