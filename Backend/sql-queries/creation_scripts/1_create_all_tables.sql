@@ -38,10 +38,11 @@ CREATE TABLE Department (
 -- 3. Person (depends on Department)
 -- Are we assuming one person belongs to one department only? Which means also one institution only?
 -- Behrooz has done some work for Rochester Institute of Technology and USM, how would we represent that here?
+-- wm: the worksin relation should fix the above comment - person should now be able to belong to different departments if nec.
 -- Also, having 3 separate expertise fields seems a bit limiting, what if someone has more than 3 areas of expertise?
+-- wm : that's a good point - if all agree, i can create an expertise relation linked to person?
 -- I may be remembering this wrong, but I think we discussed expertise being the same as tags. If that's the case there needs to be a way to 
 -- ensure expertise are linked to the Tag table to ensure consistency. Same with main_field if that's also a tag.
--- Same phone comment as earlier
 CREATE TABLE Person (
     person_id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     person_name VARCHAR(150) NOT NULL,
@@ -55,12 +56,26 @@ CREATE TABLE Person (
     department_id BIGINT UNSIGNED,
     FOREIGN KEY (department_id) REFERENCES Department(department_id)
 );
+
+-- 3.5. WorksIn (junction table between Person and Department)
+-- Allows many-to-many relationship: a person can work in multiple departments
+-- and a department can have multiple people
+CREATE TABLE WorksIn (
+    worksin_id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    person_id BIGINT UNSIGNED NOT NULL,
+    department_id BIGINT UNSIGNED NOT NULL,
+    UNIQUE KEY uq_person_department (person_id, department_id),
+    FOREIGN KEY (person_id) REFERENCES Person(person_id),
+    FOREIGN KEY (department_id) REFERENCES Department(department_id)
+);
+
 -- having a table with one column is typically not a good database design
 -- However, having a Tag table like this will allow us to have a controlled amount of tags, just ensure
 -- strict access to insert into this table only from an admin. 
 CREATE TABLE Tag (
 	tag_name VARCHAR(50) PRIMARY KEY
 );
+
 -- 4. Project (depends on Person for lead)
 -- Is there only one lead per project? I'm not in research so correct me if I'm wrong, but I think
 -- there can typically be more than one lead per project
@@ -88,7 +103,6 @@ CREATE TABLE Project_Tag (
     FOREIGN KEY (project_id) REFERENCES Project(project_id),
     FOREIGN KEY (tag_name) REFERENCES Tag(tag_name)
 );
-
 
 -- These next two tables have been removed as of our previous meeting, but keeping the code here for reference in case we want to add them later
 -- 5. WorkedOn (table for Person-Project M:N relationship)
