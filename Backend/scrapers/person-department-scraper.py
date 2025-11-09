@@ -1,59 +1,65 @@
+import re
 import requests
 from bs4 import BeautifulSoup
 
 """
-Example Data
-[
-  {
-    "institution": {
-      "institution_name": "State University",
-      "institution_type": "University",
-      "street": "123 College Ave",
-      "city": "Townsville",
-      "state": "TS",
-      "zipcode": "12345",
-      "institution_phone": "555-1111"
-    },
-    "departments": [
-      {
-        "department_name": "Computer Science",
-        "department_email": "cs@stateu.edu",
-        "department_phone": "555-2222",
-        "people": [
-          {
-            "person_name": "Alice",
-            "person_email": "alice@stateu.edu",
-            "person_phone": "555-3333",
-            "bio": "Researcher in ML",
-            "expertise_1": "ml",
-            "expertise_2": "nlp",
-            "expertise_3": null,
-            "main_field": "Computer Science",
-            "projects": [
-              {
-                "project_title": "Project A",
-                "project_description": "A study of X",
-                "start_date": "2025-01-01",
-                "end_date": null,
-                "leadperson_email": "alice@stateu.edu",
-                "tags": ["AI", "ML"]
-              }
-            ]
-          },
-          {
-            "person_name": "Bob",
-            "person_email": "bob@stateu.edu",
-            "main_field": "Computer Science",
-            "projects": []
-          }
-        ]
-      }
-    ]
-  }
-]
-
-
+    project_id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    project_title VARCHAR(200) NOT NULL,
+    project_description TEXT,
+    leadperson_id BIGINT UNSIGNED,
+    tag_name VARCHAR(50),
+    start_date DATE NOT NULL,
+    end_date DATE,
+    person_id BIGINT UNSIGNED NOT NULL,
 """
+
+def scrape_usm_person(url):
+    headers = {
+        'User-Agent': (
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
+            'AppleWebKit/537.36 (KHTML, like Gecko) '
+            'Chrome/117.0.0.0 Safari/537.36'
+        )
+    }
+
+    response = requests.get(url, headers=headers, timeout=15)
+    response.raise_for_status()
+
+    soup = BeautifulSoup(response.text, 'html.parser')
+    projects = []
+
+    #  The actual bio if exists
+    bio = soup.select('.kt-inside-inner-col')
+
+    publications = soup.select('.publications')
+    if publications:
+      count = 0
+      all_publications = publications[0].find_all('p')
+      for pub in all_publications:
+          project = {
+              "project_title": "",             # VARCHAR(200) NOT NULL
+              "project_description": '',     # TEXT
+              "start_date": None,              # DATE NOT NULL
+              "end_date": None,                # DATE
+          }
+          if pub.get_text(strip=True) == '':
+              continue
+          if '<strong>' in pub.decode_contents():
+              continue
+          count += 1
+          publication = pub.get_text(strip=True)
+          project['project_title'] = publication
+          match = re.search(r"\((\d{4})\)", publication)
+          
+          if match:
+              project['end_date'] = match.group(1)
+
+          print('Pub: ', count, ': ', publication)
+          print(' -----')
+          projects.append(project)
+
+    return projects
+
 def scrape_usm_department(url):
     headers = {
         'User-Agent': (
@@ -68,138 +74,190 @@ def scrape_usm_department(url):
 
     soup = BeautifulSoup(response.text, 'html.parser')
 
-    people_data = []
-
+    # Build a dict keyed by person name for easy lookups
+    people_by_name = {}
     person_blocks = soup.select('.grid_item.people_item.kt_item_fade_in.kad_people_fade_in.postclass')
     links_array = []
 
+    # department/title element (string) for all people on this page
+    dept_elem = soup.select_one('.entry-site-title')
+    dept_name = dept_elem.get_text(strip=True) if dept_elem else ''
+    print('Scraping department:', dept_name)
     for block in person_blocks:
-        person = {
-            "name": None,
-            "profile_url": None,
-            "phone": None
-        }
-        department_elems = soup.select('.entry-site-title')
-
         name_tag = block.find('h3')
-        if name_tag:
-            person['name'] = name_tag.get_text(strip=True)
-        link_tag = block.find('a')
-        if link_tag.find('h3'):  
-            link = link_tag.get('href')
-            person['profile_url'] = link
-            links_array.append(link)
+        if not name_tag:
+            continue
 
+        name = name_tag.get_text(strip=True)
+        if not name:
+            continue
+        name = clean_name(name)
+        
+        # default person record
+        person =   {
+            'department': dept_name,
+            'person_email': '',
+            'person_phone': '',
+            'profile_url': '',
+            'bio': '',
+            'expertise_1': None,
+            'expertise_2': None,
+            'expertise_3': None,
+            'main_field': None,
+            'projects': []
+        }
+        projects = []
+        link_tag = block.find('a', href=True)
+        if link_tag and link_tag.find('h3'):
+            person['profile_url'] = link_tag.get('href')
+            links_array.append({'text': name, 'url': person['profile_url']})
+            person['projects'] = scrape_usm_person(link_tag.get('href'))
+            
         tel_tag = block.find('a', href=lambda x: x and x.startswith('tel:'))
         if tel_tag:
-            person['phone'] = tel_tag.get_text(strip=True)
+            person['person_phone'] = tel_tag.get_text(strip=True)
 
         email = block.find('a', href=lambda x: x and '@maine.edu' in x)
         if email:
-            person['email'] = email.get_text(strip=True)
-    
-        if person['name']:
-            people_data.append(person)
-            
+            person['person_email'] = email.get_text(strip=True)
+
         bio = block.find('p')
         if bio:
-            person['bio'] = bio.get_text(strip=True)
+          # Sometimes p tag contains strong tag. If thats the case its going to grab their pronouns instead of bio/title
+          # Everytime this is the case, li is the correct bio/title
+            if '<strong>' in bio.decode_contents():
+                bio = block.find('li')
+                if not bio:
+                    bio = ''
+                else:
+                  bio = bio.get_text(strip=True)
+                person['bio'] = bio
+            else:
+              person['bio'] = bio.get_text(strip=True)
 
-    return people_data, links_array, department_elems
+        people_by_name[name] = person
+        
+    return people_by_name, links_array, dept_name
+
+# Sometimes, people include their degrees or credentials in their name on the usm websites. So, names need to be cleaned.
+def clean_name(name):
+    parts = name.split(',')
+    first_part = parts[0]        
+    words = first_part.split()
+    cleaned_words = [w for w in words if not w.isupper() and not w.endswith(('PhD','MD','PsyD','MBA','BCBA','Esq'))]
+    return ' '.join(cleaned_words)
+  
+#  AI Generated by ChatGPT to print the data in a readable format
+def print_institution_data(data):
+    spacing = "  "
+
+# --- Institution Info ---
+    institution = data.get("institution", {})
+    print(f"{spacing}Institution: {institution.get('institution_name', 'N/A')}")
+    print(f"{spacing}  Type: {institution.get('institution_type', 'N/A')}")
+    print(f"{spacing}  Address: {institution.get('street', '')}, {institution.get('city', '')}, "
+          f"{institution.get('state', '')} {institution.get('zipcode', '')}")
+    print(f"{spacing}  Phone: {institution.get('institution_phone', 'N/A')}")
+    print()
+
+    # --- Departments ---
+    departments = data.get("departments", {})
+    for dept_key, dept in departments.items():
+        print(f"{spacing}Department: {dept.get('department_name', dept_key)}")
+        print(f"{spacing}  Email: {dept.get('department_email', 'N/A')}")
+        print(f"{spacing}  Phone: {dept.get('department_phone', 'N/A')}")
+        print()
+
+        # --- People ---
+        people = dept.get("people", {})
+        for person_name, person_data in people.items():
+            print(f"{spacing}  Name: {person_name}")
+            print(f"{spacing}    Title/Bio: {person_data.get('bio', 'N/A')}")
+            print(f"{spacing}    Email: {person_data.get('person_email', 'N/A')}")
+            print(f"{spacing}    Phone: {person_data.get('person_phone', 'N/A')}")
+            print(f"{spacing}    Profile: {person_data.get('profile_url', 'N/A')}")
+            
+            # Expertise
+            expertise = [person_data.get(f"expertise_{i}") for i in range(1, 4)]
+            expertise = [e for e in expertise if e]
+            if expertise:
+                print(f"{spacing}    Expertise: {', '.join(expertise)}")
+            
+            # Projects
+            projects = person_data.get("projects", [])
+            if projects:
+                print(f"{spacing}    Projects:")
+                for i, project in enumerate(projects, start=1):
+                    print(f"{spacing}      Project {i}:")
+                    print(f"{spacing}        Title: {project.get('project_title', 'N/A')}")
+                    print(f"{spacing}        Description: {project.get('project_description', 'N/A')}")
+                    print(f"{spacing}        Start Date: {project.get('start_date', 'N/A')}")
+                    print(f"{spacing}        End Date: {project.get('end_date', 'N/A')}")
+            print()  # newline between people
+        print("-" * 60)  # separator between departments
+        print()
 
 
 if __name__ == '__main__':
-    
+  # Base data structure
     usm_data = {
-    "institution": {
-      "institution_name": "University of Southern Maine",
-      "institution_type": "University",
-      "street": "96 Falmouth St",
-      "city": "Portland",
-      "state": "Maine",
-      "zipcode": "04038",
-      "institution_phone": "800-800-4876"
-    },
-    "departments": [
-      {
-          "department_name": "Computer Science",
-        "department_email": None,
-        "department_phone": None,
-        "people": [
-          {
-           
-            "projects": [
-              {
-                "tags": ["AI", "ML"]
-              }
-            ]
-          },
-          {
-            "projects": []
-          }
-        ]
-      }
+        "institution": {
+            "institution_name": "University of Southern Maine",
+            "institution_type": "University",
+            "street": "96 Falmouth St",
+            "city": "Portland",
+            "state": "Maine",
+            "zipcode": "04038",
+            "institution_phone": "800-800-4876"
+        },
+        "departments": {
+
+        }
+    }
+    # List of USM department people pages to scrape
+    usm_department_pages = [
+        "https://usm.maine.edu/department-computer-science/people/",
+        "https://usm.maine.edu/department-physics/people/",
+        "https://usm.maine.edu/department-chemistry/people/",
+        "https://usm.maine.edu/department-linguistics/people/",
+        "https://usm.maine.edu/department-mathematics-statistics/people/",
+        "https://usm.maine.edu/department-engineering/people/",
+        "https://usm.maine.edu/department-art/people/",
+        "https://usm.maine.edu/communication-media-studies-department/people/",
+        "https://usm.maine.edu/department-history/people/",
+        "https://usm.maine.edu/department-biological-sciences/people/",
+        "https://usm.maine.edu/department-technology/people/",
+        "https://usm.maine.edu/department-sociology-criminology/people/",
+        "https://usm.maine.edu/department-exercise-health-sport-sciences/people/",
+        "https://usm.maine.edu/department-psychology/people/",
+        "https://usm.maine.edu/department-english/people/",
+        "https://usm.maine.edu/department-political-science/people/",
+        "https://usm.maine.edu/department-environmental-science-policy/people/",
+        "https://usm.maine.edu/department-theatre/people/",
+        "https://usm.maine.edu/social-behavioral-sciences/people/",
+        "https://usm.maine.edu/department-technology/people/",
+        "https://usm.maine.edu/department-linguistics/people/",
+        "https://usm.maine.edu/department-theatre/people/",
+        "https://usm.maine.edu/department-art/people/",
+        "https://usm.maine.edu/department-history/people/",
+        "https://usm.maine.edu/department-exercise-health-sport-sciences/people/",
+        "https://usm.maine.edu/school-social-work/people/",
+        "https://usm.maine.edu/college-management-human-services/people/"
     ]
-  }
-    print(usm_data)
 
-    print(usm_data['departments'])
-    print(usm_data['departments'][0]['people'])
-    # gets the first departmnets first persons projects
-    print(usm_data['departments'][0]['people'][0]['projects'])
-
-    try:
-        usm_scraped_data, links, dept = scrape_usm_department('https://usm.maine.edu/department-computer-science/people/')
-    except Exception as e:
-        print('Error during scrape:', e)
-
-    
-    usm_data['departments'].append(    {"departments": [
-      {
-        "department_name": dept[0].get_text(strip=True) if dept else '',
-        "department_email": None,
-        "department_phone": None,
-        "people": usm_scraped_data
-      }
-    ]    }
-    )
-    print(usm_data)
-
-    for person in people:
-        name = person.get_text(strip=True)
-        if name:
-            output['departments'][0]['people'].append({
-            "person_name": name,
-            "person_email": "",
-            "person_phone": "",
-            "bio": "",
-            "expertise_1": "",
-            "expertise_2": "",
-            "expertise_3": "",
-            "main_field": "Computer Science",
-            "projects": [
+    for url in usm_department_pages:
+      try:
+          usm_scraped_data = {}
+          links = []
+          dept = ''
+          usm_scraped_data, links, dept = scrape_usm_department(url)
+          usm_data['departments'][dept] = {
+              "department_name": dept,
+              "department_email": None,
+              "department_phone": None,
+              "people": usm_scraped_data
+         }
+      except Exception as e:
+          print('Error during scrape:', e)
         
-            ]
-
-                })
-            print(name)
-    print(output)
-
-    print('Department title: ', department_elems[0].get_text(strip=True) if department_elems else '')
-
-    person_output = {}
-    # Process people
-    # My task is not to get people info, but department info. There is more info to grab for each person
-    # However, I can grab person info if needed, I've got a good idea on how and it would not take long
-    for person in people:
-        name = person.get_text(strip=True)
-        if name:
-            person_output[name] = {
-                'department': department_elems[0].get_text(strip=True) if department_elems else '',
-                'link': [link['url'] for link in links_array if link['text'] == name] # Not efficient, but works for now
-            }
-        
-    for name, details in person_output.items():
-        print(f"Name: {name}")
-        print(f"  Department: {details['department']}")
-        print(f"  Link(s): {details['link']}")
+    print_institution_data(usm_data)   
