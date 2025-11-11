@@ -1,6 +1,6 @@
-DROP DATABASE IF EXISTS `CollabConnect`;
-CREATE DATABASE `CollabConnect`;
-USE `CollabConnect`;
+-- DROP DATABASE IF EXISTS `CollabConnect`;
+-- CREATE DATABASE `CollabConnect`;
+USE `collab_connect_db`;
 
 -- 1. Institution (independent table)
 CREATE TABLE Institution (
@@ -65,15 +65,4 @@ CREATE TABLE WorkedOn (
     PRIMARY KEY (person_id, project_id),
     FOREIGN KEY (person_id) REFERENCES Person(person_id),
     FOREIGN KEY (project_id) REFERENCES Project(project_id)
-);
-
--- 6. WorkHistory (depends on Person) might not be necessary.
-CREATE TABLE WorkHistory (
-    workhistory_id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    person_id BIGINT UNSIGNED NOT NULL,
-    company_name VARCHAR(200) NOT NULL,
-    work_role VARCHAR(120) NOT NULL,
-    start_date DATE NOT NULL,
-    end_date DATE,
-    FOREIGN KEY (person_id) REFERENCES Person(person_id)
 );
