@@ -123,7 +123,7 @@ def scrape_usm_department(url):
             'main_field': None,
             'projects': []
         }
-        projects = []
+
         link_tag = block.find('a', href=True)
         if link_tag and link_tag.find('h3'):
             person['profile_url'] = link_tag.get('href')
@@ -280,6 +280,6 @@ if __name__ == '__main__':
       except Exception as e:
           print('Error during scrape:', e)
    
-    with open( "output.json", 'w') as f:
+    with open( "../data/pre_cleaning_usm_data.json", 'w') as f:
         json.dump(usm_data, f, indent=4) 
     print_institution_data(usm_data)   
