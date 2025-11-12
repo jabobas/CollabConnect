@@ -1,8 +1,7 @@
 """
-NIH Reporter Scraper - Outputs unified JSON format
-Fetches projects from https://reporter.nih.gov/ and transforms to CollabConnect schema.
-Usage:
-    python nih_scraper.py --keyword "machine learning" --fiscal-year 2025 --limit 50
+Author: Aubin Mugisha
+Description: Fetches Maine research projects from NIH Reporter API and exports to JSON
+
 """
 
 import argparse
@@ -60,11 +59,6 @@ def parse_date(value: Optional[str]) -> Optional[str]:
         return parsed.isoformat()
     except ValueError:
         return None
-
-
-def synthetic_email(profile_id: str) -> str:
-    """Generate synthetic email for NIH profile (used as lookup key)."""
-    return f"nih_{profile_id}@profiles.nih.gov"
 
 
 def transform_to_unified_schema(projects: List[Dict]) -> Dict:
@@ -154,29 +148,26 @@ def transform_to_unified_schema(projects: List[Dict]) -> Dict:
         investigators = project.get("principal_investigators") or []
         for idx, investigator in enumerate(investigators, start=1):
             profile_id = str(investigator.get("profile_id") or "").strip()
-            if not profile_id:
-                continue
+            name = (
+                investigator.get("full_name")
+                or investigator.get("name")
+                or investigator.get("first_name")
+                or "NIH Investigator"
+            )
             
-            email = synthetic_email(profile_id)
-            if email in seen_people:
-                # Person already added, just create WorkedOn relationship
-                pass
-            else:
-                seen_people.add(email)
-                name = (
-                    investigator.get("full_name")
-                    or investigator.get("name")
-                    or investigator.get("first_name")
-                    or "NIH Investigator"
-                )
+            # Use name as unique key since email is not available
+            person_key = f"{name}_{profile_id}" if profile_id else name
+            
+            if person_key not in seen_people:
+                seen_people.add(person_key)
                 
                 # Add person to department
                 if institution_name and dept_name in institutions_map[institution_name]["departments"]:
                     institutions_map[institution_name]["departments"][dept_name]["people"].append({
                         "person_name": name,
-                        "person_email": email,
+                        "person_email": None,  # Email not available from NIH API
                         "person_phone": None,
-                        "bio": f"NIH Investigator (profile {profile_id})",
+                        "bio": None,  # Bio not available from NIH API
                         "profile_url": None,
                         "expertise_1": None,
                         "expertise_2": None,
@@ -187,12 +178,12 @@ def transform_to_unified_schema(projects: List[Dict]) -> Dict:
             # WorkedOn relationship
             role = investigator.get("role") or "Principal Investigator" if idx == 1 else "Co-Investigator"
             workedon_list.append({
-                "person_email": email,
+                "person_email": None,  # Email not available from NIH API
+                "person_name": name,   # Use name for matching instead
                 "project_title": project_title,
                 "project_role": role,
                 "start_date": start_date,
                 "end_date": end_date,
-                "notes": f"NIH project {project_num}",
             })
     
     # Convert institutions_map to list format (flatten departments dict to list)
@@ -240,8 +231,8 @@ def main():
     parser.add_argument(
         "--output",
         type=str,
-        default="Backend/scrapers/data/nih_projects.json",
-        help="Output JSON file path (default: Backend/scrapers/data/nih_projects.json)",
+        default="../data/nih_projects.json",
+        help="Output JSON file path (default: ../data/nih_projects.json)",
     )
     
     args = parser.parse_args()

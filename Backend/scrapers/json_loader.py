@@ -1,10 +1,6 @@
 """
-JSON to Database Loader - Loads unified JSON schema into MySQL
-Reads JSON files produced by scrapers (NIH, USM, etc.) and populates the database.
-
-Usage:
-    python json_loader.py --input Backend/scrapers/data/nih_projects.json
-    python json_loader.py --input Backend/scrapers/data/usm_data.json --dry-run
+Author: Aubin Mugisha
+Description: Loads scraped research data from JSON into MySQL database
 """
 
 import argparse
@@ -171,17 +167,29 @@ def get_or_create_department(cursor, dept: Dict, institution_id: int) -> Optiona
 def get_or_create_person(cursor, person: Dict) -> Optional[int]:
     """Get or create person, return person_id."""
     email = person.get("person_email")
-    if not email:
+    name = person.get("person_name")
+    
+    if not name:
         return None
     
-    # Check mapping table
-    cursor.execute(
-        "SELECT person_id FROM PersonEmailMap WHERE person_email = %s",
-        (email,),
-    )
-    row = cursor.fetchone()
-    if row:
-        return row[0]
+    # If email exists, check mapping table
+    if email:
+        cursor.execute(
+            "SELECT person_id FROM PersonEmailMap WHERE person_email = %s",
+            (email,),
+        )
+        row = cursor.fetchone()
+        if row:
+            return row[0]
+    else:
+        # No email - check if person exists by name
+        cursor.execute(
+            "SELECT person_id FROM Person WHERE person_name = %s AND person_email IS NULL",
+            (name,),
+        )
+        row = cursor.fetchone()
+        if row:
+            return row[0]
     
     # Insert new person
     cursor.execute(
@@ -190,7 +198,7 @@ def get_or_create_person(cursor, person: Dict) -> Optional[int]:
         VALUES (%s, %s, %s, %s)
         """,
         (
-            person.get("person_name"),
+            name,
             email,
             person.get("person_phone"),
             person.get("bio"),
@@ -198,11 +206,12 @@ def get_or_create_person(cursor, person: Dict) -> Optional[int]:
     )
     person_id = cursor.lastrowid
     
-    # Add to mapping
-    cursor.execute(
-        "INSERT INTO PersonEmailMap (person_email, person_id) VALUES (%s, %s)",
-        (email, person_id),
-    )
+    # Add to mapping only if email exists
+    if email:
+        cursor.execute(
+            "INSERT INTO PersonEmailMap (person_email, person_id) VALUES (%s, %s)",
+            (email, person_id),
+        )
     
     return person_id
 
@@ -299,18 +308,33 @@ def load_workedon(conn: MySQLConnection, data: Dict) -> None:
     try:
         for row in workedon_rows:
             person_email = row.get("person_email")
+            person_name = row.get("person_name")
             project_title = row.get("project_title")
             
-            # Lookup person_id
-            cursor.execute(
-                "SELECT person_id FROM PersonEmailMap WHERE person_email = %s",
-                (person_email,),
-            )
-            person_row = cursor.fetchone()
-            if not person_row:
+            # Lookup person_id - try email first, then name
+            person_id = None
+            if person_email:
+                cursor.execute(
+                    "SELECT person_id FROM PersonEmailMap WHERE person_email = %s",
+                    (person_email,),
+                )
+                person_row = cursor.fetchone()
+                if person_row:
+                    person_id = person_row[0]
+            
+            # If email lookup failed or no email, try name
+            if not person_id and person_name:
+                cursor.execute(
+                    "SELECT person_id FROM Person WHERE person_name = %s",
+                    (person_name,),
+                )
+                person_row = cursor.fetchone()
+                if person_row:
+                    person_id = person_row[0]
+            
+            if not person_id:
                 skipped += 1
                 continue
-            person_id = person_row[0]
             
             # Lookup project_id
             cursor.execute(
@@ -332,7 +356,6 @@ def load_workedon(conn: MySQLConnection, data: Dict) -> None:
                     row.get("project_role"),
                     row.get("start_date"),
                     row.get("end_date"),
-                    row.get("notes"),
                 ],
             )
             inserted += 1
@@ -402,7 +425,7 @@ def main():
         "--input",
         type=str,
         required=True,
-        help="Path to unified JSON file (e.g., Backend/scrapers/data/nih_projects.json)",
+        help="Path to unified JSON file (e.g., Backend/data/nih_projects.json)",
     )
     parser.add_argument(
         "--dry-run",

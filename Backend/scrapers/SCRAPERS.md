@@ -25,12 +25,12 @@ python nih_scraper.py --keyword "research" --limit 50 --state ME
 python nih_scraper.py --keyword "cancer" --limit 100 --state ME
 ```
 
-**Output:** Creates `Backend/scrapers/data/nih_projects.json`
+**Output:** Creates `Backend/data/nih_projects.json`
 
 ### 2. Load JSON into database
 
 ```bash
-python json_loader.py --input data/nih_projects.json
+python json_loader.py --input ../data/nih_projects.json
 ```
 
 ### 3. Verify in MySQL
