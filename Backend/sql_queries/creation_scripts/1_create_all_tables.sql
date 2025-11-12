@@ -23,15 +23,12 @@ CREATE TABLE Department (
     department_name VARCHAR(150) NOT NULL,
     department_email VARCHAR(150) UNIQUE,
     department_phone VARCHAR(15),
-    FOREIGN KEY (institution_id) REFERENCES Institution(institution_id)
+    ADD CONSTRAINT fk_department_institution FOREIGN KEY (institution_id) 
+    REFERENCES Institution(institution_id) 
+    ON DELETE RESTRICT 
+    ON UPDATE CASCADE;
 );
 
-{
-    institution_id : ""
-    department_name : "",
-    department_email : "",
-    department_phone : "",
-}
 
 -- 3. Person (depends on Department)
 CREATE TABLE Person (
@@ -48,6 +45,8 @@ CREATE TABLE Person (
     FOREIGN KEY (department_id) REFERENCES Department(department_id)
 );
 
+
+
 CREATE TABLE Tag (
 	tag_name VARCHAR(50) PRIMARY KEY
 );
@@ -63,9 +62,13 @@ CREATE TABLE Project (
     end_date DATE,
     person_id BIGINT UNSIGNED NOT NULL,
     FOREIGN KEY (tag_name) REFERENCES Tag(tag_name),
-    FOREIGN KEY (leadperson_id) REFERENCES Person(person_id),
-    FOREIGN KEY (person_id) REFERENCES Person(person_id)
+    FOREIGN KEY (person_id) REFERENCES Person(person_id),
+    ADD CONSTRAINT fk_project_leadperson
+    FOREIGN KEY (leadperson_id) REFERENCES Person(person_id)
+    ON DELETE SET NULL
+    ON UPDATE CASCADE;
 );
+
 
 --  If a project is deleted, delete all associated workedon entries
 CREATE TABLE Project_Tag (
@@ -76,14 +79,54 @@ CREATE TABLE Project_Tag (
     FOREIGN KEY (tag_name) REFERENCES Tag(tag_name) ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS BelongsTo (
+    department_id    BIGINT UNSIGNED NOT NULL,
+    institution_id   BIGINT UNSIGNED NOT NULL,
+    effective_start  DATE            NOT NULL,
+    effective_end    DATE            DEFAULT NULL,
+    justification    VARCHAR(255)    DEFAULT NULL,
+    PRIMARY KEY (department_id, institution_id, effective_start),
+    CONSTRAINT ck_belongsto_dates CHECK (effective_end IS NULL OR effective_end >= effective_start),
+    CONSTRAINT fk_belongsto_department
+        FOREIGN KEY (department_id) REFERENCES Department(department_id)
+        ON UPDATE CASCADE ON DELETE CASCADE,
+    CONSTRAINT fk_belongsto_institution
+        FOREIGN KEY (institution_id) REFERENCES Institution(institution_id)
+        ON UPDATE CASCADE ON DELETE RESTRICT
+);
+
+CREATE TABLE IF NOT EXISTS WorkedOn (
+    person_id      BIGINT UNSIGNED NOT NULL,
+    project_id     BIGINT UNSIGNED NOT NULL,
+    project_role   VARCHAR(100)    NOT NULL,
+    start_date     DATE            NOT NULL,
+    end_date       DATE            DEFAULT NULL,
+    notes          VARCHAR(255)    DEFAULT NULL,
+    PRIMARY KEY (person_id, project_id, start_date),
+    CONSTRAINT ck_workedon_dates CHECK (end_date IS NULL OR end_date >= start_date),
+    CONSTRAINT fk_workedon_person
+        FOREIGN KEY (person_id) REFERENCES Person(person_id)
+        ON UPDATE CASCADE ON DELETE CASCADE,
+    CONSTRAINT fk_workedon_project
+        FOREIGN KEY (project_id) REFERENCES Project(project_id)
+        ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+-- 3.5. WorksIn (junction table between Person and Department)
+-- Allows many-to-many relationship: a person can work in multiple departments
+-- and a department can have multiple people
+CREATE TABLE WorksIn (
+    worksin_id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    person_id BIGINT UNSIGNED NOT NULL,
+    department_id BIGINT UNSIGNED NOT NULL,
+    UNIQUE KEY uq_person_department (person_id, department_id),
+    FOREIGN KEY (person_id) REFERENCES Person(person_id),
+    FOREIGN KEY (department_id) REFERENCES Department(department_id)
+);
+
 
 -- If the lead person on a project is deleted, set leadperson_id to NULL
 -- Since a project can exist without a lead person
-ALTER TABLE Project
-  ADD CONSTRAINT fk_project_leadperson
-    FOREIGN KEY (leadperson_id) REFERENCES Person(person_id)
-    ON DELETE SET NULL
-    ON UPDATE CASCADE;
 
 -- Use this if we say that a department should not exist without an institution
 -- ALTER TABLE Department
@@ -100,8 +143,4 @@ ALTER TABLE Project
 --     ON DELETE RESTRICT
 --     ON UPDATE CASCADE;
 
-ALTER TABLE Department
-  ADD CONSTRAINT fk_department_institution FOREIGN KEY (institution_id) 
-  REFERENCES Institution(institution_id) 
-  ON DELETE RESTRICT 
-  ON UPDATE CASCADE;
+
