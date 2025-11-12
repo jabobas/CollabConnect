@@ -1,0 +1,268 @@
+{
+  "source": "nih",
+  "scraped_at": "2025-11-11T04:32:40.097595+00:00",
+  "institutions": [
+    {
+      "institution_name": "JACKSON LABORATORY",
+      "institution_type": "Research Institutes",
+      "street": null,
+      "city": "BAR HARBOR",
+      "state": "ME",
+      "zipcode": "046091523",
+      "country": "UNITED STATES",
+      "institution_phone": null,
+      "departments": [
+        {
+          "department_name": "Unknown Department",
+          "department_email": null,
+          "department_phone": null,
+          "people": [
+            {
+              "person_name": "OLGA  ANCZUKOW-CAMARDA",
+              "person_email": "nih_10300099@profiles.nih.gov",
+              "person_phone": null,
+              "bio": "NIH Investigator (profile 10300099)",
+              "profile_url": null,
+              "expertise_1": null,
+              "expertise_2": null,
+              "expertise_3": null,
+              "main_field": null
+            },
+            {
+              "person_name": "Ronny  Korstanje",
+              "person_email": "nih_9466314@profiles.nih.gov",
+              "person_phone": null,
+              "bio": "NIH Investigator (profile 9466314)",
+              "profile_url": null,
+              "expertise_1": null,
+              "expertise_2": null,
+              "expertise_3": null,
+              "main_field": null
+            },
+            {
+              "person_name": "LAURA G REINHOLDT",
+              "person_email": "nih_7014557@profiles.nih.gov",
+              "person_phone": null,
+              "bio": "NIH Investigator (profile 7014557)",
+              "profile_url": null,
+              "expertise_1": null,
+              "expertise_2": null,
+              "expertise_3": null,
+              "main_field": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "institution_name": "MOUNT DESERT ISLAND BIOLOGICAL LAB",
+      "institution_type": "Research Institutes",
+      "street": null,
+      "city": "SALSBURY COVE",
+      "state": "ME",
+      "zipcode": "046720035",
+      "country": "UNITED STATES",
+      "institution_phone": null,
+      "departments": [
+        {
+          "department_name": "Unknown Department",
+          "department_email": null,
+          "department_phone": null,
+          "people": [
+            {
+              "person_name": "Dustin Lynn Updike",
+              "person_email": "nih_9197469@profiles.nih.gov",
+              "person_phone": null,
+              "bio": "NIH Investigator (profile 9197469)",
+              "profile_url": null,
+              "expertise_1": null,
+              "expertise_2": null,
+              "expertise_3": null,
+              "main_field": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "institution_name": "MAINEHEALTH",
+      "institution_type": "Independent Hospitals",
+      "street": null,
+      "city": "PORTLAND",
+      "state": "ME",
+      "zipcode": "041023175",
+      "country": "UNITED STATES",
+      "institution_phone": null,
+      "departments": [
+        {
+          "department_name": "Unknown Department",
+          "department_email": null,
+          "department_phone": null,
+          "people": [
+            {
+              "person_name": "Frances E. Carr",
+              "person_email": "nih_10367065@profiles.nih.gov",
+              "person_phone": null,
+              "bio": "NIH Investigator (profile 10367065)",
+              "profile_url": null,
+              "expertise_1": null,
+              "expertise_2": null,
+              "expertise_3": null,
+              "main_field": null
+            },
+            {
+              "person_name": "Douglas B Sawyer",
+              "person_email": "nih_1887504@profiles.nih.gov",
+              "person_phone": null,
+              "bio": "NIH Investigator (profile 1887504)",
+              "profile_url": null,
+              "expertise_1": null,
+              "expertise_2": null,
+              "expertise_3": null,
+              "main_field": null
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "project_title": "Research Programs",
+      "project_description": "PROJECT SUMMARY RESEARCH PROGRAM \nThe overarching goal of The Jackson Laboratory Cancer Center (JAXCC) Research Program, “Genetics and \nGenomics of Aging and Cancer”, is to advance cancer medicine through basic research discoveries with \npotential for preventive and therapeutic impact for patients. Our Research Program is focused on uncovering \nthe underlying genetic, epigenetic, and transcriptional mechanisms that drive aging-associated cellular \ndysfunction, chronic inflammation, and immune dysfunction, and their profound contributions to cancer. By \ndelving into these fundamental processes, we strive to gain insights into cancer development, dissemination, \nand treatment resistance to develop age-tailored interventions. Our Program has been focused on exploring \nthe genomic complexity of cancer and how the tumor and the host interact. Building on our success, we are \nnow extending these studies to include the dimension of time by incorporating aspects of aging pathobiology. \nOur research is organized around three complementary and interrelated Specific Aims. Aim 1 seeks to \nuncover cancer cell-intrinsic mechanisms contributing to tumor progression and treatment resistance and how \naging impacts them. Aim 2 seeks to dissect the complexity of immune and stromal components of the tumor \nmicroenvironment and their associations with genetics and aging. Aim 3 seeks to decipher and modulate \naging-associated pathology at the organismal level to prevent tumor progression and treatment resistance. All \nthree Aims draw on the JAXCC’s longstanding strengths in the genetics, development, and analysis of \norganismal, cellular, and computational models, with a focus on how aging and genetic background contribute \nto the physiology of cancer. The 59 JAXCC members include 37 full Program members and 22 Affiliate \nmembers. The Program is supported by $9.99M in annual direct costs from NCI and other peer-reviewed \ncancer-related grants. Over four years of the current grant cycle, JAXCC Program members published 377 \ncancer-relevant research articles: 45% were in journals with impact factor >10, 27% have JAXCC co-authors, \nand 60% have external co-authors, of which 41% include authors from other NCI-designated Cancer Centers. \nThe CCSG has enabled the development of key platforms impactful for our members’ research, including \nsingle cell biology, spatial biology, and tumor-host interactions. The has CCSG supported aging and cancer \nresearch trainees through a new Brooks Scholars program and a series of workshops and think tanks in \ncollaboration with other Cancer Centers. The JAXCC will work closely with the JAX Center for Aging Research, \nwhich includes the NIA-funded Nathan Shock Center of Excellence in the Basic Biology of Aging and the \nInterventions Testing Program, to enable our members to leverage aging expertise and aged genetically \nheterogeneous animal models. The efforts of the Co-Program Leaders and JAXCC Senior Leadership have \nfostered interactivity among members and engaged their participation in planning for resource development \nand faculty recruitment through monthly Research Program meetings, collaborative projects, subsidized intercampus \ntravel, and the JAXCC Annual Retreat.",
+      "project_tags": "Research Institutes",
+      "start_date": "2025-11-10",
+      "end_date": null,
+      "external_id": "2P30CA034196-39"
+    },
+    {
+      "project_title": "Research Development Core",
+      "project_description": "PROJECT SUMMARY / ABSTRACT RESEARCH DEVELOPMENT CORE\nUnderstanding the complexity of the aging process and its profound effects across all levels of biological\norganization will require a strong, interdisciplinary, and diverse supply of talented scientists. The overall goal of\nThe Jackson Laboratory Nathan Shock Center (JAX NSC) Research Development Core is to provide support\nfor the career development of junior faculty entering the field of basic aging biology or other investigators who\nwish to change career direction toward basic aging research. During the current funding period, the JAX NSC\nResearch Development Core competitively awarded funding and resources to aging projects using the mouse\nas a biological system. These projects resulted in new discoveries, research publications and sources of funding,\nand helped junior awardees establish their own independent careers in aging research. Moving forward, these\nsuccesses will be expanded by providing targeted funding to exciting projects proposed by investigators new to\naging research, and by offering a variety of research and intellectual resources to support awardees and other\ninvestigators in their work. The outstanding institutional resources available at JAX, a premier institution for\nmouse genetics and systems biology research, will be leveraged to sustain and grow this foundation of\nresearchers at JAX and within the aging community. The Specific Aims of this Core are: Aim 1. Provide support\nfor projects by new investigators in aging research using a competitive pilot award program. Promising\ninvestigators new to aging research will be funded through a competitive process so they can generate the data\nand gain the expertise necessary to support competitive funding applications and a transition to a career in aging\nbiology. Aim 2. Provide resources to support pilot awardees and investigators new to aging research.\nAccess to resources (e.g., aged mice, data, tissues, phenotype platforms, expertise) will be provided to support\npilot awardees and other investigators new to aging research. The aged mouse cohorts and phenotyping\ntechnologies supported by the JAX NSC present a valuable opportunity for investigators to access material and\ncollect data that might otherwise be prohibitively expensive or difficult to obtain. Aim 3. Provide mentorship,\ntraining, and career development opportunities in aging research. Investigators new to aging research will\nbe provided with mentorship by JAX NSC researchers and collaborators. They will also be given opportunities\nfor career development in the aging field via support with the grant writing process, opportunities to participate\nin aging meetings, and introductions to potential collaborations within the broader geroscience community. The\nResearch Development Core will have a significant impact on the support and expansion of the pool of\ninvestigators devoted to the study of the basic biology of aging.",
+      "project_tags": "Research Institutes",
+      "start_date": "2025-11-10",
+      "end_date": null,
+      "external_id": "2P30AG038070-16"
+    },
+    {
+      "project_title": "Developmental Research Project Program",
+      "project_description": "DEVELOPMENTAL RESEARCH PROJECTS PROGRAM PROJECT SUMMARY \nThe Developmental Research Project Program (DRPP) of the Maine INBRE (ME-INBRE) aims to support innovative biomedical research and pilot projects led by outstanding faculty researchers at ME-INBRE network institutions. The program has three specific aims. 1) Funding: The DRPP will provide competitive funding for Research Projects (RPs), Pilot Projects (PPs), and Collaborative Pilot Projects (CPPs) that involve students in innovative biomedical research. RP Leaders, who are newly appointed or early-career faculty, will dedicate 50% of their effort to their projects. PP Leaders can be faculty members at any career stage from Primarily Undergraduate Institutions (PUIs), devoting 25% effort. CPP Leaders will form multi-disciplinary teams involving scientists from different INBRE network institutions. Funding duration varies, with RPs spanning two years and PPs funded for one year, with the possibility of one competitive renewal contingent on progress. 2) Mentoring: Project Leaders will be partnered with and receive guidance from experienced mentors. RPs will have both an internal mentor from their institution and an external mentor in their research field. PPs will typically have a single mentor. Project Leaders will also participate in workshops on data science, grant writing, lab management, and other relevant topics, fostering their career development. 3) Evaluation: The DRPP will undergo rigorous evaluation to ensure its effectiveness. Project Leaders will submit progress reports, and the DRPP Director and the Evaluation Team will assess project progress toward publications, major grant proposals, and mentoring effectiveness using a prescribed evaluation matrix. The External Advisory Committee will conduct semiannual evaluations and provide personalized feedback to the Project Leaders and their mentors, ensuring their continued success. The ME-INBRE DRPP prioritizes innovative projects, particularly those with data science components, engaging undergraduate students and leveraging core resources from ME-INBRE and other IDeA programs in Maine and the region like the Maine COBREs and Northern New England CTR. The program's impact will be to increase the amount of and capacity for high-quality biomedical research in Maine. It will do so by supporting innovative investigator-initiated research and pilot projects, both standalone and collaborative, and through effective mentorship and research oversight. The program will also promote collaborations across ME-INBRE network institutions.",
+      "project_tags": "Research Institutes",
+      "start_date": "2025-11-10",
+      "end_date": null,
+      "external_id": "5P20GM103423-25"
+    },
+    {
+      "project_title": "Translational Research Technologies Core",
+      "project_description": "The Northern New England region is among the most rural in the U.S. It has competent investigators with complementary expertise in biomedical research, who place a priority on collaborative team science and translational research. However, one challenge is limited access to consolidated state-of-the-art and rapidly advancing research resources, education, and technologies. The NNE-CTR now provides innovative and integrated shared technical resources at partner institutions to cost-effectively support approaches with education and training for optimal use by investigators and trainees in academic medical centers, practice- based research networks (PBRNs), and industry throughout the region. We have consolidated strategic core facilities by leveraging expertise in genomic/epigenomic, proteomic, lipidomic, and imaging technologies with emphasis towards molecular diagnostics/precision medicine. Building upon our success, the goals of the Translational Research and Technologies Core (TRTC) are to provide investigators with support for research based on genomics, proteomics, lipidomics, cell and tissue analyses, molecular diagnostics and novel mouse models for preclinical studies. Our secondary goal is to advance collaborative partnerships among scientists, behaviorists, and physician investigators and support the career development of biomedical researchers. Coordinating with the Community Engagement and Outreach Core, the TRTC will expand educational efforts to facilitate bidirectional communication and to foster collaborations and discovery in translational and clinical research. This research infrastructure, with expanded faculty development in translational and clinical research, will also strengthen the interactions and engagement with the NNE-PBRN and other clinician investigators to support mechanistic and clinical investigations of cancer, cardiovascular disease, substance abuse and other diseases prevalent in the northern New England rural population. Furthermore, the TRTC will build upon established IDeA Networks of Biomedical Research Excellence (INBRE) programs and multiple Centers of Biomedical Research Excellence (COBRE), to effectively leverage resources established by these programs for the enhancement of young and established investigators. The TRTC is currently supporting the development of genomic and cellular imaging-based diagnostics for future public health challenges. TRTC will also support Department of Health initiatives in partnering states and private sector endeavors that likely will require molecular diagnostics. In summary, the TRTC, by integrating unique and essential biomedical research expertise, technologies, and services, will enhance research capacity, credential research programs, and increase the competitiveness of investigators in the region for the benefit of northern New England institutions and the people they serve.",
+      "project_tags": "Independent Hospitals",
+      "start_date": "2025-11-10",
+      "end_date": null,
+      "external_id": "5U54GM115516-09"
+    },
+    {
+      "project_title": "Center of Biomedical Research Excellence in Acute Care Research and Rural Disparities",
+      "project_description": "Acute care research can be defined as investigations into preventive, curative, rehabilitative, or palliative\nactions that depend on time-sensitive and urgent intervention. Thus, acute care encompasses multiple medical\nspecialties, including critical care services, emergency and urgent care, trauma and acute care surgery, and\nneurocritical care. In rural states, the need for improvements in acute care and acute care research are\npressing, as medical advances have increased the disparities between urban and rural areas. These\ndisparities are due in large part to imbalances in access to specialty-trained clinicians, resources and facilities,\nas well as clinical research. We propose a new inter-departmental Center for Biomedical Research Excellence\n(COBRE) at Maine Medical Center, a tertiary care center located in the largest population center (Portland) in\nthe state of Maine. Serving as the hub of activities, this program will mentor cohorts of acute care researchers\nin significant clinical/translational areas of need while providing a foundation for these studies to impact\ncommunities and patients in all regions of our state. This COBRE is led by Douglas Sawyer MD, PhD, an\nestablished leader in clinical care services, mentorship, and translational research. The aims of this program\nare: 1) Provide the leadership, governance, and advisory network to establish a COBRE in Acute Care\nResearch and Rural Disparities at Maine Medical Center; 2) Provide project and mentorship support to launch\nthe careers of promising clinician-scientists within this scientific program, and help ensure their long-term\nscientific success as independent researchers; 3) Enhance the capabilities of Maine Medical Center's core\nfacilities and research infrastructure to support human subject research of both our COBRE investigators and\nother institutional and external researchers, and to stimulate innovative research methodologies and new\ncollaborations, and 4) Enhance our existing COBRE- and CTR-supported pilot project programs to focus on\ntranslational and clinical opportunities related to acute care and rural health disparities. In Phase I, we have\ninitially selected 4 clinical/translational project leaders with clinical research areas of primary need. These\ninclude: Teresa May DO, a critical care physician-researcher developing a standardized statewide system of\ncardiac arrest post-resuscitation care, David Gagnon PharmD, a pharmacist-researcher testing the benefits of\nprophylactic antibiotics in cardiac arrest survivors, David Seder MD, a critical care physician-researcher\nexpanding his clinical research program to include translational molecular signaling studies of inflammation in\ncardiac arrest, and Alexa Craig MD, a pediatric neurologist engaged in research utilizing telemedicine to\nimprove survival and neurological outcomes for newborns born at risk for encephalopathy. These researchers\nwill be supported by a robust mentorship and advisory network and a Community Engagement, Bioethics, and\nOutreach Core that will develop state-wide health professional and community partnerships in a learning\nhealthcare system to enhance understanding of and increase inclusion in human subjects research.",
+      "project_tags": "Independent Hospitals",
+      "start_date": "2025-11-10",
+      "end_date": null,
+      "external_id": "5P20GM139745-05"
+    },
+    {
+      "project_title": "Applied Research Section",
+      "project_description": "PROJECT SUMMARY APPLIED RESEARCH\nGenome editing promises to transform the way we treat genetic disease. Advanced tools including base and\nprime editors can be used to precisely install single base modifications in a single treatment without inducing\nDNA breaks. A critical component to developing and implementing a genome editor-based therapeutic strategy\nis the availability of validated animal models with clear phenotypic and/or molecular readouts to assess both\nefficacy and safety. Mouse models provide an ideal preclinical testing platform that can recapitulate the\ncomplexity of a given mutation or disease state in the context of a multi-tissue, multi-organ mammalian system.\nThe MMRRC hosts a growing collection of human disease models that will prove invaluable in the testing of\nnovel genome editing-based therapeutics. Cell-based platforms are important for the initial evaluation of\ngenome editing strategies. While human iPS cells or patient-derived fibroblasts are suitable for this purpose,\nthey are slow growing, expensive, non-renewable and/or unavailable resources. Mouse embryonic stem cells\n(mESCs) grow rapidly, are simple to transfect, are renewable, and can be derived directly from preclinical\nmodels that will be used for follow-up in vivo validation. Our team has extensive experience in the generation,\ncharacterization and distribution of mESCs through the MMRRC. The overarching goal of this applied research\ncomponent is to enhance the utility of the MMRRC Resource for translational applications by 1) generating\nnovel mouse embryonic stem cell (mESC) resources from important mouse models of human disease and 2)\nto demonstrate the utility of these resources through the implementation of a genome editing therapeutic\ndesign screening platform. The mESC resources will be distributed to the external community, and we will\nexplore the feasibility of deploying our platform as a future external service.",
+      "project_tags": "Research Institutes",
+      "start_date": "2025-11-10",
+      "end_date": null,
+      "external_id": "2U42OD010921-16"
+    },
+    {
+      "project_title": "Applied Research",
+      "project_description": "PROJECT SUMMARY/ABSTRACT – Applied Research\n The genetics underlying human biology and disease is complex and will require the use of “system genetics”\nto dissect the myriad of interactions that control and regulate biological processes. Tools for human studies\nhave advanced greatly yet there remains a necessary reliance on mammalian models. To this end new strains\nof mice have been created that better emulate the extent of human genetic variation. These strains include\nCollaborative Cross (CC), Diversity Outbred (DO) and recombinant inbred mice (e.g. BXD). The CC/DO and\nBXD platforms harness the natural inbred strain variation needed for systems genetics studies. However, the\nuse of these strains typically requires additional genetic engineering of the mice to create “tool strains” to allow\nspecific types of genetic manipulations. Such strains already exist for standard inbred strains (e.g. C57BL/6J),\nbut “tool strains”, that carry commonly needed genetic manipulations, are not presently available for genetically\ndiverse inbred strains such as CC/DO, BXD, or all of the founder inbred strains used to create these RI panels.\n The use of the powerful CC/DO/BXD strains is growing rapidly and to facilitate efficient use of these mice we\npropose to create a series of tool strains and mouse embryonic stem cells (mESC). To do this, we will take\nadvantage of diverse inbred strains that harbor novel, high efficiency recombinase-based docking sites to\nfacilitate the use of CRISPR-cas9 editing for creation of the new strains. Validated new tool strains will be\nmade available through the Special Mouse Strain Resource (SMSR).\n To achieve this goal we will:\n Derive and validate germ line competent mESC lines from existing Bxb1 integrase strains. The goal\nhere is to create a panel of genetically diverse mESC lines harboring Bxb1 integrase sites, as well as LSL-\nCas9-FLAG. These mESCs will provide tools for engineering loci that are difficult to engineer in zygotes or for\nvalidation experiments that can be accomplished in vitro.\n Generate Rosa26-LSL-Cas9-FLAG tool strains for CAST/EiJ, PWK/EiJ, and DBA/2J inbred strains.\nThese strains will enable CRISPR/cas9 editing in the absence of exogenous Cas9. This facilitates engineering\nin zygotes and allows for easy, precise engineering of somatic cells/tissues. The goal is to create and validate\nthis important tool strain for the three high priority inbred strain backgrounds listed above.\n Generate germ line deletion tool strains for CAST/EiJ and PWK/EiJ inbred strain backgrounds.\nRemoval of specific DNA sequences or engineering stop codons is frequently accomplished using flanking\nloxP sites that serve as catalytic domains for cre recombinase. Implementation of this approach frequently\nuses “germ line cre” strains, that are not currently available on genetically diverse strain backgrounds. Thus,\nthe goal here is to take advantage of our Bxb1 docking site strains to create Rosa26 Sox2-cre knock-in alleles\non CAST/EiJ and PWK/EiJ.",
+      "project_tags": "Research Institutes",
+      "start_date": "2025-11-10",
+      "end_date": null,
+      "external_id": "5P40OD011102-25"
+    }
+  ],
+  "workedon": [
+    {
+      "person_email": "nih_10300099@profiles.nih.gov",
+      "project_title": "Research Programs",
+      "project_role": "Principal Investigator",
+      "start_date": "2025-11-10",
+      "end_date": null,
+      "notes": "NIH project 2P30CA034196-39"
+    },
+    {
+      "person_email": "nih_9466314@profiles.nih.gov",
+      "project_title": "Research Development Core",
+      "project_role": "Principal Investigator",
+      "start_date": "2025-11-10",
+      "end_date": null,
+      "notes": "NIH project 2P30AG038070-16"
+    },
+    {
+      "person_email": "nih_9197469@profiles.nih.gov",
+      "project_title": "Developmental Research Project Program",
+      "project_role": "Principal Investigator",
+      "start_date": "2025-11-10",
+      "end_date": null,
+      "notes": "NIH project 5P20GM103423-25"
+    },
+    {
+      "person_email": "nih_10367065@profiles.nih.gov",
+      "project_title": "Translational Research Technologies Core",
+      "project_role": "Principal Investigator",
+      "start_date": "2025-11-10",
+      "end_date": null,
+      "notes": "NIH project 5U54GM115516-09"
+    },
+    {
+      "person_email": "nih_1887504@profiles.nih.gov",
+      "project_title": "Center of Biomedical Research Excellence in Acute Care Research and Rural Disparities",
+      "project_role": "Principal Investigator",
+      "start_date": "2025-11-10",
+      "end_date": null,
+      "notes": "NIH project 5P20GM139745-05"
+    },
+    {
+      "person_email": "nih_7014557@profiles.nih.gov",
+      "project_title": "Applied Research Section",
+      "project_role": "Principal Investigator",
+      "start_date": "2025-11-10",
+      "end_date": null,
+      "notes": "NIH project 2U42OD010921-16"
+    },
+    {
+      "person_email": "nih_7014557@profiles.nih.gov",
+      "project_title": "Applied Research",
+      "project_role": "Principal Investigator",
+      "start_date": "2025-11-10",
+      "end_date": null,
+      "notes": "NIH project 5P40OD011102-25"
+    }
+  ],
+  "belongsto": [
+    {
+      "department_name": "Unknown Department",
+      "institution_name": "JACKSON LABORATORY",
+      "effective_start": "2025-11-10",
+      "effective_end": null,
+      "justification": "NIH project 2P30CA034196-39"
+    },
+    {
+      "department_name": "Unknown Department",
+      "institution_name": "MOUNT DESERT ISLAND BIOLOGICAL LAB",
+      "effective_start": "2025-11-10",
+      "effective_end": null,
+      "justification": "NIH project 5P20GM103423-25"
+    },
+    {
+      "department_name": "Unknown Department",
+      "institution_name": "MAINEHEALTH",
+      "effective_start": "2025-11-10",
+      "effective_end": null,
+      "justification": "NIH project 5U54GM115516-09"
+    }
+  ]
+}
