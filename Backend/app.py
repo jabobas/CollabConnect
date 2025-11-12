@@ -1,17 +1,11 @@
 from flask import Flask
 from flask_mysqldb import MySQL
-<<<<<<< HEAD
 import os
 import configparser
-=======
-import configparser
-import os
->>>>>>> 23669596d61f1b85d11ca45dee8ffb7b89d9eadb
 
 app = Flask(__name__)
 
 config = configparser.ConfigParser()
-<<<<<<< HEAD
 config.read('config.ini')
 
 app.config['MYSQL_HOST'] = config.get('Database', 'db_host', fallback='127.0.0.1')
@@ -20,21 +14,11 @@ app.config['MYSQL_USER'] = config.get('Database', 'db_user', fallback='root')
 app.config['MYSQL_PASSWORD'] = config.get('Database', 'db_password', fallback='')
 app.config['MYSQL_DB'] = config.get('Database', 'db_name', fallback='collab_connect_db')
 app.config['MYSQL_CURSORCLASS'] = config.get('Database', 'db_cursorclass', fallback='DictCursor')
-=======
-config_path = os.path.join(os.path.dirname(__file__), 'config.ini')
-config.read(config_path)
->>>>>>> 23669596d61f1b85d11ca45dee8ffb7b89d9eadb
 
-app.config['MYSQL_HOST'] = config.get('Database', 'db_host', fallback='localhost')
-app.config['MYSQL_USER'] = config.get('Database', 'db_user', fallback='root')
-app.config['MYSQL_PASSWORD'] = config.get('Database', 'db_password', fallback='')
-app.config['MYSQL_DB'] = config.get('Database', 'db_name', fallback='collab_connect_db')
-app.config['MYSQL_PORT'] = config.getint('Database', 'db_port', fallback=3306)
-app.config['MYSQL_CURSORCLASS'] = config.get('Database', 'db_cursorclass', fallback='DictCursor')
+mysql = MySQL(app)
 
 def check_db() -> bool:
     try:
-<<<<<<< HEAD
         # temporarily set no DB to check for existence
         app.config['MYSQL_DB'] = None
 
@@ -57,38 +41,14 @@ def check_db() -> bool:
             cursor.close()
             return True
         
-=======
-        with app.app_context():
-            app.config['MYSQL_DB'] = None
-            sql_connection = MySQL(app)
-            cursor = sql_connection.connection.cursor()
-
-            cursor.execute("CREATE DATABASE IF NOT EXISTS collab_connect_db")
-            print("Database 'collab_connect_db' checked/created successfully")
-
-            sql_connection.connection.commit()
-            cursor.close()
-
-            app.config['MYSQL_DB'] = config.get('Database', 'db_name', fallback='collab_connect_db')
->>>>>>> 23669596d61f1b85d11ca45dee8ffb7b89d9eadb
     except Exception as e:
         print("Database check/creation failed:", e)
         print("Ensure that the MySQL server is running and the connection details are correct.")
         return False
 
-<<<<<<< HEAD
 def create_db():
     
     print('Creating database')
-=======
-# can't have a flask app without a db, so check to see if it exists before starting app
-check_db()
-
-mysql = MySQL(app)
-
-@app.route('/')
-def hello_world():
->>>>>>> 23669596d61f1b85d11ca45dee8ffb7b89d9eadb
     cursor = mysql.connection.cursor()
     cursor.execute("CREATE SCHEMA collab_connect_db")
     cursor.execute("USE collab_connect_db")
@@ -205,13 +165,9 @@ def health():
 
 
 if __name__ == '__main__':
-<<<<<<< HEAD
     if not check_db():
         print('Database check failed; not starting Flask app.')
         import sys
         sys.exit(1)
    
     app.run()
-=======
-    app.run()
->>>>>>> 23669596d61f1b85d11ca45dee8ffb7b89d9eadb
