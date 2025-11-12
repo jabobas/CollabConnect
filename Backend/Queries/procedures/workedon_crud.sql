@@ -1,5 +1,5 @@
--- File: Backend/sql_queries/aubin/procedures/workedon_crud.sql
--- Purpose: CRUD stored procedures for WorkedOn (MySQL 8.0).
+-- Author: Aubin Mugisha
+-- Description: Stored procedures for inserting, updating, and deleting WorkedOn relationships
 
 DELIMITER $$
 
@@ -8,16 +8,14 @@ CREATE PROCEDURE sp_insert_workedon (
     IN p_project_id   BIGINT UNSIGNED,
     IN p_project_role VARCHAR(100),
     IN p_start_date   DATE,
-    IN p_end_date     DATE,
-    IN p_notes        VARCHAR(255)
+    IN p_end_date     DATE
 )
 BEGIN
-    INSERT INTO WorkedOn (person_id, project_id, project_role, start_date, end_date, notes)
-    VALUES (p_person_id, p_project_id, p_project_role, p_start_date, p_end_date, p_notes)
+    INSERT INTO WorkedOn (person_id, project_id, project_role, start_date, end_date)
+    VALUES (p_person_id, p_project_id, p_project_role, p_start_date, p_end_date)
     ON DUPLICATE KEY UPDATE
         project_role = VALUES(project_role),
-        end_date     = VALUES(end_date),
-        notes        = VALUES(notes);
+        end_date     = VALUES(end_date);
 END$$
 
 CREATE PROCEDURE sp_update_workedon_role (

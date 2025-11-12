@@ -1,5 +1,6 @@
--- File: Backend/sql_queries/aubin/procedures/belongsto_crud.sql
--- Purpose: CRUD stored procedures for BelongsTo (MySQL 8.0).
+-- Author: Aubin Mugisha
+-- Description: Stored procedures for managing BelongsTo department-institution relationships
+-- Handles inserting, closing (setting end date), and deleting records
 
 DELIMITER $$
 

@@ -1,5 +1,7 @@
--- DROP DATABASE IF EXISTS `CollabConnect`;
--- CREATE DATABASE `CollabConnect`;
+-- Author: Aubin Mugisha
+-- Description: Creates all core tables - Institution, Department, Person, Project, WorkedOn, BelongsTo
+-- Run this once to initialize the complete database schema
+
 USE `collab_connect_db`;
 
 -- 1. Institution (independent table)
@@ -28,7 +30,7 @@ CREATE TABLE Department (
 CREATE TABLE Person (
     person_id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     person_name VARCHAR(150) NOT NULL,
-    person_email VARCHAR(150) UNIQUE NOT NULL,
+    person_email VARCHAR(150) UNIQUE DEFAULT NULL,
     person_phone VARCHAR(30),
     bio TEXT,
     -- type and constraints are still uncertain

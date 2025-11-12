@@ -1,6 +1,6 @@
--- File: Backend/sql_queries/aubin/tables/workedon.sql
--- Purpose: canonical WorkedOn table definition for MySQL deployments.
--- Depends on: Person (person_id PK), Project (project_id PK)
+-- Author: Aubin Mugisha
+-- Description: WorkedOn table tracks who worked on which research projects
+-- Links Person to Project with role, start/end dates
 
 CREATE TABLE IF NOT EXISTS WorkedOn (
     person_id      BIGINT UNSIGNED NOT NULL,
@@ -8,7 +8,6 @@ CREATE TABLE IF NOT EXISTS WorkedOn (
     project_role   VARCHAR(100)    NOT NULL,
     start_date     DATE            NOT NULL,
     end_date       DATE            DEFAULT NULL,
-    notes          VARCHAR(255)    DEFAULT NULL,
     PRIMARY KEY (person_id, project_id, start_date),
     CONSTRAINT ck_workedon_dates CHECK (end_date IS NULL OR end_date >= start_date),
     CONSTRAINT fk_workedon_person

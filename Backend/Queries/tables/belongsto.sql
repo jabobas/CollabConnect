@@ -1,6 +1,6 @@
--- File: Backend/sql_queries/aubin/tables/belongsto.sql
--- Purpose: track the Department -> Institution relationship history in MySQL.
--- Depends on: Department (department_id PK), Institution (institution_id PK)
+-- Author: Aubin Mugisha
+-- Description: BelongsTo table tracks which departments belong to which institutions over time
+-- Handles department transfers between institutions with effective start/end dates
 
 CREATE TABLE IF NOT EXISTS BelongsTo (
     department_id    BIGINT UNSIGNED NOT NULL,

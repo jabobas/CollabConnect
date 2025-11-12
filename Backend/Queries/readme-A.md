@@ -1,7 +1,7 @@
 ````markdown
 # SQL Queries Package
 
-Self-contained MySQL scripts for the `WorkedOn` and `BelongsTo` deliverables.  
+Scripts for the `WorkedOn` and `BelongsTo` deliverables.  
 Run them independently from the rest of the team's schema to avoid merge conflicts.
 
 ## Folder structure
