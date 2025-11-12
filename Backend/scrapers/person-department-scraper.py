@@ -47,7 +47,14 @@ def scrape_usm_person(url):
 
     #  The actual bio if exists
     bio = soup.select('.kt-inside-inner-col')
+    backup_bio = soup.select('.bio')
 
+    if bio:
+        bio = bio[0].get_text(strip=True)
+    elif backup_bio:
+        bio = backup_bio[0].get_text(strip=True)
+    else:
+        bio = ''
     publications = soup.select('.publications')
     if publications:
       count = 0
@@ -71,11 +78,10 @@ def scrape_usm_person(url):
           if match:
               project['end_date'] = match.group(1)
 
-          print('Pub: ', count, ': ', publication)
-          print(' -----')
+
           projects.append(project)
 
-    return projects
+    return projects, bio
 
 def scrape_usm_department(url):
     headers = {
@@ -128,8 +134,9 @@ def scrape_usm_department(url):
         if link_tag and link_tag.find('h3'):
             person['profile_url'] = link_tag.get('href')
             links_array.append({'text': name, 'url': person['profile_url']})
-            person['projects'] = scrape_usm_person(link_tag.get('href'))
-            
+            projects, bio = scrape_usm_person(link_tag.get('href'))
+            person['projects'] = projects
+            person['bio'] = bio
         tel_tag = block.find('a', href=lambda x: x and x.startswith('tel:'))
         if tel_tag:
             person['person_phone'] = tel_tag.get_text(strip=True)
@@ -138,19 +145,19 @@ def scrape_usm_department(url):
         if email:
             person['person_email'] = email.get_text(strip=True)
 
-        bio = block.find('p')
-        if bio:
+        title = block.find('p')
+        if title:
           # Sometimes p tag contains strong tag. If thats the case its going to grab their pronouns instead of bio/title
           # Everytime this is the case, li is the correct bio/title
-            if '<strong>' in bio.decode_contents():
-                bio = block.find('li')
-                if not bio:
-                    bio = ''
+            if '<strong>' in title.decode_contents():
+                title = block.find('li')
+                if not title:
+                    title = ''
                 else:
-                  bio = bio.get_text(strip=True)
-                person['bio'] = bio
-            else:
-              person['bio'] = bio.get_text(strip=True)
+                  title = title.get_text(strip=True)
+                # person['bio'] = title
+            # else:
+            #   person['bio'] = title.get_text(strip=True)
 
         people_by_name[name] = person
         
@@ -254,12 +261,6 @@ if __name__ == '__main__':
         "https://usm.maine.edu/department-environmental-science-policy/people/",
         "https://usm.maine.edu/department-theatre/people/",
         "https://usm.maine.edu/social-behavioral-sciences/people/",
-        "https://usm.maine.edu/department-technology/people/",
-        "https://usm.maine.edu/department-linguistics/people/",
-        "https://usm.maine.edu/department-theatre/people/",
-        "https://usm.maine.edu/department-art/people/",
-        "https://usm.maine.edu/department-history/people/",
-        "https://usm.maine.edu/department-exercise-health-sport-sciences/people/",
         "https://usm.maine.edu/school-social-work/people/",
         "https://usm.maine.edu/college-management-human-services/people/"
     ]
