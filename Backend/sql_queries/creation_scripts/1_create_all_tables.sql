@@ -34,7 +34,7 @@ CREATE TABLE Department (
 CREATE TABLE Person (
     person_id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     person_name VARCHAR(150) NOT NULL,
-    person_email VARCHAR(150) ,
+    person_email VARCHAR(150) UNIQUE,
     person_phone VARCHAR(30),
     bio TEXT,
     expertise_1 VARCHAR(50),
@@ -63,7 +63,8 @@ CREATE TABLE Project (
     person_id BIGINT UNSIGNED NOT NULL,
     FOREIGN KEY (tag_name) REFERENCES Tag(tag_name),
     FOREIGN KEY (person_id) REFERENCES Person(person_id),
-    CONSTRAINT fk_project_leadperson FOREIGN KEY (leadperson_id) REFERENCES Person(person_id)
+    CONSTRAINT fk_project_leadperson
+    FOREIGN KEY (leadperson_id) REFERENCES Person(person_id)
     ON DELETE SET NULL
     ON UPDATE CASCADE
 );

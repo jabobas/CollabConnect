@@ -20,7 +20,7 @@ BEGIN
     INSERT INTO Person
         (person_name, person_email, person_phone, bio, expertise_1, expertise_2, expertise_3, main_field, department_id)
     VALUES
-        (p_person_name, p_person_email, p_person_phone, p_bio, p_expertise1, p_expertise2, p_expertise3, p_main_field, p_department_id);
+        (@PersonName, @PersonEmail, @PersonPhone, @Bio, @Expertise1, @Expertise2, @Expertise3, @MainField, @DepartmentId);
 END$$
 
 -- 2. Delete person
@@ -29,14 +29,14 @@ CREATE PROCEDURE DeletePerson(
 )
 BEGIN
     DELETE FROM Person
-    WHERE person_id = p_person_id;
-END$$
+    WHERE person_id = @PersonId;
+END$$ 
 
 -- 3. Get all people
 CREATE PROCEDURE GetAllPeople()
 BEGIN 
     SELECT * 
-    FROM Person;
+    FROM Person
 END$$
 
 -- 4. Update person given arguments for fields and new values
@@ -62,19 +62,17 @@ BEGIN
     -- Update only provided fields; NULL parameters leave columns unchanged
     UPDATE Person
     SET
-        person_name   = COALESCE(p_person_name, person_name),
-        person_email  = COALESCE(p_person_email, person_email),
-        person_phone  = COALESCE(p_person_phone, person_phone),
-        bio           = COALESCE(p_bio, bio),
-        expertise_1   = COALESCE(p_expertise1, expertise_1),
-        expertise_2   = COALESCE(p_expertise2, expertise_2),
-        expertise_3   = COALESCE(p_expertise3, expertise_3),
-        main_field    = COALESCE(p_main_field, main_field),
-        department_id = COALESCE(p_department_id, department_id)
-    WHERE person_id = p_person_id;
+        person_name   = COALESCE(@PersonName, person_name),
+        person_email  = COALESCE(@PersonEmail, person_email),
+        person_phone  = COALESCE(@PersonPhone, person_phone),
+        bio           = COALESCE(@Bio, bio),
+        expertise_1   = COALESCE(@Expertise1, expertise_1),
+        expertise_2   = COALESCE(@Expertise2, expertise_2),
+        expertise_3   = COALESCE(@Expertise3, expertise_3),
+        main_field    = COALESCE(@MainField, main_field),
+        department_id = COALESCE(@DepartmentId, department_id)
+    WHERE person_id = @PersonId;
 END$$
-
-DELIMITER ;
 
 -- Additional things it could be useful to add
 -- Get all people with a shared expertise
