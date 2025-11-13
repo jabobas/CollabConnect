@@ -231,16 +231,29 @@ def get_or_create_project(cursor, project: Dict) -> Optional[int]:
     if row:
         return row[0]
     
+    # Lookup leadperson_id by name if provided
+    leadperson_id = None
+    leadperson_name = project.get("leadperson_name")
+    if leadperson_name:
+        cursor.execute(
+            "SELECT person_id FROM Person WHERE person_name = %s LIMIT 1",
+            (leadperson_name,),
+        )
+        lead_row = cursor.fetchone()
+        if lead_row:
+            leadperson_id = lead_row[0]
+    
     # Insert new project
     cursor.execute(
         """
         INSERT INTO Project (project_title, project_description, project_tags, leadperson_id, start_date, end_date)
-        VALUES (%s, %s, %s, NULL, %s, %s)
+        VALUES (%s, %s, %s, %s, %s, %s)
         """,
         (
             title,
             project.get("project_description"),
             project.get("project_tags"),
+            leadperson_id,  # Now links to actual person
             project.get("start_date"),
             project.get("end_date"),
         ),

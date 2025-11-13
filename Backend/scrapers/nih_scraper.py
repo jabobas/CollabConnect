@@ -55,9 +55,14 @@ def parse_date(value: Optional[str]) -> Optional[str]:
     if not value:
         return None
     try:
-        parsed = dt.datetime.strptime(value, "%Y-%m-%d").date()
+        # Try ISO 8601 datetime format first (2021-05-20T00:00:00)
+        if 'T' in value:
+            parsed = dt.datetime.fromisoformat(value.replace('Z', '+00:00')).date()
+        else:
+            # Fallback to simple date format (YYYY-MM-DD)
+            parsed = dt.datetime.strptime(value, "%Y-%m-%d").date()
         return parsed.isoformat()
-    except ValueError:
+    except (ValueError, AttributeError):
         return None
 
 
@@ -77,9 +82,12 @@ def transform_to_unified_schema(projects: List[Dict]) -> Dict:
     belongsto_list = []
     
     # Track seen entities to avoid duplicates
-    seen_people = set()  # emails
+    seen_people = set()  # person keys
     seen_projects = set()  # project_num
     seen_belongsto = set()  # (dept_name, inst_name, start_date)
+    
+    # Track projects per person for nesting
+    person_projects_map = {}  # person_key -> list of project objects
     
     for project in projects:
         project_num = project.get("project_num")
@@ -95,10 +103,22 @@ def transform_to_unified_schema(projects: List[Dict]) -> Dict:
         start_date = parse_date(project.get("project_start_date")) or dt.date.today().isoformat()
         end_date = parse_date(project.get("project_end_date"))
         
+        # Get principal investigator (lead person)
+        investigators = project.get("principal_investigators") or []
+        leadperson_name = None
+        if investigators:
+            lead_inv = investigators[0]
+            leadperson_name = (
+                lead_inv.get("full_name")
+                or lead_inv.get("name")
+                or lead_inv.get("first_name")
+            )
+        
         projects_list.append({
             "project_title": project_title,
             "project_description": project_description,
             "project_tags": project_tags,
+            "leadperson_name": leadperson_name,  # Add lead person for linking
             "start_date": start_date,
             "end_date": end_date,
             "external_id": project_num,
@@ -185,11 +205,35 @@ def transform_to_unified_schema(projects: List[Dict]) -> Dict:
                 "start_date": start_date,
                 "end_date": end_date,
             })
+            
+            # Add project to person's projects array
+            if person_key not in person_projects_map:
+                person_projects_map[person_key] = []
+            person_projects_map[person_key].append({
+                "project_title": project_title,
+                "project_description": project_description,
+                "project_role": role,
+                "start_date": start_date,
+                "end_date": end_date,
+            })
     
-    # Convert institutions_map to list format (flatten departments dict to list)
+    # Convert institutions_map to list format and add projects to each person
     institutions_list = []
     for inst in institutions_map.values():
         inst["departments"] = list(inst["departments"].values())
+        # Add projects array to each person
+        for dept in inst["departments"]:
+            for person in dept["people"]:
+                person_name = person["person_name"]
+                # Find person_key (try with and without profile_id)
+                person_key = None
+                for key in person_projects_map.keys():
+                    if key.startswith(person_name):
+                        person_key = key
+                        break
+                
+                person["projects"] = person_projects_map.get(person_key, [])
+        
         institutions_list.append(inst)
     
     return {
