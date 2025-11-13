@@ -20,8 +20,7 @@ BEGIN
         (person_name, person_email, person_phone, bio, expertise_1, expertise_2, expertise_3, main_field, department_id)
     VALUES
         (@PersonName, @PersonEmail, @PersonPhone, @Bio, @Expertise1, @Expertise2, @Expertise3, @MainField, @DepartmentId);
-END;
-GO
+END$$
 
 -- 2. Delete person
 CREATE PROCEDURE DeletePerson
@@ -30,8 +29,7 @@ AS
 BEGIN
     DELETE FROM Person
     WHERE person_id = @PersonId;
-END;
-GO
+END$$ 
 
 -- 3. Get all people
 CREATE PROCEDURE GetAllPeople
@@ -39,8 +37,7 @@ AS
 BEGIN 
     SELECT * 
     FROM Person
-END;
-GO
+END$$
 
 -- 4. Update person given arguments for fields and new values
 CREATE PROCEDURE UpdatePerson
@@ -76,8 +73,7 @@ BEGIN
         main_field    = COALESCE(@MainField, main_field),
         department_id = COALESCE(@DepartmentId, department_id)
     WHERE person_id = @PersonId;
-END;
-GO
+END$$
 
 ------------------------------------------------
 -- Additional things it could be useful to add
