@@ -1,5 +1,6 @@
 *.venv
 *.ini
+databases
 
 # macOS system files
 .DS_Store

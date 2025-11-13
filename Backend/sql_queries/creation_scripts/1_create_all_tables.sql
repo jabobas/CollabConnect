@@ -23,10 +23,10 @@ CREATE TABLE Department (
     department_name VARCHAR(150) NOT NULL,
     department_email VARCHAR(150) UNIQUE,
     department_phone VARCHAR(15),
-    ADD CONSTRAINT fk_department_institution FOREIGN KEY (institution_id) 
+    CONSTRAINT fk_department_institution FOREIGN KEY (institution_id) 
     REFERENCES Institution(institution_id) 
     ON DELETE RESTRICT 
-    ON UPDATE CASCADE;
+    ON UPDATE CASCADE
 );
 
 
@@ -63,10 +63,10 @@ CREATE TABLE Project (
     person_id BIGINT UNSIGNED NOT NULL,
     FOREIGN KEY (tag_name) REFERENCES Tag(tag_name),
     FOREIGN KEY (person_id) REFERENCES Person(person_id),
-    ADD CONSTRAINT fk_project_leadperson
+    CONSTRAINT fk_project_leadperson
     FOREIGN KEY (leadperson_id) REFERENCES Person(person_id)
     ON DELETE SET NULL
-    ON UPDATE CASCADE;
+    ON UPDATE CASCADE
 );
 
 
