@@ -1,0 +1,500 @@
+{
+    "institution": {
+        "institution_name": "Roux Institute at Northeastern University",
+        "institution_type": "Academic",
+        "street": null,
+        "city": "Portland",
+        "state": "ME",
+        "zipcode": null,
+        "institution_phone": null
+    },
+    "departments": {
+        "General Faculty and Staff": {
+            "department_name": "General Faculty and Staff",
+            "department_email": null,
+            "department_phone": null,
+            "people": {
+                "Eva Balog": {
+                    "person_email": null,
+                    "person_phone": null,
+                    "bio": "Dr. Balog is currently on a sabbatical appointment as a Visiting Associate Professor at the Roux Institute and a Life Sciences Fellow with the Institute for Experiential AI. She is an Associate Professor of Chemistry at the University of New England and an inaugural member of UNE\u2019s Portland Laboratory for Biotechnology and Health Sciences and the Center for Cell Signaling Research. Dr. Balog received her Ph.D. in Molecular, Cell, and Developmental Biology from the University of California, Santa Cruz, and completed postdoctoral training at Los Alamos National Laboratory\u2019s Center for Integrated Nanotechnologies. Dr. Balog\u2019s research is focused on the biophysical characterization of engineered proteins for biomaterials and biotechnology applications, with an especial interest in protein-based tools for the study and control of cellular activities.",
+                    "expertise_1": null,
+                    "expertise_2": null,
+                    "expertise_3": null,
+                    "main_field": "Visiting Associate Professor",
+                    "projects": []
+                },
+                "Deanna Barry": {
+                    "person_email": "d.barry@northeastern.edu",
+                    "person_phone": null,
+                    "bio": "Deanna Barry (she/her) is the Assistant Director of Housing Services at the Roux Institute. Deanna is responsible for supporting students with their housing needs and helping them build connections with each other and the local community as they transition to a new environment and culture. Before joining the Roux, Deanna worked at the University of New England in the Office of Housing and Residential/Commuter Life, where she was able to combine her passions for education, community development, and crisis response. Additionally, she spent 5 years working as a licensed social worker in both clinical and community settings, focusing on youth and gender-based violence prevention and response. Deanna received her Bachelors\u2019 degrees in English and Psychology from Saint Joseph\u2019s College of Maine in 2016, followed by her Masters of Social Work from the University of New England in 2017. As a born and raised Mainer, Deanna feels a deep connection to the mission of the Roux and the opportunity it gives students to learn, grow, and contribute their unique skills and contributions to the state.",
+                    "expertise_1": null,
+                    "expertise_2": null,
+                    "expertise_3": null,
+                    "main_field": "Assistant Director of Housing Services",
+                    "projects": []
+                },
+                "Mariah Boudreau": {
+                    "person_email": null,
+                    "person_phone": null,
+                    "bio": "Mariah Boudreau is a postdoctoral research fellow at the Roux Institute and Network Science Institute. Her research focuses on stochastic disease modeling, in the context of within-host and population-level disease dynamics. Boudreau holds a PhD in mathematical sciences from the University of Vermont, and an undergraduate degree in mathematics from Saint Michael\u2019s College. She enjoys skiing and hiking when out of the office. Boudreau\u2019s work focuses on branching processes applied to disease spread. She uses probability generating functions to model these branching processes.",
+                    "expertise_1": null,
+                    "expertise_2": null,
+                    "expertise_3": null,
+                    "main_field": "Postdoc Research Fellow",
+                    "projects": []
+                },
+                "Jonah Bradenay": {
+                    "person_email": "j.bradenay@northeastern.edu",
+                    "person_phone": null,
+                    "bio": "Jonah Bradenday is the OHDSI lab administrator at Northeastern University\u2019s Roux Institute. He supports researchers with the technical and scientific processes related to observational health research. Prior to joining the Roux Institute, he worked as a health applications analyst for Brown University. Bradenay has spent most of his life in Maine. He grew up on Peaks Island, attended Colby College in Waterville, and now lives here with his wife and two cats. Outside of work, he writes fiction and enjoys backpacking and baking.",
+                    "expertise_1": null,
+                    "expertise_2": null,
+                    "expertise_3": null,
+                    "main_field": "OHDSI Lab Administrator",
+                    "projects": []
+                },
+                "Meghan Bradley": {
+                    "person_email": null,
+                    "person_phone": null,
+                    "bio": "Meghan Bradley is a Career Services and Co-op Advisor with the Roux Institute. In this role, she supports students with co-op placement and career preparation. Bradley has close to a decade of experience working in the world of education, from high school counseling to undergraduate internship advising, with the bulk of this experience residing in undergraduate admissions. Bradley believes in the power of lifelong learning and that education should be viewed as a right, not a privilege. Bradley has strong roots in the Portland area, dating back to the 1600s when her ancestors were lobstermen on Long Island (Maine). She grew up in Fryeburg and obtained a Bachelor of Arts in Psychology with a Clinical/Counseling concentration from Saint Joseph\u2019s College of Maine in 2015. She will complete her Master of Science in Adult and Higher Education from the University of Southern Maine in the fall of 2024. She lives on Munjoy Hill in Portland.",
+                    "expertise_1": null,
+                    "expertise_2": null,
+                    "expertise_3": null,
+                    "main_field": "Career and Co-op Advisor",
+                    "projects": []
+                },
+                "Rob Cavanaugh": {
+                    "person_email": null,
+                    "person_phone": null,
+                    "bio": "Rob Cavanaugh, PhD, CCC-SLP, is an Assistant Professor at the Massachusetts General Hospital Institute for Health Professions and affiliate faculty at the Roux Institute, where he previously worked with Brianne Olivieri-Mui and Louisa Smith in the Observational Health Data Sciences and Informatics (OHDSI) Center. He specializes in quantitative methods, serving as a statistical co-investigator, consultant, and mentor for various research initiatives. Dr. Cavanaugh is committed to education and open science, advocating for experiential learning approaches that build strong statistical foundations for future rehabilitation and health science researchers and practitioners. Dr. Cavanaugh\u2019s background as a speech-language pathologist in neurorehabilitation informs his teaching and research perspectives. His current research integrates rehabilitation health services, population health, and data science, analyzing insurance claims and electronic health record data to examine healthcare outcomes and improve service delivery. He continues to collaborate with Dr. Olivieri-Mui and Dr. Smith on health services and population health research using large-scale datasets such as the OHDSI Lab data at Northeastern University and the All of Us Research Program and serves as a domain expert in real-world data for data science student research projects.",
+                    "expertise_1": null,
+                    "expertise_2": null,
+                    "expertise_3": null,
+                    "main_field": "Faculty Affiliate",
+                    "projects": []
+                },
+                "Charles Chandler": {
+                    "person_email": null,
+                    "person_phone": null,
+                    "bio": "Charlie is a lecturer in the College of Professional Studies, leading classes in data and analytics. He has been working in data and analytics for over 15 years, mostly in healthcare and higher education. He received his data science certification from The Data Incubator in 2021, having completed a Python-based data science bootcamp. Charlie is currently a data scientist at InterMed, a primary care practice with clinics in Southern Maine. His favorite project so far is a model that predicts whether patients will admit to the emergency department. Charlie has a BA in English and an MA in the humanities. He was a professional writer and editor before pivoting to data and analytics. In his spare time, he has fun with his wife and kiddos, makes music, and tries to grow gourmet mushrooms. Having at least one himself, he loves stories about wild career pivots, and he loves how many Mainers he\u2019s met who have multiple hustles.",
+                    "expertise_1": null,
+                    "expertise_2": null,
+                    "expertise_3": null,
+                    "main_field": "Part Time Lecturer",
+                    "projects": []
+                },
+                "Jeff Chu": {
+                    "person_email": null,
+                    "person_phone": null,
+                    "bio": "Over the past 20+ years, I\u2019ve built and scaled, products, teams, and companies. Currently leveraging my previous experience building and scaling a product development and commercialization strategy company (acquired in 2021) in the medical device / consumer health markets to help our next generation of founders bring life changing products to market. I\u2019ve been a Principal Investigator on many NIH and DoD grants, hold 12+ patents, was technical lead for 2 federally funded commercialization centers, and have deep technical experience in medical device design, systems architecture, embedded hardware/firmware, algorithms, and commercialization. I\u2019ve worked across all layers within organizations, having built and led cross-functional technical, quality, and compliance teams across multiple subsidiaries in a global organization, and supported a variety of companies as a trusted and seasoned advisor / board member.",
+                    "expertise_1": null,
+                    "expertise_2": null,
+                    "expertise_3": null,
+                    "main_field": "Managing Partner @ Features Capital | MedTech Innovator | Exited Founder",
+                    "projects": []
+                },
+                "Annie Chuprevich": {
+                    "person_email": "a.chuprevich@northeastern.edu",
+                    "person_phone": null,
+                    "bio": "Annie Chuprevich is the director of learner services at the Roux Institute. Chuprevich is responsible for the development and oversight of a rich learner experience for all students engaging with the Roux Institute. With over a decade of experience in higher education in Maine, she has held roles at the University of Southern Maine and Unity College. Chuprevich received a BA in Visual and Media Arts from Emerson College and an MS in Adult and Higher Education from the University of Southern Maine. She cites moving back to Maine after many years in Boston as one of the best decisions she\u2019s ever made and currently resides in Windham with her husband and daughter.",
+                    "expertise_1": null,
+                    "expertise_2": null,
+                    "expertise_3": null,
+                    "main_field": "Senior Director of Academic Operations and Learner Services",
+                    "projects": []
+                },
+                "Chris Comora": {
+                    "person_email": null,
+                    "person_phone": null,
+                    "bio": "Chris has spent more than two decades leading cross-functional teams across various industries, including Financial Services and Manufacturing. His career has been marked by a focus on large-scale change initiatives and enhancing operating efficiency through data-driven strategies. At the core of his approach is a commitment to leveraging data analysis to uncover insights that drive operational improvements and streamline processes. Currently, as a Senior Director at WEX, Chris oversees the Strategic Vendor Management team for Global Service Operations. Before embarking on his business career, Chris served as a U.S. Naval Officer. He holds a BS in Systems Engineering from the United States Naval Academy at Annapolis, Maryland, and a Master\u2019s in Statistics from North Carolina State University.",
+                    "expertise_1": null,
+                    "expertise_2": null,
+                    "expertise_3": null,
+                    "main_field": "Part Time Lecturer",
+                    "projects": []
+                },
+                "Puja Das": {
+                    "person_email": null,
+                    "person_phone": null,
+                    "bio": "Dr. Das is a data science expert specializing in climate and weather risk analysis, with a PhD in Interdisciplinary Engineering from Northeastern University. Her research centers on extreme weather modeling and the development of AI-driven solutions for precipitation forecasting and flood risk assessment. With comprehensive expertise spanning machine learning, remote sensing, earth system model data analysis, and hydrological engineering, Dr. Das is dedicated to leveraging cutting-edge technology to address critical climate adaptation challenges. Her work bridges the gap between advanced computational methods and practical climate adaptation strategies.",
+                    "expertise_1": null,
+                    "expertise_2": null,
+                    "expertise_3": null,
+                    "main_field": "Postdoc Research Fellow",
+                    "projects": []
+                },
+                "Jennifer Fitz": {
+                    "person_email": null,
+                    "person_phone": null,
+                    "bio": "Jennifer Fitz is the BioPILOT Lab Manager at The Roux Institute at Northeastern University, where she leads operations supporting teaching, research, and entrepreneurship to advance research and development in biotechnology. In addition to her role with the BioPILOT Lab, she also provides support to the BioIN Lab at the University of Southern Maine. With a strong background in cell and molecular R&D, Jennifer previously served as Co-Founder and Director at biotech start-up Hound Bio and has over a decade of industry experience at IDEXX. She holds a bachelor\u2019s degree in Biology from the University of Southern Maine and is dedicated to fostering innovation and collaborative research environments in the biotech field.",
+                    "expertise_1": null,
+                    "expertise_2": null,
+                    "expertise_3": null,
+                    "main_field": "BioPILOT Lab Manager",
+                    "projects": []
+                },
+                "Nir Harish": {
+                    "person_email": null,
+                    "person_phone": null,
+                    "bio": "I came to PBMC after completing a Robert Wood Johnson Foundation Clinical Scholarship at Yale University, where I studied the economics of acute care and alternative business models for healthcare delivery. I completed my residency in emergency medicine at the Denver Health Medical Center and University of Colorado Hospital, where I served as a chief resident. I received my undergraduate degree from Yale University, and an MD/MBA from Harvard Medical School and Harvard Business School. My wife and I have always wanted to live in the Midcoast and I look forward to exploring all the region has to offer.",
+                    "expertise_1": null,
+                    "expertise_2": null,
+                    "expertise_3": null,
+                    "main_field": "PBMC",
+                    "projects": []
+                },
+                "Lucy Havens": {
+                    "person_email": null,
+                    "person_phone": null,
+                    "bio": "Lucy Havens is a postdoctoral research fellow in human-data interaction. Her research focuses on AI and data literacy, combining user research, data visualization, and natural language processing methods to investigate people\u2019s perceptions of AI models and AI-generated content. Havens work aims to improve processes of evaluating AI models, with a particular focus on user-centered interventions and context-specific assessments. Havens earned her Ph.D. in Responsible AI from the University of Edinburgh for research using natural language processing to analyze gender biases in archival documentation. She earned her master\u2019s in Design Informatics from the University of Edinburgh and her bachelor\u2019s in Information Systems from Carnegie Mellon University. Before joining the Roux, she worked as a postdoctoral researcher in the University of Maryland\u2019s College of Information. She has also worked as a research software engineer, business and technology consultant, web developer and designer, and information designer. In her free time, Havens can be found running, cooking, drawing, or (most often!) reading.",
+                    "expertise_1": null,
+                    "expertise_2": null,
+                    "expertise_3": null,
+                    "main_field": "Postdoctoral Research Fellow",
+                    "projects": []
+                },
+                "Liz Kohler": {
+                    "person_email": "e.kohler@northeastern.edu",
+                    "person_phone": null,
+                    "bio": "Liz Kohler is the Managing Director of Strategy, Operations & Growth at Northeastern University\u2019s Roux Institute. Kohler was a founding member of the partnerships team and helped to define the Roux Institute\u2019s partnership approach that emphasizes deep collaboration across sectors to drive innovation, talent development, and economic growth. Currently, Kohler leads select strategic initiatives and partnerships focused on growth and oversees the operations and marketing functions of the institute. Kohler joined Northeastern after spending seven years at a non-profit start-up graduate school of education, Relay GSE, focused on diversifying the teacher pipeline and training transformative school leaders. She has worked in program management, strategy, operations, and partnership roles at high growth organizations in the non-profit and K12 sectors. Kohler started her career as a Teach For America corps member in South Texas and later worked for a member of Congress in constituent relations. Kohler holds a Master\u2019s Degree in Public Administration from Cornell University, a Graduate Certificate in Non-Profit Management from the University of Pennsylvania, and a Bachelor of Arts in History from Goucher College. Kohler is based in the Midcoast region of Maine.",
+                    "expertise_1": null,
+                    "expertise_2": null,
+                    "expertise_3": null,
+                    "main_field": "Managing Director of Strategy, Operations and Growth",
+                    "projects": []
+                },
+                "Dan Koloski": {
+                    "person_email": "d.koloski@northeastern.edu",
+                    "person_phone": null,
+                    "bio": "Dan Koloski is the head of learning programs and professor of the practice in the College of Professional Studies (CPS) at Northeastern University\u2019s Roux Institute. At the Roux Institute, Koloski carries administrative responsibility for all learning programs across degree and non-degree contexts. Professor Koloski\u2019s own teaching is in analytics and software development and the application of both to business, and in addition to his work within various Northeastern degree programs, he works with the Roux partnerships team to develop and teach custom non-degree courses to partner employees. Beyond his CPS teaching, Koloski serves as an adjunct faculty member with the College of Engineering\u2019s Multidisciplinary Graduate Engineering (MGEN) unit and is also a faculty affiliate of Northeastern\u2019s Center for Technology Management and Digital Leadership. Koloski joined Northeastern after spending over twenty years in the IT and software industry, working in technical and business management roles across large and small companies. Most recently, Koloski was vice president of product management and business development at Oracle. Before Oracle, he was CTO and director of strategy of the web business unit at Empirix, which he helped spin out and sell to Oracle. Koloski holds a bachelor\u2019s from Yale University and an MBA from Harvard Business School. Koloski has lived in Portland for several decades with his wife and two daughters. He is an avid sailor and skier and maintains an active performing schedule in the Portland-area music and theater scene. He is also the founder and leader of the Roux Institute\u2019s Department of Music, a student, faculty, and staff choral group. Koloski specializes in project-based experiential learning and can most often be found teaching via hands-on, applied pedagogies that leverage technology and analytics in business contexts. Koloski also researches best practices relating to organizational transformation around data-driven decision-making. Degree-related courses he frequently teaches include: ALY6080 Integrated Experiential Learning, ALY6980 Capstone, ALY6995 Project, ALY6060 Decision Support and Business Intelligence, ALY 6000 Introduction to Analytics and ALY6010 Probability Theory and Introductory Statistics, BUS5963 Experiential Entrepreneurship , INFO6215 Business Analysis and Information Engineering. Non-degree courses include a variety of executive and practitioner learning experiences in the Analytics, Digital Transformation and AI/ML domains.",
+                    "expertise_1": null,
+                    "expertise_2": null,
+                    "expertise_3": null,
+                    "main_field": "Head of Learning Programs, Professor of the Practice",
+                    "projects": []
+                },
+                "Chris Mallett": {
+                    "person_email": "c.mallett@northeastern.edu",
+                    "person_phone": null,
+                    "bio": "Chris has led and been part of teams that have built two of this century\u2019s most creative and impactful higher education institutions: Northeastern University\u2019s Roux Institute and Western Governors University. At the Roux Institute, Chris leads teams building a new model for talent and economic development by working with industry, higher ed, and community partners throughout Maine. The Roux\u2019s graduate and custom education programs help people and businesses develop the competencies they need to lead and grow. Tech-focused research teams spur new discoveries and help partners to innovate. And the Roux\u2019s programs for entrepreneurs help founders grow and sustain their startups, making Maine the most exciting place to start and grow a business. At WGU, Chris was a member of the founding team that pioneered online competency-based education at the dawn of the commercial Internet, enabling access to postsecondary education and career growth for 500K+ learners and alumni/ae since 2000. The team developed and scaled new learning paradigms that have evolved to become the gold standard in online, personalized learning. Chris\u2019 WGU experience spanned 14 years and included leadership of enrollment, faculty, and product divisions. Himself a lifelong learner and the first member of his family to experience postsecondary education, Chris has navigated his entire academic career while working, balancing professional, family, and academic pursuits. He has earned associate\u2019s and bachelor\u2019s degrees in general education and political science, respectively, from Weber State University. While working at WGU, Chris earned a master\u2019s in public administration at the University of Utah and a doctorate in education at Pepperdine University. Chris and his wife Charlet reside in Freeport, Maine. They are the parents of three children. Two are graduates of Northeastern University; the other is enjoying 8th grade.",
+                    "expertise_1": null,
+                    "expertise_2": null,
+                    "expertise_3": null,
+                    "main_field": "Chief Administrative Officer",
+                    "projects": []
+                },
+                "Michael Pollastri": {
+                    "person_email": "m.pollastri@northeastern.edu",
+                    "person_phone": null,
+                    "bio": "Michael Pollastri is the senior vice provost and academic lead of the Roux Institute at Northeastern University, where he leads and oversees the academic and research portfolio. Pollastri joined the Northeastern faculty in the Department of Chemistry and Chemical Biology in 2009, was appointed department chair in 2015, rose to the rank of full professor in 2017, and was appointed interim dean of the College of Science in March 2019. Prior to joining Northeastern, Pollastri spent ten years at Pfizer in hit-to-lead and lead optimization medicinal chemistry. In 2007, he accepted a research faculty position at Boston University\u2019s Department of Chemistry, where he led the establishment of the Center for Molecular Discovery, a collaborative university resource that encompassed a combination of high-throughput screening and medicinal chemistry optimization capabilities. Pollastri\u2019s research is focused on the discovery of new therapeutics for neglected tropical diseases. He earned his master\u2019s degree from Duke University and his doctorate from a graduate program he developed through a partnership between Pfizer and the Brown University Department of Chemistry.",
+                    "expertise_1": null,
+                    "expertise_2": null,
+                    "expertise_3": null,
+                    "main_field": "Senior Vice Provost and Academic Lead",
+                    "projects": []
+                },
+                "Liz Atwood": {
+                    "person_email": "e.atwood@northeastern.edu",
+                    "person_phone": null,
+                    "bio": "Liz Atwood is the director of enrollment management of the Roux Institute at Northeastern University where she leads and oversees the recruitment, financial aid, and enrollment unit. In her previous capacity as associate director of recruitment and engagement, Atwood developed and led the institute\u2019s first graduate recruitment team. Before joining Northeastern, she served as the director of recruitment and events, and as the director of outreach and communication for admissions at Colby College, where she oversaw domestic and international recruitment in addition to the student visit experience. Atwood holds a master of project management with a concentration in analytics from Northeastern University, and a BA in environmental studies from St. Lawrence University. She lives in Portland, Maine.",
+                    "expertise_1": null,
+                    "expertise_2": null,
+                    "expertise_3": null,
+                    "main_field": "Senior Director, Global Enrollment Management, Global Campuses",
+                    "projects": []
+                },
+                "Aileen Huang-Saad": {
+                    "person_email": "a.huang-saad@northeastern.edu",
+                    "person_phone": null,
+                    "bio": "Aileen Huang-Saad is the director of life sciences, health, and engineering programs at the Roux Institute and an associate professor of bioengineering. Leveraging her experience with design, entrepreneurship, education research, and professional practice, she seeks to close the gap between higher education and professional practice. Specifically, she is designing interdisciplinary experiential education life sciences, health, and engineering programs to attract, retain, and promote talent in the state of Maine. These programs are designed to re-imagine how higher education and communities can work together to impact economic and talent development. Huang-Saad has an over 14 year history of bringing about organizational change in higher education, leveraging evidence-based practices at University of Michigan. She created the U-M BME graduate design program, co-founded the U-M College of Engineering Center for Entrepreneurship, launched the U-M National Science Foundation (NSF) I-Corps Node, and developed the U-M BME Instructional Incubator. She is a canonical instructor for both the NSF and National Institute of Health (NIH) I-Corps Programs. Huang-Saad has received numerous awards for her teaching and student advising, including the 1938E College of Engineering Award, the Thomas M. Sawyer, Jr. Teaching Award, the U-M ASEE Outstanding Professor Award, the International Teaching with Sakai Innovation Award, and the College of Engineering Outstanding Student Advisor Award. She currently serves as Deputy Editor-in-Chief of Springer\u2019s Biomedical Engineering Education and is a member of the Maine State Workforce Board and the National Academies\u2019 Roundtable on Systemic Change in Undergraduate STEM Education. Huang-Saad is also an American Institute for Medical and Biological Engineering Fellow. Prior to entering higher education, Huang-Saad worked in industry gaining experience in new venture biotech, the defense industry, and medical device testing. She has a Bachelor of Science in engineering from the University of Pennsylvania, a Doctor of Philosophy from the Johns Hopkins University School of Medicine, and a Master of Business Administration from University of Michigan Ross School of Business. Huang-Saad is the proud mom of two sons and is a fitness data fanatic. She and her husband enjoy long walks, hikes, and bike rides around Maine. Huang-Saad\u2019s current research areas are entrepreneurship, innovation, and transforming higher education. She has been funded by the NSF to explore the influence of the microenvironment of entrepreneurship education on minoritized populations, entrepreneurial ecosystems, and fostering graduate student professional development.",
+                    "expertise_1": null,
+                    "expertise_2": null,
+                    "expertise_3": null,
+                    "main_field": "Director of Life Sciences, Health, & Engineering; Associate Professor of Bioengineering",
+                    "projects": []
+                },
+                "Alan Jamieson": {
+                    "person_email": "a.jamieson@northeastern.edu",
+                    "person_phone": null,
+                    "bio": "Alan Jamieson is the director of computing programs and a teaching professor of computer science at the Roux Institute. Jamieson teaches courses in the Align program and the MSCS program for Khoury College of Computer Sciences. His research interests include broadening participation in computer science, K-12 computational thinking and data science education integration, and combinatorial graph theory. Jamieson has spent his career introducing computer science to students with varying backgrounds and experiences with technology \u2013 including cool and innovative pedagogical techniques whenever he can. Before joining Northeastern, Jamieson was a professor at St. Mary\u2019s College of Maryland for 14 years, which included serving as the computer science program coordinator and later, chair of the Department of Mathematics and Computer Science. At St. Mary\u2019s, he coordinated the development of a liberal arts focused data science program and worked to bring a multi-disciplinary fabrication lab to the college. He received his doctoral degree in computer science from Clemson University. He is a recipient of the National Center for Women and Information Technology\u2019s (NCWIT) Undergraduate Research Mentorship Award, named one of NCWIT\u2019s faculty ambassador, and he has been recognized for his service as a reviewer of the Aspirations in Computing Awards. In 2019, he was selected as a member of Amazon\u2019s inaugural AWS Educate Cloud Ambassador Program for his work integrating cloud computing concepts into the liberal arts classroom. In his free time Jamieson is a world-class consumer of coffee and donuts. He also has an eclectic non-CS background, including working as a jazz DJ in New Orleans and as a theatre kid for the Springer Opera House, the state theatre of Georgia. Jamieson is a world-class consumer of coffee and donuts and enjoys the opportunities that Maine provides on both accounts. As the director of computing programs, Jamieson provides oversight for the graduate programs provided by Northeastern\u2019s Khoury College of Computer Sciences. His teaching focuses on the theoretical and mathematical underpinnings of computer science, including Discrete Structures in the Align Program and Algorithms in the MSCS and MSDS programs. Jamieson also maintains active research pipelines in PreK-2 computational thinking integration and algorithmic development.",
+                    "expertise_1": null,
+                    "expertise_2": null,
+                    "expertise_3": null,
+                    "main_field": "Associate Dean of Computing Programs, East Coast - Khoury College",
+                    "projects": []
+                },
+                "Prashant Mittal": {
+                    "person_email": "p.mittal@northeastern.edu",
+                    "person_phone": null,
+                    "bio": "Prashant Mittal is an accomplished data scientist, professor, and consultant with extensive industry experience. Most recently, he was Data Science lead at Lincoln Financial Group, a Fortune company, where he managed a team of data scientists and leveraged natural language processing and statistical modeling to provide guidance on managing disability claims. In addition to his role at Lincoln Financial, Mittal was the lead professor of the Analytics and Data Science graduate program at the University of New Hampshire. Over two decades of teaching at four universities, he taught numerous courses in machine learning, statistics, programming, health analytics, bioinformatics, and data applications. With extensive experience as an analytics consultant, Mittal has worked across various industries, including retail, insurance, fitness and healthcare. He has a strong background in healthcare and population health, working with large hospital systems and grants from the Center for Disease Control and Prevention (CDC) and the Robert Wood Johnson Foundation (RWJF). He is adept at analyzing healthcare claims data, electronic health records, and national public health surveillance data. A prolific writer, Mittal is the co-author of multiple journal articles and reports on research in public health, education, and business.",
+                    "expertise_1": null,
+                    "expertise_2": null,
+                    "expertise_3": null,
+                    "main_field": "Professor of the Practice and Director of Professional Programs",
+                    "projects": []
+                },
+                "Tracey Spinato": {
+                    "person_email": "t.spinato@northeastern.edu",
+                    "person_phone": null,
+                    "bio": "Tracey Spinato is the Director for Experiential Education at the Roux Institute. In her role, Spinato leads the Experiential Learning Team and is responsible for the development and oversight of experiential education opportunities for learners across all academic programming. Spinato and her team work with learners and industry partners to generate mutually beneficial and dynamic opportunities through cooperative education (co-op), experiential network projects (XNs), Working Labs, and full time talent solutions. Before joining the Roux Institute, Spinato spent over a decade at the intersection of social work, public health, and higher education, bringing a multidisciplinary perspective to her current role. She holds a Master of Public Health from Tulane University School of Public Health and Tropical Medicine, a Master of Social Work from Tulane University School of Social Work, and a Bachelor of Arts in Literature from Ramapo College.",
+                    "expertise_1": null,
+                    "expertise_2": null,
+                    "expertise_3": null,
+                    "main_field": "Director for Experiential Education",
+                    "projects": []
+                },
+                "Winifred Lee Dickinson": {
+                    "person_email": "wi.dickson@northeastern.edu",
+                    "person_phone": null,
+                    "bio": "Winifred Lee Dickson (Lee) is a Part-Time Lecturer in the College of Professional Studies\u2019 Master of Science in Project Management Program at the Roux Institute. With over 30 years of experience in technology roles for financial services companies, Lee has been a practicing project manager across a number of project areas including application development, infrastructure upgrades, client on boarding and company acquisitions. She holds a PMP and finds it challenging and rewarding to apply project management principles as embodied in the PMBOK (\u201cthe right way to do projects\u201d) to the real world of competitive enterprise (\u201cjust get it done!\u201d). She earned her MBA from Babson College with a concentration in Information Technology Management and a BA in mathematics from The College of the Holy Cross. Lee recently moved to Maine where she and her husband enjoy kayaking, hiking and golf in the summer and have begun to dabble in winter snowshoeing.",
+                    "expertise_1": null,
+                    "expertise_2": null,
+                    "expertise_3": null,
+                    "main_field": "Part-Time Lecturer",
+                    "projects": []
+                },
+                "Margaret Herrick": {
+                    "person_email": "m.herrick@northeastern.edu",
+                    "person_phone": null,
+                    "bio": "Margaret Herrick is a Recruitment & Engagement Manager at The Roux Institute. In her role, Margaret creates personalized opportunities for prospective students to learn about Northeastern\u2019s graduate programs. She received her Bachelor of Science in Health Science from Saint Michael\u2019s College in Colchester, Vermont. In her undergraduate program, Margaret also minored in Sociology and was very involved in her college\u2019s volunteer organization as a student leader, mentor, and event coordinator. Margaret is a Maine native and in her free time, she enjoys crocheting, skiing, and gardening.",
+                    "expertise_1": null,
+                    "expertise_2": null,
+                    "expertise_3": null,
+                    "main_field": "Recruitment & Engagement Manager",
+                    "projects": []
+                },
+                "Tessa Ruszala": {
+                    "person_email": "t.ruszala@northeastern.edu",
+                    "person_phone": null,
+                    "bio": "Tessa Ruszala is a front desk assistant at the Roux Institute. Originally from Connecticut, Ruszala received her Bachelor of Science in statistics from the University of Vermont. After graduating, she worked at Wayfair in Boston for five years focusing on image metadata strategy. Most recently, Ruszala was a digital product manager for a small start-up. She\u2019s called Portland home for the last two years but had grown up visiting Moosehead Lake as a kid. In her spare time she enjoys trying new restaurants and DIYing.",
+                    "expertise_1": null,
+                    "expertise_2": null,
+                    "expertise_3": null,
+                    "main_field": "Front Desk Assistant",
+                    "projects": []
+                },
+                "Brian Cavallaro": {
+                    "person_email": "b.cavallaro@northeastern.edu",
+                    "person_phone": null,
+                    "bio": "Brian Cavallaro is the IT Support Specialist at the Roux Institute. Cavallaro has worked in different parts of the IT support world since 2005 from working for many years as a Creative & Genius at the Apple Store to going off on his own as a personal computer and tech consultant. Most recently, he worked for a small online software company supporting each customer and keeping everything working smoothly. Cavallaro graduated from Rockport College in 2005 with a degree in writing & directing film. He is a huge film fanatic and loves to play video games. His favorite thing to do in life is learn and experience new things.",
+                    "expertise_1": null,
+                    "expertise_2": null,
+                    "expertise_3": null,
+                    "main_field": "IT Support Specialist",
+                    "projects": []
+                },
+                "Berkeley Almand-Hunter": {
+                    "person_email": "b.almand-hunter@northeastern.edu",
+                    "person_phone": null,
+                    "bio": "Dr. Berkeley Almand-Hunter is the Technical Director of Partner Products at Northeastern University\u2019s Roux Institute. In this role, she works with partner organizations to understand their data maturity and learning opportunities. She also leads course design and strategic planning to build high-quality, impactful experiences. She is currently conducting a workforce learning advisory for a partner organization, using her findings to develop a two-year learning plan to upskill over a thousand employees in Analytics and AI. Previously, Dr. Almand-Hunter lectured in the College of Professional Studies, where she designed and taught graduate-level courses in analytics. She has taught courses in Machine Learning, Data Visualization, Statistics, Data-Driven Decision Making, and Prompt Engineering. Before joining the Roux Institute, Dr. Almand-Hunter was a data scientist at Square in San Francisco. In this role, she supported all data needs for the Capital Partnerships team, including determining which partner data could be used in underwriting, working with engineering teams to store the data, building ETLs to make the data accessible for analytics, developing ML underwriting models, building dashboards to track loan origination and repayment, and collaborating with key stakeholders to make data-driven decisions. Dr. Almand-Hunter holds a Ph.D. in Mechanical Engineering from the University of Colorado and BS and MS degrees in Mechanical Engineering from Colorado School of Mines. She fell in love with data science while building machine learning models to calibrate low-cost ozone sensors as part of her graduate research. She lives in Hallowell, ME with her husband and two young children.",
+                    "expertise_1": null,
+                    "expertise_2": null,
+                    "expertise_3": null,
+                    "main_field": "Technical Director of Partner Products",
+                    "projects": []
+                },
+                "Enrico Bertini": {
+                    "person_email": "e.bertini@northeastern.edu",
+                    "person_phone": null,
+                    "bio": "Enrico Bertini is an associate professor at Northeastern University, holding a joint appointment with the College of Arts, Media, and Design and Khoury College of Computer Sciences. Bertini works on data visualization interfaces to help people make sense of the world through data. In recent years, his work has focused on the use of visual interfaces to explore, validate, and understand machine learning models and systems. His research also aims to advance the theoretical and empirical understanding of how people extract information and meaning from visual representations. In 2006, Bertini earned a doctorate in computer engineering from the University of Rome La Sapienza, in his hometown of Rome. Between 2006-2012, he was a research scientist at the University of Fribourg, Switzerland and at the University of Konstanz, Germany. In 2012, he joined the NYU School of Engineering as an assistant professor; he was promoted to the rank of associate professor in 2018. Bertini is the co-host of Data Stories , a popular podcast series that discusses the role of data in everyday life.",
+                    "expertise_1": null,
+                    "expertise_2": null,
+                    "expertise_3": null,
+                    "main_field": "Associate Professor",
+                    "projects": []
+                },
+                "Ryan Bockmon": {
+                    "person_email": "r.bockmon@northeastern.edu",
+                    "person_phone": null,
+                    "bio": "Ryan Bockmon is an assistant teaching professor at the Roux Institute. Bockmon teaches machine learning, data science, data mining, computer vision and introductory computing. His research interests include computer science education, augmented reality, mixed reality, experimental design, and instrument validation. Bockmon completed his PhD in Computer Science from the University of Nebraska \u2013 Lincoln and his bachelor\u2019s also in Computer Science from Montana State University. When not teaching, he enjoys hiking, fishing, woodworking, gardening, and painting.",
+                    "expertise_1": null,
+                    "expertise_2": null,
+                    "expertise_3": null,
+                    "main_field": "Assistant Teaching Professor, Khoury College",
+                    "projects": []
+                },
+                "Philip Bogden": {
+                    "person_email": "p.bogden@northeastern.edu",
+                    "person_phone": null,
+                    "bio": "Philip Bogden is Associate Teaching Professor of Computer Science, specializing in data visualization, data science, web technologies and AI/ML. Bogden has startup experience and has consulted for a range of clients, including companies in the oil and gas industry and the financial services sector. He was previously CEO of a nonprofit that provided real-time environmental data as a public service, and he spent two years helping develop and implement open data policy and cyberinfrastructure for the National Science Foundation. Philip previously served on the faculty at Yale and UConn, and he has a Ph.D. from University of California and a Bachelors from Harvard.",
+                    "expertise_1": null,
+                    "expertise_2": null,
+                    "expertise_3": null,
+                    "main_field": "Associate Teaching Professor, Computer Science",
+                    "projects": []
+                },
+                "Michelle Borkin": {
+                    "person_email": "m.borkin@northeastern.edu",
+                    "person_phone": null,
+                    "bio": "Michelle Borkin is an associate professor at the Khoury College of Computer Sciences at Northeastern University. Borkin earned her doctorate and master\u2019s in applied physics, as well as her bachelor\u2019s in astronomy, astrophysics, and physics from Harvard University. Borkin works on the development of novel visualization techniques and tools to enable new insights and discoveries in data. She works across disciplines to bring together computer scientists, doctors, and astronomers to collaborate on new analysis and visualization techniques. Her research resulted in the development of novel computer assisted diagnostics in cardiology, scalable visualization solutions for large network data sets, and novel astrophysical visualization tools and discoveries. Prior to joining Northeastern, Borkin was a postdoctoral research fellow in computer science at the University of British Columbia, an associate in computer science at Harvard University, and a research fellow at Brigham & Women\u2019s Hospital. She was previously a National Science Foundation graduate research fellow, a National Defense Science and Engineering graduate fellow, and a TED fellow.",
+                    "expertise_1": null,
+                    "expertise_2": null,
+                    "expertise_3": null,
+                    "main_field": "Associate Professor, Khoury College",
+                    "projects": []
+                },
+                "Tim Breton": {
+                    "person_email": "timothy.breton@maine.edu",
+                    "person_phone": null,
+                    "bio": "Tim Breton is an associate professor of biology at the University of Maine at Farmington (UMF). Breton has expertise in comparative genomics and fish physiology, publishing papers related to oocyte development, sex change in fish, and novel hormone receptor characterizations, as part of the Maine-INBRE program. At UMF, Breton teaches anatomy and physiology, developmental biology, and basic bioinformatics. He has been involved in several educational initiatives across Maine and beyond, including student research experiences in the Howard Hughes Medical Institute SEA-PHAGES program and the Maine-eDNA grant.",
+                    "expertise_1": null,
+                    "expertise_2": null,
+                    "expertise_3": null,
+                    "main_field": "Affiliate Faculty, University of Maine at Farmington",
+                    "projects": []
+                },
+                "Gary Cantrell": {
+                    "person_email": "g.cantrell@northeastern.edu",
+                    "person_phone": null,
+                    "bio": "Gary Cantrell is an associate teaching professor at the Roux Institute where he is currently teaching in Northeastern\u2019s Align program, and has been focusing on course development and building student community at the Roux Institute. Cantrell\u2019s first academic position was at Utah Tech University in St. George, UT. During this time he was instrumental in establishing their Computer Crime Institute (originally a grant-funded organization providing academic programs, law enforcement training, and digital forensic examinations). There he served as academic coordinator and primary faculty for their academic and police training mission. After reaching tenure at this university, Cantrell decided to expand out from digital forensics and searched for an opportunity teaching in core computer science. This prompted a move to Southern Utah University and from there to his current appointment at the Roux Institute. In his spare time Cantrell enjoys collecting hobbies. Some of his strongest obsessions include fiber arts, halloween prop building, and soap making. He believes it is important to find a balance between the proverbial right and left brain. In fact, he is also a licensed massage therapist. He currently lives in Portland, ME with his husband and two weirdo cats. Cantrell is currently focused on teaching graduate courses within the Align program, such as Computational Thinking and Object Oriented Design as well as Information Security, Digital Forensics, and Software Engineering. He is also currently working toward the establishment of project-based courses in support of the mission at the Roux Institute.",
+                    "expertise_1": null,
+                    "expertise_2": null,
+                    "expertise_3": null,
+                    "main_field": "Director of Computing Programs, Associate Teaching Professor",
+                    "projects": []
+                },
+                "Salli Cheever": {
+                    "person_email": "s.cheever@northeastern.edu",
+                    "person_phone": null,
+                    "bio": "Salli Cheever is a lecturer at the Roux Institute. Cheever teaches Quality Systems and Validation for the biotechnology department. She has a 20+ year career in compliance with a focus on Quality Systems and Regulatory Affairs. Cheever has a MS in Regulatory Affairs from Northeastern University. She is currently enjoying working for a Software as a Medical Device (SaMD) start-up and has lived in Maine most of her life. Cheever is excited about the future of the Life Sciences industries in New England and is happy to be a part of the growth via the Roux Institute.",
+                    "expertise_1": null,
+                    "expertise_2": null,
+                    "expertise_3": null,
+                    "main_field": "Lecturer, Biotechnology",
+                    "projects": []
+                },
+                "Matteo Chinazzi": {
+                    "person_email": "m.chinazzi@northeastern.edu",
+                    "person_phone": null,
+                    "bio": "Matteo Chinazzi is a research associate professor at the Roux Institute and core faculty at the Network Science Institute . His research lies at the intersection of network science, data science, epidemiology, economics, and artificial intelligence. His work primarily focuses on improving the modeling of socio-technical-economic systems by leveraging large-scale, data-driven, behaviorally informed, analytical, and computational frameworks to assist policy and decision-making in various public and private contexts. Chinazzi holds a PhD in economics from Sant\u2019Anna School of Advanced Studies (Pisa, Italy), an M.Sc. in economics and social sciences from Bocconi University, and an undergraduate degree in economics (CLEMIT) from Bocconi University. Chinazzi\u2019s most recent work focuses on developing large-scale, data-driven computational models to study and forecast the spatial spread of infectious diseases; building near real-time epidemic intelligence solutions that combine mechanistic modeling approaches and deep learning frameworks; and analyzing individual level data to study the social determinants of health and the interplay between public health policies and economic outcomes. Furthermore, he is the lead developer of the current version of the Global Epidemic and Mobility model (GLEAM, https://www.gleamproject.org ) and the coordinator of the Network Science Institute COVID-19 Mobility project ( http://covid19.gleamproject.org/mobility ).",
+                    "expertise_1": null,
+                    "expertise_2": null,
+                    "expertise_3": null,
+                    "main_field": "Research Associate Professor",
+                    "projects": []
+                },
+                "Aleksandar Diamond-Stanic": {
+                    "person_email": "a.diamond-stanic@northeastern.edu",
+                    "person_phone": null,
+                    "bio": "Aleks Diamond-Stanic (he/him) is a Visiting Associate Professor at the Roux Insititute. Diamond-Stanic is on a year-long sabbatical from Bates College, where he is an Associate Professor in the Department of Physics & Astronomy. He received a BA in Physics from Carleton College and a PhD in Astronomy from the University of Arizona. Diamond-Stanic was a Center for Galaxy Evolution Fellow at the University of California, San Diego and a Grainger Postdoctoral Fellow at the University of Wisconsin-Madison before coming to Maine. Diamond-Stanic\u2019s research focuses on the evolution of galaxies and the growth of supermassive black holes through cosmic time, using data from ground- and space-based telescopes. He is excited about connections with the Roux\u2019s research, education, and partnerships programs in areas such as data science, data visualization, machine learning, and artificial intelligence. He also enjoys spending time with family and playing tennis and ultimate frisbee.",
+                    "expertise_1": null,
+                    "expertise_2": null,
+                    "expertise_3": null,
+                    "main_field": "Affiliate Faculty",
+                    "projects": []
+                },
+                "Elyse Doyle": {
+                    "person_email": "e.doyle@northeastern.edu",
+                    "person_phone": null,
+                    "bio": "Elyse Doyle is a senior project manager at Energy Dome where she is the project manager for the first CO2 Battery system in the United States to be deployed at Alliant Energy in Wisconsin. Elyse has experience working closely with customers to define technical and strategic contract requirements and reflect them into a comprehensive project plan. Elyse works closely with Energy Dome\u2019s team of specialized engineers and travels to the company\u2019s headquarters in Milan, Italy on a regular basis. Elyse has over seven years of experience managing projects, teams and customers as a project manager and consultant for a variety of energy projects. She has developed program lifecycle value stream maps, built dynamic project schedules and managed an energy database from data intake to analysis and reporting on energy savings. Elyse received her MA in economics and BA in financial economics from the University of Maine. During her time in graduate school, she taught and tutored undergraduate microeconomics students. Elyse also holds a Project Management Professional (PMP) certification from the Project Management Institute.",
+                    "expertise_1": null,
+                    "expertise_2": null,
+                    "expertise_3": null,
+                    "main_field": "Lecturer, Project Management",
+                    "projects": []
+                },
+                "Jennifer Dy": {
+                    "person_email": "j.dy@northeastern.edu",
+                    "person_phone": null,
+                    "bio": "Dr. Jennifer G. Dy is a professor at the Department of Electrical and Computer Engineering, Northeastern University, Boston, MA, since 2002. She obtained her MS and PhD in 1997 and 2001 respectively from the School of Electrical and Computer Engineering, Purdue University, West Lafayette, IN, and her BS degree in 1993 from the Department of Electrical Engineering, University of the Philippines. She received an NSF Career award in 2004. She is an editorial board member for the journal, Machine Learning since 2004, publications chair for the International Conference on Machine Learning in 2004, and program committee member for ICML, ACM SIGKDD, AAAI, and SIAM SDM. Her research interests include Machine Learning, Data Mining, Statistical Pattern Recognition, and Computer Vision.",
+                    "expertise_1": null,
+                    "expertise_2": null,
+                    "expertise_3": null,
+                    "main_field": "Director of Experiential AI Postdoc Education; Professor, Electrical and Computer Engineering",
+                    "projects": []
+                },
+                "Brianna Dym": {
+                    "person_email": "b.dym@northeastern.edu",
+                    "person_phone": null,
+                    "bio": "Dr. Brianna Dym is an Assistant Teaching Professor at the Roux Institute. As someone who came to computer science through non-traditional means, Dym focuses her research on broadening participation in computing for people from underrepresented groups. She approaches computer science from a human-centered computing perspective and hopes to empower learners across all ranges of computer science to truly take ownership of the discipline.",
+                    "expertise_1": null,
+                    "expertise_2": null,
+                    "expertise_3": null,
+                    "main_field": "Assistant Teaching Professor, Computer Science",
+                    "projects": []
+                },
+                "Cliff Forlines": {
+                    "person_email": "c.forlines@northeastern.edu",
+                    "person_phone": null,
+                    "bio": "Clifton Forlines is an associate research professor focusing on developing and evaluating novel interaction and visualization techniques on tradition and emerging hardware platforms. His research lies in the field of Human-Computer Interaction with a focus on the relationship between input and visual data manipulation to support data-insight and decision-making. The work relies on close collaborations with experts in other disciplines and institutions, and on an understanding of not only computer science and engineering but also human cognition and perception. Endeavors at the Roux Institute include understanding and taking advantage of advancements in display technology to support AR/VR, low-cost physiological sensing of users to understand emotional and cognitive state, and presentation methods for predictions made with advanced ML techniques. He received his PhD from the University of Toronto where his thesis work focused on presentation techniques to improve visual search. He received a master\u2019s in human-computer interaction and a master\u2019s in entertainment technology from Carnegie Mellon University, along with an BFA in industrial design. His employment background spans academic and industrial research, government contracting, and start-up environments. Prior to joining Northeastern, Forlines worked as a research scientist at the Mitsubishi Electric Research Laboratories before joining Draper Laboratory where he became the leader of the Human Centered Engineering group. Most recently, Forlines founded and ran a startup company focused on hardware and software human-sensing systems. Forlines lives just south of Portland and feels lucky to have ended up both 10 minutes from downtown and 10 minutes to some of the best trails and beaches southern Maine has to offer. Forlines works within the Roux Institute\u2019s Human-Data Interaction team to design and build sensing and presentation systems with research and industry partners. Recent efforts have focused on inexpensively understanding user\u2019s cognitive and emotional states and in better presenting the output of computational medicine algorithms to decision-makers in healthcare.",
+                    "expertise_1": null,
+                    "expertise_2": null,
+                    "expertise_3": null,
+                    "main_field": "Research Associate Professor",
+                    "projects": []
+                },
+                "Dustin Garvey": {
+                    "person_email": "d.garvey@northeastern.edu",
+                    "person_phone": null,
+                    "bio": "Dustin Garvey, PhD is a machine learning lecturer at the Roux Institute. Dr. Garvey received his PhD in Nuclear Engineering from the University of Tennessee. He has held various contributor and management roles in applied machine learning research at Fortune 500 and startup companies. He is currently the Chief Data Officer at WEVO, a Boston based startup in user experience research.",
+                    "expertise_1": null,
+                    "expertise_2": null,
+                    "expertise_3": null,
+                    "main_field": "Lecturer, Analytics",
+                    "projects": []
+                },
+                "Reem Gohar": {
+                    "person_email": "r.gohar@northeastern.edu",
+                    "person_phone": null,
+                    "bio": "Reem Gohar is a PMP certified and results-driven professional with 23 years of experience at Bear River, San Mateo County, Walmart.com, IBM, Agilent Technologies and the US Government. She has worked for the US Government and has also worked in the private sector. She has worked in a broad range of industries (software development, e-commerce, IT, Education, Wireless and Telecommunications), and has expertise that includes people management, business development, data analysis, strategic planning, cross-functional leadership, partnership development, project management, program management, mentorship and education. Reem has a doctorate degree in Business Administration. She also has two Master\u2019s degrees, one in Electrical engineering and an MBA and that made her bridge the gap between the technical and the business worlds. She has over 14 years of teaching experience. On a personal note, Reem is a well diverse person who got exposed to more than one culture and that made her more accepting of differences. She believes that diversity is synergy and she respects and understands other opinions even if they are different from hers.",
+                    "expertise_1": null,
+                    "expertise_2": null,
+                    "expertise_3": null,
+                    "main_field": "Assistant Teaching Professor, Project Management",
+                    "projects": []
+                },
+                "Umesh Hodeghatta": {
+                    "person_email": "u.hodeghatta@northeastern.edu",
+                    "person_phone": null,
+                    "bio": "Umesh R. Hodeghatta is an engineer, a scientist, and an educator. He is a faculty member at Northeastern University specializing in analytics, AI, machine learning, deep learning, natural language processing (NLP), big data analytics, and cyber security. He is also a data science/AI practitioner and consulting advisor to various organizations, including Walmart, United Health Group, AT &T, Greenwich.HR, ThoughtData, etc. He has over 25 years of work experience in technical and senior management positions at AT&T Bell Laboratories, Cisco Systems, McAfee, and Wipro. He was also a faculty member at Kent State University, Kent, Ohio, and Xavier Institute of Management, Bhubaneswar, India. He has a master\u2019s degree in electrical and computer engineering (ECE) from Oklahoma State University, USA and a PhD from the Indian Institute of Technology (IIT), Kharagpur. Hodeghatta has published many journal articles in international journals and conference proceedings. In addition, he has authored books titled \u201cPractical Business Analytics Using R and Python\u201d and \u201cThe InfoSec Handbook: An Introduction to Information Security,\u201d published by Springer Apress. Furthermore, Hodeghatta has contributed his services to many professional organizations and regulatory bodies. He was an executive committee member of IEEE Computer Society (India); academic advisory member for the Information and Security Audit Association (ISACA), USA; IT advisor for the government of India; technical advisory member of the International Neural Network Society (INNS) India; and advisory member of Task Force on Business Intelligence & Knowledge Management. He is listed in Who\u2019s Who in the World in the year 2012, 2013, 2014, 2015 and 2016. He is also a senior member of the IEEE, USA. Further details about Hodeghatta are available at http://www.mytechnospeak.com Hodeghatta was instrumental in setting up a high-speed optical network, with the integration of telephony and data, for the Xavier University campus. He designed the data center and set up a digital university. In his free time, he loves playing golf, flying airplanes, and nature photography. Hodeghatta\u2019s research interests are in applying AI and deep learning techniques to solve cyber security challenges and social and economic problems in agriculture, health sciences, etc. Recently, he received grants from NASA Spaceport for a utonomous UAVs for crop monitoring in the state of Maine.",
+                    "expertise_1": null,
+                    "expertise_2": null,
+                    "expertise_3": null,
+                    "main_field": "Faculty, CPS",
+                    "projects": []
+                },
+                "John Houser": {
+                    "person_email": "j.houser@northeastern.edu",
+                    "person_phone": null,
+                    "bio": "John Houser is a lecturer in the College of Professional Studies at Northeastern University. He earned his MBA from Haslam College of Business at the University of Tennessee, and his bachelor\u2019s in computer science from the University of Southern Maine.",
+                    "expertise_1": null,
+                    "expertise_2": null,
+                    "expertise_3": null,
+                    "main_field": "Lecturer, Project Management",
+                    "projects": []
+                },
+                "Lindsay Jamieson": {
+                    "person_email": "l.jamieson@northeastern.edu",
+                    "person_phone": null,
+                    "bio": "Lindsay Jamieson is a teaching professor for Khoury College at the Roux Institute. She is also the coordinator for K-12 CS education for Khoury College. Her teaching is primarily in the MSCS and MSDS Align programs. Her research is in K-12 CS education with a focus on increasing diversity and equity within the computer science field. Prior to joining Northeastern and the Roux Institute, Jamieson was an associate professor of computer science at St. Mary\u2019s College of Maryland in St. Mary\u2019s City, Maryland where she worked for 14 years. Jamieson earned her PhD in computer science from Clemson University and her Bachelor of Arts in computer science and mathematics from DePauw University. She is the chair of the ACM-W North America Executive Committee and a member of CSTA-Maine. Jamieson lives in Scarborough with her husband, two daughters and two cats. She enjoys being minutes from the beach and able to go to the ocean no matter the season.",
+                    "expertise_1": null,
+                    "expertise_2": null,
+                    "expertise_3": null,
+                    "main_field": "Associate Dean for Teaching Faculty, Khoury College",
+                    "projects": []
+                },
+                "Andrew Kinley": {
+                    "person_email": "a.kinley@northeastern.edu",
+                    "person_phone": null,
+                    "bio": "Andrew Kinley is a full-time assistant teaching faculty in the College of Professional Studies teaching graduate analytics. Prior to joining the Roux Institute, he earned a Ph.D. in computer science from Indiana University before teaching computer science at both the Rose-Hulman Institute of Technology and Fordham University. His research was focused on solving problems by utilizing past solutions as a starting point and adapting them to the new scenario. Kinley was raised and educated in a small Maine town and after time away returned to do the same with his three children. He has twice led groups through the 100-mile wilderness, seen the puffins on Eastern Egg Rock, and understands the value of an occasional Moxie. Kinley teaches numerous courses in the Analytics program and is a fixture of the Introduction to Analytics course. Areas that he enjoys teaching include the R Programming Language, the Python Programming Language, Big Data, and optimization. He attempts to incorporate real-world data into his course whenever possible and is always on the lookout for new data.",
+                    "expertise_1": null,
+                    "expertise_2": null,
+                    "expertise_3": null,
+                    "main_field": "Assistant Teaching Faculty",
+                    "projects": []
+                },
+                "Jack Lesko": {
+                    "person_email": "j.lesko@northeastern.edu",
+                    "person_phone": null,
+                    "bio": "Jack Lesko is the director of engineering research at the Roux Institute. He is also a professor in Northeastern\u2019s College of Engineering, in the Departments of Civil and Environmental Engineering and Mechanical and Industrial Engineering. He also serves on the Board of Directors for the Maine Manufacturing Extension Partnership. Lesko helps build the institute\u2019s engineering research enterprise, focusing on industry partnerships, translational research, and technology development to grow the technology economy in Portland, throughout Maine, and across the Northeast. Lesko came to the Roux Institute from Virginia Tech, where he was the Rolls-Royce Commonwealth Professor of Mechanical Engineering. His research and development work focused on materials development and manufacturing, and his work contributed to new composite technologies for highway bridges, desalination membranes, and components in extreme environments. He also served at Virginia Tech as the associate dean for research and graduate studies and as a special assistant to the vice president of research. In September 2021, he was honored by Virginia Tech with the title of professor emeritus of mechanical engineering. An entrepreneur himself, Lesko co-founded PowerHub Systems, an energy storage company acquired by Fermata Energy. He was a co-principal investigator for the NSF I-Corps Mid-Atlantic Regional Node (DC I-Corps). He uses his startup experience to help other companies innovate their products and businesses to address customer pain points and value propositions. He earned his PhD and Master of Science in engineering mechanics from Virginia Tech and his Bachelor of Science in mechanical engineering from the University of Maryland, College Park. Lesko lives in Portland, ME and loves anything water-related. He particularly enjoys coast sailing, diving, swimming, and fishing. Lesko\u2019s research and development work focuses on designing and creating new materials, and manufacturing methods and systems for products addressing societal needs. He also engages in physics-based and data analytic-driven designs, manufactured materials, and systems for increased durability and sustainably, that are safer, more efficient for their environments, and more suitable for their intended lifespan. His more recent work features advanced additive manufacturing and supply chain systems; he\u2019s collaborating with several Maine companies to scope and develop opportunities to automate and digitalize how to build resilience and increase capacity in their manufacturing processes.",
+                    "expertise_1": null,
+                    "expertise_2": null,
+                    "expertise_3": null,
+                    "main_field": "Director of Engineering Research",
+                    "projects": []
+                }
+            }
+        }
+    }
+}
