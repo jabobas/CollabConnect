@@ -37,10 +37,10 @@ CREATE TABLE Person (
     person_email VARCHAR(150),
     person_phone VARCHAR(30),
     bio TEXT,
-    expertise_1 VARCHAR(50),
-    expertise_2 VARCHAR(50),
-    expertise_3 VARCHAR(50),
-    main_field VARCHAR(50) NOT NULL,
+    expertise_1 VARCHAR(100),
+    expertise_2 VARCHAR(100),
+    expertise_3 VARCHAR(100),
+    main_field VARCHAR(100) NOT NULL,
     department_id BIGINT UNSIGNED,
     FOREIGN KEY (department_id) REFERENCES Department(department_id)
 );
@@ -57,7 +57,7 @@ CREATE TABLE Project (
     project_title VARCHAR(200) NOT NULL,
     project_description TEXT,
     leadperson_id BIGINT UNSIGNED,
-    tag_name VARCHAR(50),
+    tag_name VARCHAR(100),
     start_date DATE NOT NULL,
     end_date DATE,
     person_id BIGINT UNSIGNED NOT NULL,
@@ -73,7 +73,7 @@ CREATE TABLE Project (
 --  If a project is deleted, delete all associated workedon entries
 CREATE TABLE Project_Tag (
     project_id BIGINT UNSIGNED,
-    tag_name VARCHAR(50),
+    tag_name VARCHAR(100),
     PRIMARY KEY (project_id, tag_name),
     FOREIGN KEY (project_id) REFERENCES Project(project_id) ON DELETE CASCADE,
     FOREIGN KEY (tag_name) REFERENCES Tag(tag_name) ON DELETE CASCADE

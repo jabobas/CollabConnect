@@ -8,10 +8,10 @@ CREATE PROCEDURE InsertPerson(
     IN p_person_email VARCHAR(150),
     IN p_person_phone VARCHAR(15),
     IN p_bio TEXT,
-    IN p_expertise1 VARCHAR(50),
-    IN p_expertise2 VARCHAR(50),
-    IN p_expertise3 VARCHAR(50),
-    IN p_main_field VARCHAR(50),
+    IN p_expertise1 VARCHAR(100),
+    IN p_expertise2 VARCHAR(100),
+    IN p_expertise3 VARCHAR(100),
+    IN p_main_field VARCHAR(100),
     IN p_department_id BIGINT
 )
 BEGIN
@@ -44,10 +44,10 @@ CREATE PROCEDURE UpdatePerson(
     IN p_person_email VARCHAR(150),
     IN p_person_phone VARCHAR(11),
     IN p_bio TEXT,
-    IN p_expertise1 VARCHAR(50),
-    IN p_expertise2 VARCHAR(50),
-    IN p_expertise3 VARCHAR(50),
-    IN p_main_field VARCHAR(50),
+    IN p_expertise1 VARCHAR(100),
+    IN p_expertise2 VARCHAR(100),
+    IN p_expertise3 VARCHAR(100),
+    IN p_main_field VARCHAR(100),
     IN p_department_id BIGINT
 )
 BEGIN

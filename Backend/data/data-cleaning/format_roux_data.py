@@ -1,7 +1,19 @@
+"""
+Filename: format_roux_data.py
+Author: Lucas Matheson
+Edited by: Lucas Matheson
+Date: November 12, 2025
+
+The Roux Institute data (scraped by Wyatt) came back good and in a good format.
+However, to ensure that it can be inserted easily into the database using
+db_init.py, it needs to be formatted differently to match the insert 
+algorithm. 
+"""
+
 import json
 
 def format_data():
-    json_data = get_json_data("../data/roux_institute_data.json")
+    json_data = get_json_data("../data/unprocessed/roux_institute_data.json")
 
     institution = json_data['Institution']
     department = json_data['Department']
@@ -42,5 +54,5 @@ def get_json_data(file_path: str):
 
 if __name__ == "__main__":
     data = format_data()
-    with open("../data/post_formatting_roux_data.json", "w") as f:
+    with open("../data/processed/post_formatting_roux_data.json", "w") as f:
         json.dump(data, f, indent=4)
