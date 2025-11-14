@@ -1,9 +1,9 @@
 # Table of Contents
 
-- [Aubin](#name-1)
-- [Abbas](#name-2)
-- [Wyatt](#name-3)
-- [Lucas](#name-4)
+- [Aubin's Scraper](#aubin)
+- [Abbas's Scraper](#abbas)
+- [Wyatt's Scraper](#wyatt)
+- [Lucas's Scraper](#lucas)
 
 # Aubin
 
@@ -157,33 +157,32 @@ person and save it into a dictonary like such.
 This data structure allows easy inserts into the database through db_init and clear ownership for each dependancy. 
 
 ## Running usm-scraper
+Running usm-scraper is a straight forward process. First, cd into the backend and activate your
+python virtual enviornment. This should include all the dependancies to run the scraper if
+it was created while following the set up guide. If not refer to the README located in the root 
+directory of the backend folder to ensure all dependancies are downloaded and your python venv is
+set up properly. 
 
-    Running usm-scraper is a straight forward process. First, cd into the backend and activate your
-    python virtual enviornment. This should include all the dependancies to run the scraper if
-    it was created while following the set up guide. If not refer to the README located in the root 
-    directory of the backend folder to ensure all dependancies are downloaded and your python venv is
-    set up properly. 
-
-    Once the python virtual enviornment is active, cd into the scrapers file. While here, run
-    `python usm-scraper.py` While it runs, it will print each department that it is actively scraping. 
-    This process takes some time. Once it is finished, it will dump all the json into 
-    `backend/data/unprocessed/pre_cleaning_usm_data.json`
+Once the python virtual enviornment is active, cd into the scrapers file. While here, run
+`python usm-scraper.py` While it runs, it will print each department that it is actively scraping. 
+This process takes some time. Once it is finished, it will dump all the json into 
+`backend/data/unprocessed/pre_cleaning_usm_data.json`
 
 
 ## Cleaning the usm data
 
-    When running through the data, you will see some things that need to be cleaned. There are unicode's present in
-    some of the fields, phone numbers are often not formated consistently, and almost no one as expertise fields. Cleaning 
-    the data will fix this among other small data tweaks. To clean the data, cd out of scrapers using ` cd .. ` and 
-    cd into data, then cd into data-cleaning. This is where all the data cleaning scripts reside. Run 
-    `python usm_data_cleaning.py` to begin the cleaning process, which only takes a second. The cleaned data will be
-    saved into `backend/data/processed/post_cleaning_usm_data.json`
+When running through the data, you will see some things that need to be cleaned. There are unicode's present in
+some of the fields, phone numbers are often not formated consistently, and almost no one as expertise fields. Cleaning 
+the data will fix this among other small data tweaks. To clean the data, cd out of scrapers using ` cd .. ` and 
+cd into data, then cd into data-cleaning. This is where all the data cleaning scripts reside. Run 
+`python usm_data_cleaning.py` to begin the cleaning process, which only takes a second. The cleaned data will be
+saved into `backend/data/processed/post_cleaning_usm_data.json`
 
-    Something to note about the cleaning algorithm. When looking at the data after running the script, you'll notice
-    that the expertise and main field are still blank. This is because these are generated using the OpenAI API to take in a person's bio, department, and projects and generate these tags to best describe them from a set of tags it can use. This API is not free,
-    so it is commented out and skipped after it was ran once to get the production data.
-    
-    If you wish to see the expertise and main field generation, create an account through OpenAI and get an API key to use. You will 
-    need to pay OpenAI ~5-10 dollars to get enough credits to generate tags for everyone that was scraped. Once you have the key, you can define this key inside of your config.ini file. Then, uncomment the OpenAI generate methods in `usm_data_cleaning.py` and the file will generate all the tags. Please note this takes a significate amount of time to generate all the tags
+Something to note about the cleaning algorithm. When looking at the data after running the script, you'll notice
+that the expertise and main field are still blank. This is because these are generated using the OpenAI API to take in a person's bio, department, and projects and generate these tags to best describe them from a set of tags it can use. This API is not free,
+so it is commented out and skipped after it was ran once to get the production data.
+
+If you wish to see the expertise and main field generation, create an account through OpenAI and get an API key to use. You will 
+need to pay OpenAI ~5-10 dollars to get enough credits to generate tags for everyone that was scraped. Once you have the key, you can define this key inside of your config.ini file. Then, uncomment the OpenAI generate methods in `usm_data_cleaning.py` and the file will generate all the tags. Please note this takes a significate amount of time to generate all the tags
 
     
