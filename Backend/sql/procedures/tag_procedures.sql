@@ -4,12 +4,10 @@
 -- Edited by: Lucas Matheson
 -- Date: November 11, 2025
 
-DELIMITER $$
-
 CREATE PROCEDURE InsertIntoTag(IN TagName VARCHAR(50))
 BEGIN
     INSERT INTO Tag (tag_name) VALUES (TagName);
-END$$
+END;
 
 CREATE PROCEDURE InsertMultipleTags(
     IN Tag1 VARCHAR(50),
@@ -34,7 +32,7 @@ BEGIN
     IF Tag5 IS NOT NULL THEN
         INSERT INTO Tag (tag_name) VALUES (Tag5);
     END IF;
-END$$
+END;
 
 CREATE PROCEDURE UpdateTagName(
     IN OldTagName VARCHAR(50),
@@ -42,38 +40,36 @@ CREATE PROCEDURE UpdateTagName(
 )
 BEGIN
     UPDATE Tag SET tag_name = NewTagName WHERE tag_name = OldTagName;
-END$$
+END;
 
 CREATE PROCEDURE DeleteTag(IN TagName VARCHAR(50))
 BEGIN
     DELETE FROM Project_Tag WHERE tag_name = TagName;
     DELETE FROM Tag WHERE tag_name = TagName;
-END$$
+END;
 
 CREATE PROCEDURE DeleteTagSafe(IN TagName VARCHAR(50))
 BEGIN
     -- This procedure will fail if the tag is used in Project_Tag due to foreign key constraint
     DELETE FROM Tag WHERE tag_name = TagName;
-END$$
+END;
 
 CREATE PROCEDURE GetAllTags()
 BEGIN
     SELECT * FROM Tag;
-END$$
+END;
 
 CREATE PROCEDURE SelectTagByName(IN TagName VARCHAR(50))
 BEGIN
     SELECT * FROM Tag WHERE tag_name = TagName;
-END$$
+END;
 
 CREATE PROCEDURE GetTagCount()
 BEGIN
     SELECT COUNT(*) as tag_count FROM Tag;
-END$$
+END;
 
 CREATE PROCEDURE GetTagUsageCount(IN TagName VARCHAR(50))
 BEGIN
     SELECT COUNT(*) as usage_count FROM Project_Tag WHERE tag_name = TagName;
-END$$
-
-DELIMITER ;
+END;

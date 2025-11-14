@@ -1,7 +1,6 @@
 -- File: Backend/sql_queries/aubin/procedures/workedon_crud.sql
 -- Purpose: CRUD stored procedures for WorkedOn (MySQL 8.0).
 
-DELIMITER $$
 
 CREATE PROCEDURE sp_insert_workedon (
     IN p_person_id    BIGINT UNSIGNED,
@@ -18,7 +17,7 @@ BEGIN
         project_role = VALUES(project_role),
         end_date     = VALUES(end_date),
         notes        = VALUES(notes);
-END$$
+END;
 
 CREATE PROCEDURE sp_update_workedon_role (
     IN p_person_id    BIGINT UNSIGNED,
@@ -34,7 +33,7 @@ BEGIN
     WHERE person_id = p_person_id
       AND project_id = p_project_id
       AND start_date = p_start_date;
-END$$
+END;
 
 CREATE PROCEDURE sp_close_workedon (
     IN p_person_id  BIGINT UNSIGNED,
@@ -48,7 +47,7 @@ BEGIN
     WHERE person_id = p_person_id
       AND project_id = p_project_id
       AND start_date = p_start_date;
-END$$
+END;
 
 CREATE PROCEDURE sp_delete_workedon (
     IN p_person_id  BIGINT UNSIGNED,
@@ -60,7 +59,7 @@ BEGIN
     WHERE person_id = p_person_id
       AND project_id = p_project_id
       AND start_date = p_start_date;
-END$$
+END;
 
 CREATE PROCEDURE sp_get_workedon_for_project (
     IN p_project_id BIGINT UNSIGNED
@@ -75,7 +74,6 @@ BEGIN
     FROM WorkedOn w
     WHERE w.project_id = p_project_id
     ORDER BY w.start_date;
-END$$
+END;
 
-DELIMITER ;
 

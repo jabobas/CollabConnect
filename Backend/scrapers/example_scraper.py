@@ -1,3 +1,15 @@
+""" 
+Filename: example_scraper.py
+Author: Lucas Matheson
+Date: November 09, 2025
+
+The goal of this file was to scrape www.scraper.com to learn how to use
+beautiful soup to scrap a website. This was done following a tutorial
+which can be found here 
+https://medium.com/@joerosborne/intro-to-web-scraping-build-your-first-scraper-in-5-minutes-1c36b5c4b110
+"""
+
+
 # example-scraper.py
 # To run this script, paste `python example-scraper.py` in the terminal
 # https://www.w3schools.com/cssref/css_selectors.php for reference on CSS selectors, a great cheatsheet

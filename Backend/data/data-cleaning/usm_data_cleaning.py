@@ -166,27 +166,24 @@ def clean_phone_number(phone: str) -> str:
     # Remove any remaining non-numeric characters
     cleaned = re.sub(r"[^\d]", "", cleaned)
 
-    # Format the cleaned number as needed (e.g., (123) 456-7890)
+    # Format the cleaned number to ensure all phone numbers follow a strict formation 
+    # Example: "(123) 456-7890"
     if len(cleaned) == 10:
         cleaned = f"({cleaned[:3]}) {cleaned[3:6]}-{cleaned[6:]}"
 
     return cleaned
 
-
-
 if __name__ == "__main__":
 
-    path = Path("../data/pre_cleaning_usm_data.json")
+    path = Path("../unprocessed/pre_cleaning_usm_data.json")
     with path.open("r", encoding="utf-8") as f:
         data = json.load(f)
 
     # this will save all data that will be used to generate tags for expertise 1 to 3, along with a main field
     expertise_data = []
 
-
-
     # using the baseline loop from the print function to iterate through departments and people
-    # \u00a0 is a non-breaking space character, so we need to clean that out
+
     departments = data.get("departments", {})
     for dept_key, dept in departments.items():
         print(f"Department: {dept.get('department_name', dept_key)}")
@@ -197,7 +194,9 @@ if __name__ == "__main__":
         print(f"  Phone: {dept.get('department_phone', 'N/A')}")
         print()
         people = dept.get("people", {})
-        people_items = list(people.items())  # Create a snapshot before iterating
+        # Create a snapshot before iterating, we will be changing the data so creating a snapshot of this
+        # enables us to edit the data
+        people_items = list(people.items())  
 
         for person_name, person_data in people_items:
             print(f" Name: {person_name}")
@@ -216,7 +215,9 @@ if __name__ == "__main__":
             # \u00a0 is also found in the person key sometimes, so clean that too
             copy = person_name
             clean_name = clean_unicode_escapes(copy)
-            # Something was removed, update the key in the people dictionary
+            
+            # If the name after running through cleaning is different, then it needs to 
+            # be updated by updating the key in the people dictionary
             # This removes the object with the old key and adds it back with the new key
             if clean_name != person_name:
                 people[clean_name] = people.pop(person_name)
@@ -235,7 +236,6 @@ if __name__ == "__main__":
                     print(f"      Project {i}:")
                     print(f"        Title: {project.get('project_title', 'N/A')}")
                     if project.get("project_title"):
-                        # \u00a0 and \u00c2 can appear in titles too
                         project["project_title"] = clean_unicode_escapes(
                             project["project_title"]
                         )
@@ -270,9 +270,8 @@ if __name__ == "__main__":
             #     if i < 4:
             #         person_data[f"expertise_{i + 1}"] = tag.strip()
 
-            print()  # newline between people
-        print("-" * 60)  # separator between departments
-        print()
 
-    with open("../data/post_cleaning_usm_data.json", "w") as f:
+
+
+    with open("../processed/post_cleaning_usm_data.json", "w") as f:
         json.dump(data, f, indent=4)

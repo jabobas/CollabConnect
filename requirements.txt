@@ -1,9 +1,0 @@
-requests>=2.31.0
-beautifulsoup4>=4.12.0
-mysql-connector-python>=8.0.33
-Flask>=3.0.0
-Flask-MySQLdb>=2.0.0
-
-# LLM and NLP dependencies for expertise extraction
-transformers>=4.30.0
-torch>=2.0.0

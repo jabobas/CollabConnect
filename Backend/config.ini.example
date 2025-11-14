@@ -1,7 +1,11 @@
+[General]
+debug = True
+log_level = info
+
 [Database]
-db_host = 127.0.0.1
-db_port = 3306
-db_user = root
-db_password = YOUR_PASSWORD_HERE
 db_name = collab_connect_db
+db_user = root
+db_password = ** Put in your password here! **
+db_host = localhost
+db_port = 3306
 db_cursorclass = DictCursor

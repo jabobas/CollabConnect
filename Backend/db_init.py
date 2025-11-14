@@ -1,7 +1,4 @@
 import json
-
-# Todo: research the implications of using two different cursors in a flask project
-#       Or how to do it properly
 import MySQLdb
 from app import app, mysql, config
 import re
@@ -22,139 +19,182 @@ then procedures, then insert all the scraped data found in the data folder.
 
 
 def check_db() -> bool:
+
+    original_db = app.config.get("MYSQL_DB")
+    
     try:
-        # temporarily set no DB to check for existence
+        # Temporarily set no DB to check for existence
         app.config["MYSQL_DB"] = None
 
         with app.app_context():
             cursor = mysql.connection.cursor()
-
-            db_exists = cursor.execute(
-                """SELECT SCHEMA_NAME
+            
+            try:
+                cursor.execute("""
+                    SELECT SCHEMA_NAME
                     FROM INFORMATION_SCHEMA.SCHEMATA
-                    WHERE SCHEMA_NAME = 'collab_connect_db';
-                """
-            )
+                    WHERE SCHEMA_NAME = %s
+                """, ('collab_connect_db',))
+                
+                db_exists = cursor.fetchone() is not None
 
-            # ToDo: this is improper and not robust, needs fixing
-            if db_exists == 1:
-                print("Database 'collab_connect_db' already exists")
-                app.config["MYSQL_DB"] = config.get(
-                    "Database", "db_name", fallback="collab_connect_db"
-                )
+                if db_exists:
+                    print("Database 'collab_connect_db' already exists")
+                    app.config["MYSQL_DB"] = config.get(
+                        "Database", "db_name", fallback="collab_connect_db"
+                    )
+                else:
+                    create_db()
+                    app.config["MYSQL_DB"] = config.get(
+                        "Database", "db_name", fallback="collab_connect_db"
+                    )
+                    print("Database 'collab_connect_db' created successfully")
 
-            else:
-                create_db()
-                print("Database 'collab_connect_db' checked/created successfully")
-
-            cursor.close()
-            return True
+                return True
+                
+            finally:
+                cursor.close()
 
     except Exception as e:
-        print("Database check/creation failed:", e)
-        print(
-            "Ensure that the MySQL server is running and the connection details are correct."
-        )
+        print(f"Database check/creation failed: {e}")
+        print("Ensure that the MySQL server is running and the connection details are correct.")
+        # Restore original config on failure
+        app.config["MYSQL_DB"] = original_db
         return False
 
 
 def create_db():
-
+    """Create database schema and initialize with tables, procedures, and data."""
     print("Creating database")
+    
     cursor = mysql.connection.cursor()
-    cursor.execute("CREATE SCHEMA collab_connect_db")
-    cursor.execute("USE collab_connect_db")
-    mysql.connection.commit()
-
+    
     try:
-        #  This will create all our tables
-        with open("./sql_queries/creation_scripts/1_create_all_tables.sql", "r") as f:
-            sql_script = f.read()
+        # Create database
+        cursor.execute("CREATE SCHEMA collab_connect_db")
+        cursor.execute("USE collab_connect_db")
+        mysql.connection.commit()
 
-            statements = sql_script.split(";")
-
-            # When doing all the tables at once, you end up with a
-            # Error creating tables: (2014, "Commands out of sync; you can't run this command now")
-            # So, split the create tables up into seperate statements, then execute
-            for statement in statements:
-                create_table = statement.strip()
-                if create_table:
-                    cursor.execute(create_table)
-
-            # Commit all the changes
-            mysql.connection.commit()
+        create_tables(cursor)
+        
+        create_procedures()
+        
+        insert_initial_data()
+        
+        create_indexes()
+        
     except Exception as e:
-        print("Error creating tables: ", {str(e)})
+        print(f"Error during database creation: {e}")
+        # Database creation failed, drop the schema as the db should not exist half complete
+        try:
+            cursor.execute("DROP SCHEMA IF EXISTS collab_connect_db")
+            mysql.connection.commit()
+            print("Rolled back partial database creation")
+        except Exception as cleanup_error:
+            print("Error during cleanup: ", cleanup_error)
         raise
     finally:
         cursor.close()
 
-    try:
-        create_procedures()
-    except Exception as e:
-        print("Error creating procedures: ", {str(e)})
-        raise
+
+def create_tables(cursor):
 
     try:
-        insert_initial_data()
+        with open("./sql/tables/create_all_tables.sql", "r") as f:
+            sql_script = f.read()
+
+        # Split by semicolon and execute each statement
+        statements = [stmt.strip() for stmt in sql_script.split(";") if stmt.strip()]
+
+        for statement in statements:
+            cursor.execute(statement)
+
+        mysql.connection.commit()
+        print("Tables created successfully")
+        
+    except FileNotFoundError:
+        print("Error: SQL script file not found at ./sql/tables/create_all_tables.sql")
+        raise
     except Exception as e:
-        print(f"Error inserting initial data: {str(e)}")
+        print(f"Error creating tables: {e}")
         raise
 
 
 def create_procedures():
+
     print("Creating stored procedures...")
+    
+    procedure_files = [
+        "./sql/procedures/department_procedures.sql",
+        "./sql/procedures/institution_procedures.sql",
+        "./sql/procedures/person_procedures.sql",
+        "./sql/procedures/project_procedures.sql",
+        "./sql/procedures/belongsto_crud.sql",
+        "./sql/procedures/project_tag_procedures.sql",
+        "./sql/procedures/tag_procedures.sql",
+        "./sql/procedures/workedon_crud.sql",
+    ]
+    
     cursor = mysql.connection.cursor()
-    procedures_file_paths = [
-        "./sql_queries/procedures/institution_procedures.sql",
-        "./sql_queries/procedures/department_procedures.sql",
-        "./sql_queries/procedures/person_procedures.sql",
-        "./sql_queries/procedures/project_procedures.sql",
-        "./sql_queries/procedures/belongsto_crud.sql",
-        "./sql_queries/procedures/project_tag_procedures.sql",
-        "./sql_queries/procedures/tag_procedures.sql",
-        "./sql_queries/procedures/workedon_crud.sql",
+    
+    try:
+        for file_path in procedure_files:
+            with open(file_path, "r") as f:
+                sql_script = f.read()
+            
+            # Find all CREATE PROCEDURE statements
+            pattern = r"CREATE\s+PROCEDURE[\s\S]*?END;"
+            procedures = re.findall(pattern, sql_script, flags=re.IGNORECASE)
+            
+            for procedure in procedures:
+                cursor.execute(procedure)
+                mysql.connection.commit()
+                
+    except Exception as e:
+        print(f"Error creating procedures: {e}")
+        raise
+    finally:
+        cursor.close()
+
+
+def create_indexes():
+    print("Creating indexes...")
+    cursor = mysql.connection.cursor()
+    index_file_paths = [
+        "./sql/indexes/belongsto_indexes.sql",
+        "./sql/indexes/department_indexes.sql",
+        "./sql/indexes/general_indexes.sql",
+        "./sql/indexes/person_indexes.sql",
+        "./sql/indexes/workedon_indexes.sql",
+        "./sql/indexes/worksin_indexes.sql",
     ]
     try:
-        for file_path in procedures_file_paths:
+        for file_path in index_file_paths:
             with open(file_path, "r") as f:
 
                 sql_script = f.read()
 
-                # some procedures have header comments, these should be ignored
-                # Remove single-line comments: -- comment
-                sql_script = re.sub(r"--.*", "", sql_script)
 
-                # Remove multi-line comments: /* comment */
-                sql_script = re.sub(r"/\*[\s\S]*?\*/", "", sql_script)
+            statements = sql_script.split(";")
 
-                # Remove DELIMITER statements (they're MySQL client commands, not SQL), my bad for saying you needed them
-                sql_script = sql_script.replace("DELIMITER $$", "").replace(
-                    "DELIMITER ;", ""
-                )
-            procedures = sql_script.split("CREATE PROCEDURE")
 
-            for curr in procedures:
-                if curr.strip():
-                    try:
-                        stmt = "CREATE PROCEDURE " + curr.strip()
-                        # Remove trailing $$ if present (replace with ;)
-                        stmt = stmt.rstrip("$").rstrip() + ";"
-                        cursor.execute(stmt)
-                        mysql.connection.commit()
-                    except Exception as e:
-                        print("Error creating procedure: ", {str(e)})
-                        print("Failed procedure: ", {stmt[:200]})
-                        raise
+            for statement in statements:
+                create_index = statement.strip()
+                if create_index:
+                    cursor.execute(create_index)
+
+            # Commit all the changes
+            mysql.connection.commit()
     finally:
         cursor.close()
+
 
 
 def insert_initial_data():
     print("Inserting initial data...")
     file_paths = [
-        "./data/post_cleaning_usm_data.json",
-        "./data/post_formatting_roux_data.json",
+        "./data/processed/post_cleaning_usm_data.json",
+        "./data/processed/post_formatting_roux_data.json",
     ]
     for path in file_paths:
         json_data = get_json_data(path)
@@ -323,46 +363,6 @@ def insert_initial_data():
             raise
         finally:
             cursor.close()
-
-
-# Some data needs formatting to be inserted using one method
-def format_data():
-    json_data = get_json_data("./data/roux_institute_data.json")
-    """ 
-    Example of Wyatt's data
-        "Institution": [
-        {
-        "institution_name": "Roux Institute at Northeastern University",
-        "institution_type": "Academic",
-        "street": null,
-        "city": "Portland",
-        "state": "ME",
-        "zipcode": null,
-        "institution_phone": null
-        }
-    ],
-    "Department": [
-        {
-        "institution_id": 1,
-        "department_name": "General Faculty and Staff",
-        "department_email": null,
-        "department_phone": null
-        }
-    ],
-    "Person": [
-        {
-        "person_name": "Eva Balog",
-        "person_email": null,
-        "person_phone": null,
-        "bio": "Dr. Balog is currently on a sabbatical appointment as a Visiting Associate Professor at the Roux Institute and a Life Sciences Fellow with the Institute for Experiential AI. She is an Associate Professor of Chemistry at the University of New England and an inaugural member of UNE\u2019s Portland Laboratory for Biotechnology and Health Sciences and the Center for Cell Signaling Research. Dr. Balog received her Ph.D. in Molecular, Cell, and Developmental Biology from the University of California, Santa Cruz, and completed postdoctoral training at Los Alamos National Laboratory\u2019s Center for Integrated Nanotechnologies. Dr. Balog\u2019s research is focused on the biophysical characterization of engineered proteins for biomaterials and biotechnology applications, with an especial interest in protein-based tools for the study and control of cellular activities.",
-        "expertise_1": null,
-        "expertise_2": null,
-        "expertise_3": null,
-        "main_field": "Visiting Associate Professor",
-        "department_id": null
-        },
-    """
-    print(json_data)
 
 
 def get_json_data(file_path: str):

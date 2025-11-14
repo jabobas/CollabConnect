@@ -3,7 +3,7 @@
 -- Author: Abbas Jabor
 -- Date: November 11, 2025
 
-DELIMITER $$
+
 
 CREATE PROCEDURE InsertIntoProject(
     IN ProjectTitle VARCHAR(200),
@@ -16,7 +16,7 @@ CREATE PROCEDURE InsertIntoProject(
 BEGIN
     INSERT INTO Project (project_title, project_description, leadperson_id, person_id, start_date, end_date)
     VALUES (ProjectTitle, ProjectDescription, LeadPersonID, PersonID, StartDate, EndDate);
-END$$
+END;
 
 CREATE PROCEDURE UpdateProjectDetails(
     IN ProjectID BIGINT UNSIGNED,
@@ -34,7 +34,7 @@ BEGIN
         start_date = StartDate,
         end_date = EndDate
     WHERE project_id = ProjectID;
-END$$
+END;
 
 CREATE PROCEDURE UpdateProjectTitle(
     IN ProjectID BIGINT UNSIGNED,
@@ -44,7 +44,7 @@ BEGIN
     UPDATE Project
     SET project_title = ProjectTitle
     WHERE project_id = ProjectID;
-END$$
+END;
 
 CREATE PROCEDURE UpdateProjectDescription(
     IN ProjectID BIGINT UNSIGNED,
@@ -54,7 +54,7 @@ BEGIN
     UPDATE Project
     SET project_description = ProjectDescription
     WHERE project_id = ProjectID;
-END$$
+END;
 
 CREATE PROCEDURE UpdateProjectLead(
     IN ProjectID BIGINT UNSIGNED,
@@ -64,7 +64,7 @@ BEGIN
     UPDATE Project
     SET leadperson_id = LeadPersonID
     WHERE project_id = ProjectID;
-END$$
+END;
 
 CREATE PROCEDURE UpdateProjectDates(
     IN ProjectID BIGINT UNSIGNED,
@@ -76,7 +76,7 @@ BEGIN
     SET start_date = StartDate,
         end_date = EndDate
     WHERE project_id = ProjectID;
-END$$
+END;
 
 CREATE PROCEDURE CompleteProject(
     IN ProjectID BIGINT UNSIGNED
@@ -85,37 +85,36 @@ BEGIN
     UPDATE Project
     SET end_date = CURDATE()
     WHERE project_id = ProjectID AND end_date IS NULL;
-END$$
+END;
 
 CREATE PROCEDURE DeleteProject(IN ProjectID BIGINT UNSIGNED)
 BEGIN
     DELETE FROM Project_Tag WHERE project_id = ProjectID;
     DELETE FROM Project WHERE project_id = ProjectID;
-END$$
+END;
 
 CREATE PROCEDURE GetAllProjects()
 BEGIN
     SELECT * FROM Project;
-END$$
+END;
 
 CREATE PROCEDURE SelectProjectByID(IN ProjectID BIGINT UNSIGNED)
 BEGIN
     SELECT * FROM Project WHERE project_id = ProjectID;
-END$$
+END;
 
 CREATE PROCEDURE SelectProjectsByPersonID(IN PersonID BIGINT UNSIGNED)
 BEGIN
     SELECT * FROM Project WHERE person_id = PersonID;
-END$$
+END;
 
 CREATE PROCEDURE SelectProjectsByLeadPersonID(IN LeadPersonID BIGINT UNSIGNED)
 BEGIN
     SELECT * FROM Project WHERE leadperson_id = LeadPersonID;
-END$$
+END;
 
 CREATE PROCEDURE SelectActiveProjects()
 BEGIN
     SELECT * FROM Project WHERE end_date IS NULL;
-END$$
+END;
 
-DELIMITER ;

@@ -3,8 +3,6 @@
 -- Author: Lucas Matheson
 -- Date: November 12, 2025
 
-DELIMITER $$
-
 CREATE PROCEDURE InsertIntoInstitution(
     IN InstitutionName VARCHAR(100),
     IN InstitutionType VARCHAR(50),
@@ -18,7 +16,7 @@ BEGIN
     INSERT INTO Institution (institution_name, institution_type, street, city, state, zipcode, institution_phone)
     VALUES (InstitutionName, InstitutionType, Street, City, State, Zipcode, InstitutionPhone);
     SELECT LAST_INSERT_ID() AS new_id;
-END$$
+END;
 
 CREATE PROCEDURE UpdateInstitutionDetails(
     IN InstitutionName VARCHAR(100),
@@ -38,7 +36,7 @@ BEGIN
         zipcode = Zipcode,
         institution_phone = InstitutionPhone
     WHERE institution_name = InstitutionName;
-END$$
+END;
 
 CREATE PROCEDURE UpdateInstitutionPhone(
     IN InstitutionName VARCHAR(100),
@@ -48,7 +46,7 @@ BEGIN
     UPDATE Institution
     SET institution_phone = NewPhone
     WHERE institution_name = InstitutionName;
-END$$
+END;
 
 CREATE PROCEDURE UpdateInstitutionType(
     IN InstitutionName VARCHAR(100),
@@ -58,7 +56,7 @@ BEGIN
     UPDATE Institution
     SET institution_type = NewType
     WHERE institution_name = InstitutionName;
-END$$
+END;
 
 CREATE PROCEDURE UpdateInstitutionAddress(
     IN InstitutionName VARCHAR(100),
@@ -74,19 +72,19 @@ BEGIN
         state = NewState,
         zipcode = NewZipcode
     WHERE institution_name = InstitutionName;
-END$$
+END;
 
 CREATE PROCEDURE DeleteInstitution(IN InstitutionName VARCHAR(100))
 BEGIN
     DELETE FROM Institution WHERE institution_name = InstitutionName;
-END$$
+END;
 
 CREATE PROCEDURE GetAllInstitutions()
 BEGIN
     SELECT * FROM Institution;
-END$$
+END;
 
 CREATE PROCEDURE SelectInstitutionByName(IN InstitutionName VARCHAR(100))
 BEGIN
     SELECT * FROM Institution WHERE institution_name = InstitutionName;
-END$$
+END;

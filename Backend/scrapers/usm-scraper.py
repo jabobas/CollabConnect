@@ -45,19 +45,12 @@ def scrape_usm_person(url):
     soup = BeautifulSoup(response.text, "html.parser")
     projects = []
     expertise_list = []
-    #  The actual bio if exists
+
     bio = soup.select(".kt-inside-inner-col")
     backup_bio = soup.select(".bio")
     expertise_text = soup.select(".expertise")
     publications = soup.select(".publications")
-    # if bio is not []:
-    #     for block in bio:
-    #         p_tag = block.find("p", id="block-d009ac48-5570-4899-b69c-73282c0080ae")
-    #         if p_tag:
-    #             bio = p_tag.get_text(strip=True)
-    #             print('Found targeted bio:', bio)
-    # else:
-    #     bio = ""
+
     bio = ''
     if backup_bio:
         all_bio = backup_bio[0].find_all("p")
@@ -96,6 +89,7 @@ def scrape_usm_person(url):
 
 
 def scrape_usm_department(url):
+
     headers = {
         "User-Agent": (
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "

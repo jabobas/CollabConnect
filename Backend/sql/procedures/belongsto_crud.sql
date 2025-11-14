@@ -1,8 +1,6 @@
 -- File: Backend/sql_queries/aubin/procedures/belongsto_crud.sql
 -- Purpose: CRUD stored procedures for BelongsTo (MySQL 8.0).
 
-DELIMITER $$
-
 CREATE PROCEDURE sp_insert_belongsto (
     IN p_department_id   BIGINT UNSIGNED,
     IN p_institution_id  BIGINT UNSIGNED,
@@ -16,7 +14,7 @@ BEGIN
     ON DUPLICATE KEY UPDATE
         effective_end  = VALUES(effective_end),
         justification  = VALUES(justification);
-END$$
+END;
 
 CREATE PROCEDURE sp_close_belongsto (
     IN p_department_id   BIGINT UNSIGNED,
@@ -30,7 +28,7 @@ BEGIN
     WHERE department_id = p_department_id
       AND institution_id = p_institution_id
       AND effective_start = p_effective_start;
-END$$
+END;
 
 CREATE PROCEDURE sp_delete_belongsto (
     IN p_department_id   BIGINT UNSIGNED,
@@ -42,7 +40,7 @@ BEGIN
     WHERE department_id = p_department_id
       AND institution_id = p_institution_id
       AND effective_start = p_effective_start;
-END$$
+END;
 
 CREATE PROCEDURE sp_get_belongsto_history (
     IN p_department_id BIGINT UNSIGNED
@@ -56,7 +54,7 @@ BEGIN
     FROM BelongsTo
     WHERE department_id = p_department_id
     ORDER BY effective_start DESC;
-END$$
+END;
 
 CREATE PROCEDURE sp_get_current_institution_for_department (
     IN p_department_id BIGINT UNSIGNED
@@ -72,7 +70,6 @@ BEGIN
       AND (effective_end IS NULL OR effective_end >= CURRENT_DATE())
     ORDER BY effective_start DESC
     LIMIT 1;
-END$$
+END;
 
-DELIMITER ;
 

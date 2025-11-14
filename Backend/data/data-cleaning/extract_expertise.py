@@ -492,8 +492,8 @@ def main():
     
     # Set up paths
     backend_dir = Path(__file__).parent.parent
-    input_file = backend_dir / 'data' / 'roux_institute_data.json'
-    output_file = backend_dir / 'data' / 'roux_institute_data_with_expertise.json'
+    input_file = backend_dir / 'unprocessed' / 'roux_institute_data.json'
+    output_file = backend_dir  / 'processed' / 'roux_institute_data_with_expertise.json'
     
     # Check if input file exists
     if not input_file.exists():

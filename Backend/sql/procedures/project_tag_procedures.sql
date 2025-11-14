@@ -3,8 +3,6 @@
 -- Author: Abbas Jabor
 -- Date: November 11, 2025
 
-DELIMITER $$
-
 CREATE PROCEDURE AddTagToProject(
     IN ProjectID BIGINT UNSIGNED,
     IN TagName VARCHAR(50)
@@ -12,7 +10,7 @@ CREATE PROCEDURE AddTagToProject(
 BEGIN
     INSERT INTO Project_Tag (project_id, tag_name)
     VALUES (ProjectID, TagName);
-END$$
+END;
 
 CREATE PROCEDURE AddMultipleTagsToProject(
     IN ProjectID BIGINT UNSIGNED,
@@ -23,7 +21,7 @@ BEGIN
     -- Alternative: call AddTagToProject multiple times from application layer
     -- INSERT INTO Project_Tag (project_id, tag_name) VALUES 
     -- This should be handled at application level for better flexibility
-END$$
+END;
 
 CREATE PROCEDURE RemoveTagFromProject(
     IN ProjectID BIGINT UNSIGNED,
@@ -32,29 +30,29 @@ CREATE PROCEDURE RemoveTagFromProject(
 BEGIN
     DELETE FROM Project_Tag
     WHERE project_id = ProjectID AND tag_name = TagName;
-END$$
+END;
 
 CREATE PROCEDURE RemoveAllTagsFromProject(IN ProjectID BIGINT UNSIGNED)
 BEGIN
     DELETE FROM Project_Tag WHERE project_id = ProjectID;
-END$$
+END;
 
 CREATE PROCEDURE GetProjectTags(IN ProjectID BIGINT UNSIGNED)
 BEGIN
     SELECT tag_name FROM Project_Tag WHERE project_id = ProjectID;
-END$$
+END;
 
 CREATE PROCEDURE GetProjectsByTag(IN TagName VARCHAR(50))
 BEGIN
     SELECT DISTINCT p.* FROM Project p
     INNER JOIN Project_Tag pt ON p.project_id = pt.project_id
     WHERE pt.tag_name = TagName;
-END$$
+END;
 
 CREATE PROCEDURE GetAllProjectTags()
 BEGIN
     SELECT * FROM Project_Tag;
-END$$
+END;
 
 CREATE PROCEDURE ReplaceProjectTags(
     IN ProjectID BIGINT UNSIGNED,
@@ -65,6 +63,6 @@ BEGIN
     DELETE FROM Project_Tag WHERE project_id = ProjectID;
     -- Add the new tag
     INSERT INTO Project_Tag (project_id, tag_name) VALUES (ProjectID, NewTagName);
-END$$
+END;
 
-DELIMITER ;
+

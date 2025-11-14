@@ -28,12 +28,12 @@ BEGIN
     BEGIN
         RAISERROR('WorksIn relationship already exists for person %d and department %d.', 16, 1, @PersonId, @DepartmentId);
         RETURN;
-    END
+    END;
 
     -- Insert the new relationship
     INSERT INTO WorksIn (person_id, department_id)
     VALUES (@PersonId, @DepartmentId);
-END$$
+END;
 
 -- 2. Delete a WorksIn relationship
 CREATE PROCEDURE DeleteWorksIn
@@ -49,7 +49,7 @@ BEGIN
 
     DELETE FROM WorksIn
     WHERE worksin_id = @WorksinId;
-END$$
+END;
 
 -- 3. Delete WorksIn relationship by Person and Department IDs
 CREATE PROCEDURE DeleteWorksInByIds
@@ -66,7 +66,7 @@ BEGIN
 
     DELETE FROM WorksIn
     WHERE person_id = @PersonId AND department_id = @DepartmentId;
-END$$
+END;
 
 -- 4. Get all WorksIn relationships
 CREATE PROCEDURE GetAllWorksIn
@@ -81,7 +81,7 @@ BEGIN
     FROM WorksIn w
     INNER JOIN Person p ON w.person_id = p.person_id
     INNER JOIN Department d ON w.department_id = d.department_id;
-END$$
+END;
 
 -- 5. Get WorksIn relationships by Person ID
 CREATE PROCEDURE GetWorksInByPerson
@@ -106,7 +106,7 @@ BEGIN
     INNER JOIN Person p ON w.person_id = p.person_id
     INNER JOIN Department d ON w.department_id = d.department_id
     WHERE w.person_id = @PersonId;
-END$$
+END;
 
 -- 6. Get WorksIn relationships by Department ID
 CREATE PROCEDURE GetWorksInByDepartment
@@ -131,7 +131,7 @@ BEGIN
     INNER JOIN Person p ON w.person_id = p.person_id
     INNER JOIN Department d ON w.department_id = d.department_id
     WHERE w.department_id = @DepartmentId;
-END$$
+END;
 
 -- 7. Get a specific WorksIn relationship by ID
 CREATE PROCEDURE GetWorksInById
@@ -155,7 +155,7 @@ BEGIN
     INNER JOIN Person p ON w.person_id = p.person_id
     INNER JOIN Department d ON w.department_id = d.department_id
     WHERE w.worksin_id = @WorksinId;
-END$$
+END;
 
 ------------------------------------------------
 -- Additional useful procedures
@@ -175,7 +175,7 @@ BEGIN
     BEGIN
         SELECT 0 AS RelationshipExists;
     END
-END$$
+END;
 
 -- 9. Get count of departments a person works in
 CREATE PROCEDURE GetDepartmentCountByPerson
@@ -185,7 +185,7 @@ BEGIN
     SELECT COUNT(*) AS DepartmentCount
     FROM WorksIn
     WHERE person_id = @PersonId;
-END$$
+END;
 
 -- 10. Get count of people working in a department
 CREATE PROCEDURE GetPersonCountByDepartment
@@ -195,4 +195,4 @@ BEGIN
     SELECT COUNT(*) AS PersonCount
     FROM WorksIn
     WHERE department_id = @DepartmentId;
-END$$
+END;
