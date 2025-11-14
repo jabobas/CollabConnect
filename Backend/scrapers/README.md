@@ -1,9 +1,9 @@
 # Table of Contents
 
-- [Aubin](#name-1)
-- [Abbas](#name-2)
-- [Wyatt](#name-3)
-- [Lucas](#name-4)
+- [Aubin's Scraper](#aubin)
+- [Abbas's Scraper](#abbas)
+- [Wyatt's Scraper](#wyatt)
+- [Lucas's Scraper](#lucas)
 
 # Aubin
 
