@@ -9,3 +9,6 @@ db_password = ** Put in your password here! **
 db_host = localhost
 db_port = 3306
 db_cursorclass = DictCursor
+
+[OpenAI]
+api_key = ** your api key here, if you choose to use it! **
