@@ -37,6 +37,7 @@ CREATE PROCEDURE sp_delete_belongsto (
     IN p_institution_id  BIGINT UNSIGNED,
     IN p_effective_start DATE
 )
+
 BEGIN
     DELETE FROM BelongsTo
     WHERE department_id = p_department_id
