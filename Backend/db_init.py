@@ -6,6 +6,7 @@ import MySQLdb
 from app import app, mysql, config
 import re
 
+
 """
 Filename: db_init.py
 Author: Lucas Matheson
