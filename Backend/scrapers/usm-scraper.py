@@ -31,6 +31,7 @@ import json
 
 
 def scrape_usm_person(url):
+    # Gets around certian anti scraper measures
     headers = {
         "User-Agent": (
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
@@ -45,22 +46,31 @@ def scrape_usm_person(url):
     soup = BeautifulSoup(response.text, "html.parser")
     projects = []
     expertise_list = []
-
+    
+    # These grabs the bio of the person. Depending on the profile, sometimes it is
+    # Found in .kt-inside=inner-col, and sometimes in .bio. Grab both
     bio = soup.select(".kt-inside-inner-col")
     backup_bio = soup.select(".bio")
+    
+    # Some profiles have defined expertise and publications under div class .expertise and .publications
     expertise_text = soup.select(".expertise")
     publications = soup.select(".publications")
 
+    # Run a check to see which bio is used
     bio = ''
     if backup_bio:
+        # the bio under .bio is a unordered list of sections, all contained in p wrappers
+        # This iterates over them and saves the results to one string
         all_bio = backup_bio[0].find_all("p")
         for block in all_bio:
             bio += block.get_text(strip=True) + ' '
-
+    
     if publications:
-        count = 0
+        # simular to .bio, all publications defined on the usm website are wrapped in <p>, 
+        # grab all of them and iterate over them
         all_publications = publications[0].find_all("p")
         for pub in all_publications:
+            # The project object we look to create
             project = {
                 "project_title": "",
                 "project_description": "",
@@ -69,11 +79,13 @@ def scrape_usm_person(url):
             }
             if pub.get_text(strip=True) == "":
                 continue
+            # If something is <strong> (bolded) on the website, its often not a publication and 
+            # a header that isn't wrapped in a header tag, so ignore it
             if "<strong>" in pub.decode_contents():
                 continue
-            count += 1
             publication = pub.get_text(strip=True)
             project["project_title"] = publication
+            # This regex searches the publication looking for a publish year. If it finds it, save it to end_date
             match = re.search(r"\((\d{4})\)", publication)
 
             if match:
@@ -89,7 +101,7 @@ def scrape_usm_person(url):
 
 
 def scrape_usm_department(url):
-
+    # Gets around anti scraping measures
     headers = {
         "User-Agent": (
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
@@ -105,16 +117,20 @@ def scrape_usm_department(url):
 
     # Build a dict keyed by person name for easy lookups
     people_by_name = {}
+    
+    # On the department website when inspecting it, each person is encapsalated by 
+    # .grid_item.people_item.kt_item_fade_in.kad_people_fade_in.postclass. So grabbing
+    # This will allow us to iterate over each person indiviually, keeping data consistent
     person_blocks = soup.select(
         ".grid_item.people_item.kt_item_fade_in.kad_people_fade_in.postclass"
     )
-    links_array = []
 
     # department/title element (string) for all people on this page
     dept_elem = soup.select_one(".entry-site-title")
     dept_name = dept_elem.get_text(strip=True) if dept_elem else ""
     print("Scraping department:", dept_name)
     for block in person_blocks:
+        # Name tag is found at header three
         name_tag = block.find("h3")
         if not name_tag:
             continue
@@ -137,8 +153,8 @@ def scrape_usm_department(url):
 
         link_tag = block.find("a", href=True)
         if link_tag and link_tag.find("h3"):
+            # if a persons link exists, grab it to scrape later
             person["profile_url"] = link_tag.get("href")
-            links_array.append({"text": name, "url": person["profile_url"]})
             projects, bio, expertise_list = scrape_usm_person(link_tag.get("href"))
             person["projects"] = projects
             person["bio"] = bio
@@ -146,8 +162,8 @@ def scrape_usm_department(url):
             for i in range(len(expertise_list)):
                 if temp >= 3:
                     break
-                # Max tag length is 50 characters
-                if len(expertise_list[i].strip()) < 50:
+                # Max tag length is 100 characters
+                if len(expertise_list[i].strip()) < 100:
                     person["expertise_" + str(temp)] = expertise_list[i].strip()
                     # Expertise added, ensure we only add three
                     temp += 1
@@ -155,6 +171,7 @@ def scrape_usm_department(url):
         if tel_tag:
             person["person_phone"] = tel_tag.get_text(strip=True)
 
+        # Looking for @maine.edu in the <a> tag ensure that we just grab the person's email and no other text wrapped in <a>
         email = block.find("a", href=lambda x: x and "@maine.edu" in x)
         if email:
             person["person_email"] = email.get_text(strip=True)
@@ -172,7 +189,7 @@ def scrape_usm_department(url):
 
         people_by_name[name] = person
 
-    return people_by_name, links_array, dept_name
+    return people_by_name, dept_name
 
 #  AI generated by ChatGPT to print the data in a readable format
 #  Primarily for debugging purposes
@@ -278,9 +295,8 @@ if __name__ == "__main__":
     for url in usm_department_pages:
         try:
             usm_scraped_data = {}
-            links = []
             dept = ""
-            usm_scraped_data, links, dept = scrape_usm_department(url)
+            usm_scraped_data, dept = scrape_usm_department(url)
             # usm does not have a dept email or phone, store as None
             usm_data["departments"][dept] = {
                 "department_name": dept,

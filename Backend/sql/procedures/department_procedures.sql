@@ -28,3 +28,10 @@ BEGIN
     VALUES (DepartmentPhone, DepartmentEmail, DepartmentName, InstitutionId);
     SELECT LAST_INSERT_ID() AS new_id;
 END;
+
+CREATE PROCEDURE SelectDepartmentByName(
+    IN DepartmentName VARCHAR(100)
+)
+BEGIN
+    SELECT * FROM Department WHERE department_name = DepartmentName;
+END;
