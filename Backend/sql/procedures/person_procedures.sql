@@ -19,6 +19,8 @@ BEGIN
         (person_name, person_email, person_phone, bio, expertise_1, expertise_2, expertise_3, main_field, department_id)
     VALUES
         (p_person_name, p_person_email, p_person_phone, p_bio, p_expertise1, p_expertise2, p_expertise3, p_main_field, p_department_id);
+    
+    SELECT LAST_INSERT_ID() AS person_id;
 END;
 
 -- 2. Delete person

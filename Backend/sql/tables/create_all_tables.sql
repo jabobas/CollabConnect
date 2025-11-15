@@ -84,7 +84,6 @@ CREATE TABLE IF NOT EXISTS BelongsTo (
     institution_id   BIGINT UNSIGNED NOT NULL,
     effective_start  DATE            NOT NULL,
     effective_end    DATE            DEFAULT NULL,
-    justification    VARCHAR(255)    DEFAULT NULL,
     PRIMARY KEY (department_id, institution_id, effective_start),
     CONSTRAINT ck_belongsto_dates CHECK (effective_end IS NULL OR effective_end >= effective_start),
     CONSTRAINT fk_belongsto_department
@@ -101,7 +100,6 @@ CREATE TABLE IF NOT EXISTS WorkedOn (
     project_role   VARCHAR(100)    NOT NULL,
     start_date     DATE            NOT NULL,
     end_date       DATE            DEFAULT NULL,
-    notes          VARCHAR(255)    DEFAULT NULL,
     PRIMARY KEY (person_id, project_id, start_date),
     CONSTRAINT ck_workedon_dates CHECK (end_date IS NULL OR end_date >= start_date),
     CONSTRAINT fk_workedon_person

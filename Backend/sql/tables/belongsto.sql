@@ -7,7 +7,6 @@ CREATE TABLE IF NOT EXISTS BelongsTo (
     institution_id   BIGINT UNSIGNED NOT NULL,
     effective_start  DATE            NOT NULL,
     effective_end    DATE            DEFAULT NULL,
-    justification    VARCHAR(255)    DEFAULT NULL,
     PRIMARY KEY (department_id, institution_id, effective_start),
     CONSTRAINT ck_belongsto_dates CHECK (effective_end IS NULL OR effective_end >= effective_start),
     CONSTRAINT fk_belongsto_department

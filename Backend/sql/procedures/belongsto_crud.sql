@@ -1,19 +1,18 @@
--- File: Backend/sql_queries/aubin/procedures/belongsto_crud.sql
--- Purpose: CRUD stored procedures for BelongsTo (MySQL 8.0).
+-- Author: Aubin Mugisha
+-- Description: Stored procedures for managing BelongsTo department-institution relationships
+-- Handles inserting, closing (setting end date), and deleting records
 
 CREATE PROCEDURE sp_insert_belongsto (
     IN p_department_id   BIGINT UNSIGNED,
     IN p_institution_id  BIGINT UNSIGNED,
     IN p_effective_start DATE,
-    IN p_effective_end   DATE,
-    IN p_justification   VARCHAR(255)
+    IN p_effective_end   DATE
 )
 BEGIN
-    INSERT INTO BelongsTo (department_id, institution_id, effective_start, effective_end, justification)
-    VALUES (p_department_id, p_institution_id, p_effective_start, p_effective_end, p_justification)
+    INSERT INTO BelongsTo (department_id, institution_id, effective_start, effective_end)
+    VALUES (p_department_id, p_institution_id, p_effective_start, p_effective_end)
     ON DUPLICATE KEY UPDATE
-        effective_end  = VALUES(effective_end),
-        justification  = VALUES(justification);
+        effective_end  = VALUES(effective_end);
 END;
 
 CREATE PROCEDURE sp_close_belongsto (
@@ -49,8 +48,7 @@ BEGIN
     SELECT department_id,
            institution_id,
            effective_start,
-           effective_end,
-           justification
+           effective_end
     FROM BelongsTo
     WHERE department_id = p_department_id
     ORDER BY effective_start DESC;
@@ -63,8 +61,7 @@ BEGIN
     SELECT department_id,
            institution_id,
            effective_start,
-           effective_end,
-           justification
+           effective_end
     FROM BelongsTo
     WHERE department_id = p_department_id
       AND (effective_end IS NULL OR effective_end >= CURRENT_DATE())
