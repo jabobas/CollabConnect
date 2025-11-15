@@ -1,6 +1,6 @@
 -- Filename: expertise_matching_functions.sql
 -- The purpose of this file is to hold expertise matching and recommendation functions. 
--- Author: Abbas Jabor
+-- Author: Abbas Jabor, All Copilot
 -- Date: November 12, 2025
 
 -- ============================================

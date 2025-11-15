@@ -1,6 +1,6 @@
 -- Filename: availability_capacity_functions.sql
 -- The purpose of this file is to hold availability and capacity planning functions.
--- Author: Abbas Jabor
+-- Author: Abbas Jabor, All Copilot 
 -- Date: November 12, 2025
 
 -- ============================================
