@@ -239,7 +239,7 @@ def insert_initial_data():
                 else:
                     insts.append({"institution": inst if isinstance(inst, dict) else {"institution_name": inst},
                                   "departments": top_depts})
-            # explicit "institutions" key
+
             elif "institutions" in json_data:
                 for item in json_data["institutions"] or []:
                     if isinstance(item, dict):
@@ -248,10 +248,9 @@ def insert_initial_data():
                     else:
                         insts.append({"institution": {"institution_name": item}, "departments": {}})
             else:
-                # Assume the whole dict is a single institution (backwards compatibility)
+
                 insts.append({"institution": json_data, "departments": json_data.get("departments", {})})
 
-        # Case: top-level list
         elif isinstance(json_data, list):
             for item in json_data:
                 if isinstance(item, dict):
@@ -260,7 +259,7 @@ def insert_initial_data():
                 else:
                     insts.append({"institution": {"institution_name": item}, "departments": {}})
         else:
-            # Unknown shape -> empty placeholder to keep behavior safe
+
             insts.append({"institution": {}, "departments": {}})
 
         return insts
@@ -453,8 +452,7 @@ def insert_initial_data():
                                     [
                                         project_title,
                                         project.get("project_description"),
-                                        person_id,  # leadperson_id (use current person as lead)
-                                        person_id,  # person_id (required field)
+                                        person_id, 
                                         start_date,
                                         end_date,
                                     ],

@@ -56,15 +56,14 @@ CREATE TABLE Project (
     project_id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     project_title VARCHAR(200) NOT NULL,
     project_description TEXT,
-    leadperson_id BIGINT UNSIGNED,
     tag_name VARCHAR(100),
     start_date DATE NOT NULL,
     end_date DATE,
-    person_id BIGINT UNSIGNED NOT NULL,
+    person_id BIGINT UNSIGNED,
     FOREIGN KEY (tag_name) REFERENCES Tag(tag_name),
     FOREIGN KEY (person_id) REFERENCES Person(person_id),
-    CONSTRAINT fk_project_leadperson
-    FOREIGN KEY (leadperson_id) REFERENCES Person(person_id)
+    CONSTRAINT fk_project_person
+    FOREIGN KEY (person_id) REFERENCES Person(person_id)
     ON DELETE SET NULL
     ON UPDATE CASCADE
 );

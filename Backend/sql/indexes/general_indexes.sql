@@ -8,17 +8,11 @@
 -- This will be frequently used in searching or filtering projects by title.
 CREATE INDEX idx_project_title ON Project(project_title);
 
--- This is to quickly find projects led by a specific person.
-CREATE INDEX idx_project_leadperson ON Project(leadperson_id);
-
 -- This is to quickly find projects associated with a specific person.
 CREATE INDEX idx_project_person ON Project(person_id);
 
 -- Most projects have date ranges, so indexing both for range queries.
 CREATE INDEX idx_project_dates ON Project(start_date, end_date);
-
--- When sorting projects by lead person and retrieving recent projects first.
-CREATE INDEX idx_project_leadperson_dates ON Project(leadperson_id, start_date DESC);
 
 -- This is used to search for projects, combining both title and description for full-text search.
 -- Important for the expertise match operation.
