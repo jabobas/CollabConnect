@@ -97,7 +97,30 @@ pip install requests mysql-connector-python
 
 # Abbas
 
-Scraper readme for **Abbas** goes here.
+My scraper was the NIHReport_Scraper and it's "clean up" file the nih_csv_to_json_converter.
+Both of these files are AI generated. I commented out a large section of the scraper file because I assumed it was going to load that data into the database.
+I'm not proud of either of these files, because they are AI generated but I'll give a brief run down of what they do. 
+
+The scraper:
+The scraper uses the API of the report.nih.gov website to grab all the raw data of projects in the state of Maine and puts it in a CSV. 
+
+The converter:
+The CSV file itself is a mess of data so it was necessary to try to make it into a more structured Json format. It holds Institutions, Departments, Persons, Projects, and Tags. 
+one fault is that it doesnt grab the peoples emails.
+
+The requirements for the scraper are:
+```bash
+pip install requests pandas mysql-connector-python
+```
+Then run:
+```bash
+python NIHReport_Scraper.py
+```
+Once you have the csv run: 
+```bash
+python nih_csv_to_json_converter.py
+```
+I did not create any scripts to import this data into the database. I believe lucas did that.
 
 # Wyatt
 
