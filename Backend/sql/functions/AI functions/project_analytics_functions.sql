@@ -1,6 +1,6 @@
 -- Filename: project_analytics_functions.sql
 -- The purpose of this file is to hold project analytics and insights functions.
--- Author: Abbas Jabor
+-- Author: Abbas Jabor, All copilot
 -- Date: November 12, 2025
 
 -- ============================================

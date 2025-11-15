@@ -1,6 +1,6 @@
 -- Filename: search_discovery_functions.sql
 -- The purpose of this file is to hold search and discovery functions.
--- Author: Abbas Jabor
+-- Author: Abbas Jabor, All Copilot
 -- Date: November 12, 2025
 
 -- ============================================
