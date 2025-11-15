@@ -5,7 +5,7 @@
 
 CREATE PROCEDURE AddTagToProject(
     IN ProjectID BIGINT UNSIGNED,
-    IN TagName VARCHAR(50)
+    IN TagName VARCHAR(100)
 )
 BEGIN
     INSERT INTO Project_Tag (project_id, tag_name)
@@ -25,7 +25,7 @@ END;
 
 CREATE PROCEDURE RemoveTagFromProject(
     IN ProjectID BIGINT UNSIGNED,
-    IN TagName VARCHAR(50)
+    IN TagName VARCHAR(100)
 )
 BEGIN
     DELETE FROM Project_Tag
@@ -42,7 +42,7 @@ BEGIN
     SELECT tag_name FROM Project_Tag WHERE project_id = ProjectID;
 END;
 
-CREATE PROCEDURE GetProjectsByTag(IN TagName VARCHAR(50))
+CREATE PROCEDURE GetProjectsByTag(IN TagName VARCHAR(100))
 BEGIN
     SELECT DISTINCT p.* FROM Project p
     INNER JOIN Project_Tag pt ON p.project_id = pt.project_id
@@ -56,7 +56,7 @@ END;
 
 CREATE PROCEDURE ReplaceProjectTags(
     IN ProjectID BIGINT UNSIGNED,
-    IN NewTagName VARCHAR(50)
+    IN NewTagName VARCHAR(100)
 )
 BEGIN
     -- Remove all existing tags for the project

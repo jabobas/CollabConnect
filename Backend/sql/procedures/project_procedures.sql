@@ -3,19 +3,18 @@
 -- Author: Abbas Jabor
 -- Date: November 11, 2025
 
-
-
 CREATE PROCEDURE InsertIntoProject(
     IN ProjectTitle VARCHAR(200),
     IN ProjectDescription TEXT,
     IN PersonID BIGINT UNSIGNED,
+    IN TagName VARCHAR(100),
     IN StartDate DATE,
     IN EndDate DATE
 )
 BEGIN
-    INSERT INTO Project (project_title, project_description, person_id, start_date, end_date)
-    VALUES (ProjectTitle, ProjectDescription, PersonID, StartDate, EndDate);
-    
+    INSERT INTO Project (project_title, project_description, tag_name, person_id, start_date, end_date)
+    VALUES (ProjectTitle, ProjectDescription, TagName, PersonID, StartDate, EndDate);
+
     SELECT LAST_INSERT_ID() AS project_id;
 END;
 
@@ -23,6 +22,7 @@ CREATE PROCEDURE UpdateProjectDetails(
     IN ProjectID BIGINT UNSIGNED,
     IN ProjectTitle VARCHAR(200),
     IN ProjectDescription TEXT,
+    IN TagName VARCHAR(100),
     IN StartDate DATE,
     IN EndDate DATE
 )
@@ -30,6 +30,7 @@ BEGIN
     UPDATE Project
     SET project_title = ProjectTitle,
         project_description = ProjectDescription,
+        tag_name = TagName,
         start_date = StartDate,
         end_date = EndDate
     WHERE project_id = ProjectID;
@@ -101,4 +102,3 @@ CREATE PROCEDURE SelectActiveProjects()
 BEGIN
     SELECT * FROM Project WHERE end_date IS NULL;
 END;
-

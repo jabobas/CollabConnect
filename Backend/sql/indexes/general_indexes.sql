@@ -22,7 +22,6 @@ CREATE FULLTEXT INDEX idx_project_search ON Project(project_title, project_descr
 
 -- Tag names are already the primary key, but adding this for clarity on full-text search capability.
 -- Useful if tag descriptions or metadata are added in the future.
-CREATE FULLTEXT INDEX idx_tag_search ON Tag(tag_name);
 
 -- PROJECT_TAG INDEXES
 

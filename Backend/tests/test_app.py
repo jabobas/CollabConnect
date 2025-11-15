@@ -11,7 +11,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # Import the Flask app instance from the main app file
 from app import app
 
-
+# Test ensures database is up
 def test_home(client):
     try:
         response = client.get('/health')
