@@ -37,7 +37,8 @@
                                         "Kinna  Thakarar"
                                     ],
                                     "institution": "MAINEHEALTH",
-                                    "department": "NIH U01"
+                                    "department": "NIH U01",
+                                    "tag_name": "Harm Reduction Research"
                                 }
                             ]
                         },
@@ -64,7 +65,8 @@
                                         "Frank  Chessa"
                                     ],
                                     "institution": "MAINEHEALTH",
-                                    "department": "NIH U01"
+                                    "department": "NIH U01",
+                                    "tag_name": "Inclusive Clinical Trials"
                                 }
                             ]
                         }
@@ -234,7 +236,8 @@
                                         "Ziru  Li"
                                     ],
                                     "institution": "MAINEHEALTH",
-                                    "department": "NIH R01"
+                                    "department": "NIH R01",
+                                    "tag_name": "Gastric Bone Signaling"
                                 }
                             ]
                         },
@@ -394,7 +397,8 @@
                                         "MARY Catherine OTTOLINI"
                                     ],
                                     "institution": "MAINEHEALTH",
-                                    "department": "NIH R01"
+                                    "department": "NIH R01",
+                                    "tag_name": "Rural Neonatal Simulation"
                                 }
                             ]
                         },
@@ -538,7 +542,8 @@
                                         "David B. Seder"
                                     ],
                                     "institution": "MAINEHEALTH",
-                                    "department": "NIH R01"
+                                    "department": "NIH R01",
+                                    "tag_name": "Cardiac Arrest Immunology"
                                 },
                                 {
                                     "project_title": "Protective adaptive immune mechanisms after cardiac arrest",
@@ -669,7 +674,8 @@
                                         "David B. Seder"
                                     ],
                                     "institution": "MAINEHEALTH",
-                                    "department": "NIH R01"
+                                    "department": "NIH R01",
+                                    "tag_name": "Cardiac Immunology Therapeutics"
                                 }
                             ]
                         },
@@ -813,7 +819,8 @@
                                         "David B. Seder"
                                     ],
                                     "institution": "MAINEHEALTH",
-                                    "department": "NIH R01"
+                                    "department": "NIH R01",
+                                    "tag_name": "Cardiac Arrest Immunology"
                                 },
                                 {
                                     "project_title": "Protective adaptive immune mechanisms after cardiac arrest",
@@ -944,7 +951,8 @@
                                         "David B. Seder"
                                     ],
                                     "institution": "MAINEHEALTH",
-                                    "department": "NIH R01"
+                                    "department": "NIH R01",
+                                    "tag_name": "Cardiac Arrest Immunology"
                                 }
                             ]
                         },
@@ -1052,7 +1060,8 @@
                                         "Robert  Tower"
                                     ],
                                     "institution": "MAINEHEALTH",
-                                    "department": "NIH R01"
+                                    "department": "NIH R01",
+                                    "tag_name": "Mitochondrial ROS signaling"
                                 },
                                 {
                                     "project_title": "Mitochondrial function regulates ROS-mediated patterning following injury",
@@ -1148,7 +1157,8 @@
                                         "Robert  Tower"
                                     ],
                                     "institution": "MAINEHEALTH",
-                                    "department": "NIH R01"
+                                    "department": "NIH R01",
+                                    "tag_name": "Mitochondrial ROS Signaling"
                                 }
                             ]
                         },
@@ -1256,7 +1266,8 @@
                                         "Robert  Tower"
                                     ],
                                     "institution": "MAINEHEALTH",
-                                    "department": "NIH R01"
+                                    "department": "NIH R01",
+                                    "tag_name": "Mitochondrial ROS Signaling"
                                 },
                                 {
                                     "project_title": "Mitochondrial function regulates ROS-mediated patterning following injury",
@@ -1352,7 +1363,8 @@
                                         "Robert  Tower"
                                     ],
                                     "institution": "MAINEHEALTH",
-                                    "department": "NIH R01"
+                                    "department": "NIH R01",
+                                    "tag_name": "Mitochondrial ROS Signaling"
                                 }
                             ]
                         },
@@ -1460,7 +1472,8 @@
                                         "Robert  Tower"
                                     ],
                                     "institution": "MAINEHEALTH",
-                                    "department": "NIH R01"
+                                    "department": "NIH R01",
+                                    "tag_name": "Mitochondrial ROS Signaling"
                                 },
                                 {
                                     "project_title": "Mitochondrial function regulates ROS-mediated patterning following injury",
@@ -1556,7 +1569,8 @@
                                         "Robert  Tower"
                                     ],
                                     "institution": "MAINEHEALTH",
-                                    "department": "NIH R01"
+                                    "department": "NIH R01",
+                                    "tag_name": "Mitochondrial ROS Signaling"
                                 }
                             ]
                         }
@@ -2128,7 +2142,8 @@
                                         "Laura Johnson Faherty"
                                     ],
                                     "institution": "MAINEHEALTH",
-                                    "department": "NIH UG1"
+                                    "department": "NIH UG1",
+                                    "tag_name": "Rural Pediatric Trials"
                                 }
                             ]
                         },
@@ -2693,7 +2708,8 @@
                                         "Laura Johnson Faherty"
                                     ],
                                     "institution": "MAINEHEALTH",
-                                    "department": "NIH UG1"
+                                    "department": "NIH UG1",
+                                    "tag_name": "Pediatric Environmental Health"
                                 }
                             ]
                         },
@@ -2856,7 +2872,8 @@
                                         "Scot C Remick"
                                     ],
                                     "institution": "MAINEHEALTH",
-                                    "department": "NIH UG1"
+                                    "department": "NIH UG1",
+                                    "tag_name": "Community Oncology NCORP"
                                 }
                             ]
                         },
@@ -3019,7 +3036,8 @@
                                         "Scot C Remick"
                                     ],
                                     "institution": "MAINEHEALTH",
-                                    "department": "NIH UG1"
+                                    "department": "NIH UG1",
+                                    "tag_name": "Rural Cancer Trials"
                                 }
                             ]
                         },
@@ -3182,7 +3200,8 @@
                                         "Scot C Remick"
                                     ],
                                     "institution": "MAINEHEALTH",
-                                    "department": "NIH UG1"
+                                    "department": "NIH UG1",
+                                    "tag_name": "Rural Cancer Trials"
                                 }
                             ]
                         }
@@ -3283,7 +3302,8 @@
                                         "Aaron Clifford Brown"
                                     ],
                                     "institution": "MAINEHEALTH",
-                                    "department": "NIH S10"
+                                    "department": "NIH S10",
+                                    "tag_name": "High-Dimensional Cytometry"
                                 }
                             ]
                         },
@@ -3375,7 +3395,8 @@
                                         "ILKA M PINZ"
                                     ],
                                     "institution": "MAINEHEALTH",
-                                    "department": "NIH S10"
+                                    "department": "NIH S10",
+                                    "tag_name": "In Vivo Micro-CT"
                                 }
                             ]
                         }
@@ -3544,7 +3565,8 @@
                                         "Michaela R. Reagan"
                                     ],
                                     "institution": "MAINEHEALTH",
-                                    "department": "NIH R37"
+                                    "department": "NIH R37",
+                                    "tag_name": "Adipocyte-Driven Cancer Resistance"
                                 }
                             ]
                         }
@@ -3701,7 +3723,8 @@
                                         "Audrie  Langlais-Elliott"
                                     ],
                                     "institution": "MAINEHEALTH",
-                                    "department": "NIH F31"
+                                    "department": "NIH F31",
+                                    "tag_name": "Opioid-Induced Bone Loss"
                                 },
                                 {
                                     "project_title": "Investigating miRNA-Mediated Bone Loss from Morphine Treatment",
@@ -3839,7 +3862,8 @@
                                         "Audrie  Langlais-Elliott"
                                     ],
                                     "institution": "MAINEHEALTH",
-                                    "department": "NIH F31"
+                                    "department": "NIH F31",
+                                    "tag_name": "Neuroskeletal miRNA Regulation"
                                 }
                             ]
                         }
@@ -3947,7 +3971,8 @@
                                         "Kristen Anne Woodberry"
                                     ],
                                     "institution": "MAINEHEALTH",
-                                    "department": "NIH P20"
+                                    "department": "NIH P20",
+                                    "tag_name": "Adolescent Psychosis Screening"
                                 }
                             ]
                         },
@@ -3974,7 +3999,8 @@
                                         "Elizabeth  Scharnetzki"
                                     ],
                                     "institution": "MAINEHEALTH",
-                                    "department": "NIH P20"
+                                    "department": "NIH P20",
+                                    "tag_name": "Diabetes Wellbeing Management"
                                 }
                             ]
                         }
@@ -4142,7 +4168,8 @@
                                         "Maria  Telpoukhovskaia"
                                     ],
                                     "institution": "JACKSON LABORATORY",
-                                    "department": "NIH R21"
+                                    "department": "NIH R21",
+                                    "tag_name": "Clonal Hematopoiesis Alzheimer's"
                                 }
                             ]
                         },
@@ -4250,7 +4277,8 @@
                                         "DAVID ERIC BERGSTROM"
                                     ],
                                     "institution": "JACKSON LABORATORY",
-                                    "department": "NIH R21"
+                                    "department": "NIH R21",
+                                    "tag_name": "Mouse Genome Engineering"
                                 },
                                 {
                                     "project_title": "Rapid Development of Mouse Resource Strains through the Application of Prime Editors",
@@ -4347,7 +4375,8 @@
                                         "DAVID ERIC BERGSTROM"
                                     ],
                                     "institution": "JACKSON LABORATORY",
-                                    "department": "NIH R21"
+                                    "department": "NIH R21",
+                                    "tag_name": "High-Throughput Mouse Editing"
                                 }
                             ]
                         }
@@ -4522,7 +4551,8 @@
                                         "Cheryl Lea Wellington"
                                     ],
                                     "institution": "JACKSON LABORATORY",
-                                    "department": "NIH R13"
+                                    "department": "NIH R13",
+                                    "tag_name": "Vascular Cognitive Neuroscience"
                                 }
                             ]
                         },
@@ -4676,7 +4706,8 @@
                                         "Asli  Uyar"
                                     ],
                                     "institution": "JACKSON LABORATORY",
-                                    "department": "NIH R13"
+                                    "department": "NIH R13",
+                                    "tag_name": "Alzheimer's Translational Genomics"
                                 },
                                 {
                                     "project_title": "Computational Techniques and Resources for Effective Translational Research in Alzheimer's Disease",
@@ -4823,7 +4854,8 @@
                                         "Asli  Uyar"
                                     ],
                                     "institution": "JACKSON LABORATORY",
-                                    "department": "NIH R13"
+                                    "department": "NIH R13",
+                                    "tag_name": "Alzheimer's Translational Genomics"
                                 }
                             ]
                         },
@@ -4933,7 +4965,8 @@
                                         "Brent L Berwin"
                                     ],
                                     "institution": "JACKSON LABORATORY",
-                                    "department": "NIH R13"
+                                    "department": "NIH R13",
+                                    "tag_name": "Mouse Model Training"
                                 },
                                 {
                                     "project_title": "Foundational Training in the Use of the Laboratory Mouse as a Model of Human Disease",
@@ -5031,7 +5064,8 @@
                                         "Brent L Berwin"
                                     ],
                                     "institution": "JACKSON LABORATORY",
-                                    "department": "NIH R13"
+                                    "department": "NIH R13",
+                                    "tag_name": "Genetic Mouse Models"
                                 }
                             ]
                         },
@@ -5158,7 +5192,8 @@
                                         "Basile Robin Tarchini"
                                     ],
                                     "institution": "JACKSON LABORATORY",
-                                    "department": "NIH R21"
+                                    "department": "NIH R21",
+                                    "tag_name": "Supporting Cell Morphogenesis"
                                 },
                                 {
                                     "project_title": "Modeling Hearing and Balance Disorders in Mice: the HEar@JAX Workshop",
@@ -5304,7 +5339,8 @@
                                         "Basile Robin Tarchini"
                                     ],
                                     "institution": "JACKSON LABORATORY",
-                                    "department": "NIH R13"
+                                    "department": "NIH R13",
+                                    "tag_name": "Mouse Hearing Balance"
                                 }
                             ]
                         }
@@ -5401,7 +5437,8 @@
                                         "Rafiou  Agoro"
                                     ],
                                     "institution": "JACKSON LABORATORY",
-                                    "department": "NIH R35"
+                                    "department": "NIH R35",
+                                    "tag_name": "Multi-Omics Systems Biology"
                                 }
                             ]
                         }
@@ -5549,7 +5586,8 @@
                                         "Nadia A Rosenthal"
                                     ],
                                     "institution": "JACKSON LABORATORY",
-                                    "department": "NIH U54"
+                                    "department": "NIH U54",
+                                    "tag_name": "Molecular Senescence Mapping"
                                 }
                             ]
                         },
@@ -5672,7 +5710,8 @@
                                         "Nadia A Rosenthal"
                                     ],
                                     "institution": "JACKSON LABORATORY",
-                                    "department": "NIH U54"
+                                    "department": "NIH U54",
+                                    "tag_name": "Cellular Senescence Mapping"
                                 }
                             ]
                         },
@@ -5805,7 +5844,8 @@
                                         "Nadia A Rosenthal"
                                     ],
                                     "institution": "JACKSON LABORATORY",
-                                    "department": "NIH R13"
+                                    "department": "NIH R13",
+                                    "tag_name": "Immuno-Cardiology"
                                 },
                                 {
                                     "project_title": "The Jackson Laboratory Senescence Tissue Mapping Center (JAX-Sen TMC)",
@@ -5916,7 +5956,8 @@
                                         "Nadia A Rosenthal"
                                     ],
                                     "institution": "JACKSON LABORATORY",
-                                    "department": "NIH U54"
+                                    "department": "NIH U54",
+                                    "tag_name": "Senescence Profiling Center"
                                 },
                                 {
                                     "project_title": "The Jackson Laboratory Senescence Tissue Mapping Center (JAX-Sen TMC) - Admin Core",
@@ -6003,7 +6044,8 @@
                                         "Nadia A Rosenthal"
                                     ],
                                     "institution": "JACKSON LABORATORY",
-                                    "department": "NIH U54"
+                                    "department": "NIH U54",
+                                    "tag_name": "Administrative Core"
                                 }
                             ]
                         }
@@ -6168,7 +6210,8 @@
                                         "BETHANY L DUMONT"
                                     ],
                                     "institution": "JACKSON LABORATORY",
-                                    "department": "NIH R24"
+                                    "department": "NIH R24",
+                                    "tag_name": "Genetically Diverse Mice"
                                 }
                             ]
                         }
@@ -6285,7 +6328,8 @@
                                         "VIVEK  KUMAR"
                                     ],
                                     "institution": "JACKSON LABORATORY",
-                                    "department": "NIH R25"
+                                    "department": "NIH R25",
+                                    "tag_name": "Multi-Omics Data Analysis"
                                 }
                             ]
                         },
@@ -6395,7 +6439,8 @@
                                         "VIVEK  KUMAR"
                                     ],
                                     "institution": "JACKSON LABORATORY",
-                                    "department": "NIH R25"
+                                    "department": "NIH R25",
+                                    "tag_name": "Multi-Omics Data Science"
                                 }
                             ]
                         },
@@ -6530,7 +6575,8 @@
                                         "Sarah  Wojiski"
                                     ],
                                     "institution": "JACKSON LABORATORY",
-                                    "department": "NIH R25"
+                                    "department": "NIH R25",
+                                    "tag_name": "Genomics Education Outreach"
                                 },
                                 {
                                     "project_title": "Genomics in Action",
@@ -6653,7 +6699,8 @@
                                         "Sarah  Wojiski"
                                     ],
                                     "institution": "JACKSON LABORATORY",
-                                    "department": "NIH R25"
+                                    "department": "NIH R25",
+                                    "tag_name": "Genomics Education Workforce"
                                 }
                             ]
                         },
@@ -6788,7 +6835,8 @@
                                         "Sarah  Wojiski"
                                     ],
                                     "institution": "JACKSON LABORATORY",
-                                    "department": "NIH R25"
+                                    "department": "NIH R25",
+                                    "tag_name": "Genomics Education Outreach"
                                 },
                                 {
                                     "project_title": "Genomics in Action",
@@ -6911,7 +6959,8 @@
                                         "Sarah  Wojiski"
                                     ],
                                     "institution": "JACKSON LABORATORY",
-                                    "department": "NIH R25"
+                                    "department": "NIH R25",
+                                    "tag_name": "Genomics Education Outreach"
                                 }
                             ]
                         },
@@ -7084,7 +7133,8 @@
                                         "Edison Tak-Bun Liu"
                                     ],
                                     "institution": "JACKSON LABORATORY",
-                                    "department": "NIH R01"
+                                    "department": "NIH R01",
+                                    "tag_name": "Host Genetics Immunotherapy"
                                 }
                             ]
                         },
@@ -7222,7 +7272,8 @@
                                         "Stephen A Murray"
                                     ],
                                     "institution": "JACKSON LABORATORY",
-                                    "department": "NIH R01"
+                                    "department": "NIH R01",
+                                    "tag_name": "CDH Functional Genomics"
                                 },
                                 {
                                     "project_title": "Functional Validation of Novel Variants Associated with Congenital Diaphragmatic Hernia",
@@ -7349,7 +7400,8 @@
                                         "Stephen A Murray"
                                     ],
                                     "institution": "JACKSON LABORATORY",
-                                    "department": "NIH R01"
+                                    "department": "NIH R01",
+                                    "tag_name": "CDH Functional Genomics"
                                 }
                             ]
                         },
@@ -7487,7 +7539,8 @@
                                         "Stephen A Murray"
                                     ],
                                     "institution": "JACKSON LABORATORY",
-                                    "department": "NIH R01"
+                                    "department": "NIH R01",
+                                    "tag_name": "CDH Genomics Validation"
                                 },
                                 {
                                     "project_title": "Functional Validation of Novel Variants Associated with Congenital Diaphragmatic Hernia",
@@ -7614,7 +7667,8 @@
                                         "Stephen A Murray"
                                     ],
                                     "institution": "JACKSON LABORATORY",
-                                    "department": "NIH R01"
+                                    "department": "NIH R01",
+                                    "tag_name": "CDH Genomics Validation"
                                 }
                             ]
                         },
@@ -7753,7 +7807,8 @@
                                         "Patsy M Nishina"
                                     ],
                                     "institution": "JACKSON LABORATORY",
-                                    "department": "NIH R01"
+                                    "department": "NIH R01",
+                                    "tag_name": "AMD Genetics Modeling"
                                 },
                                 {
                                     "project_title": "Role of ARMS2 mutations in age-related macular degeneration",
@@ -7880,7 +7935,8 @@
                                         "Patsy M Nishina"
                                     ],
                                     "institution": "JACKSON LABORATORY",
-                                    "department": "NIH R01"
+                                    "department": "NIH R01",
+                                    "tag_name": "AMD Genetic Mechanisms"
                                 }
                             ]
                         },
@@ -8050,7 +8106,8 @@
                                         "Lubriel  Sambolin-Escobales"
                                     ],
                                     "institution": "JACKSON LABORATORY",
-                                    "department": "NIH F32"
+                                    "department": "NIH F32",
+                                    "tag_name": "Mitochondrial Hearing Loss"
                                 }
                             ]
                         }
@@ -8203,7 +8260,8 @@
                                         "Cheryl Lea Wellington"
                                     ],
                                     "institution": "JACKSON LABORATORY",
-                                    "department": "NIH R13"
+                                    "department": "NIH R13",
+                                    "tag_name": "Vascular Cognitive Neuroscience"
                                 },
                                 {
                                     "project_title": "VCID CWOW: Identifying Novel Targets to Treat Cerebral Amyloid Angiopathy",
@@ -8351,7 +8409,8 @@
                                         "Nicholas Thomas Seyfried"
                                     ],
                                     "institution": "JACKSON LABORATORY",
-                                    "department": "NIH RF1"
+                                    "department": "NIH RF1",
+                                    "tag_name": "Neurovascular Target Discovery"
                                 }
                             ]
                         },
@@ -8511,7 +8570,8 @@
                                         "Nicholas Thomas Seyfried"
                                     ],
                                     "institution": "JACKSON LABORATORY",
-                                    "department": "NIH RF1"
+                                    "department": "NIH RF1",
+                                    "tag_name": "Neurovascular Target Discovery"
                                 }
                             ]
                         }
@@ -8684,7 +8744,8 @@
                                         "Robert W. Burgess"
                                     ],
                                     "institution": "JACKSON LABORATORY",
-                                    "department": "NIH R37"
+                                    "department": "NIH R37",
+                                    "tag_name": "Neuromuscular Genetic Therapeutics"
                                 },
                                 {
                                     "project_title": "tRNA Gene Replacement Therapy for tRNA-Synthetase Related Charcot-Marie-Tooth Disorder",
@@ -8810,7 +8871,8 @@
                                         "Scott Q Harper"
                                     ],
                                     "institution": "JACKSON LABORATORY",
-                                    "department": "NIH R61"
+                                    "department": "NIH R61",
+                                    "tag_name": "tRNA Synthetase Therapy"
                                 },
                                 {
                                     "project_title": "tRNA Gene Replacement Therapy for tRNA-Synthetase Related Charcot-Marie-Tooth Disorder",
@@ -8936,7 +8998,8 @@
                                         "Scott Q Harper"
                                     ],
                                     "institution": "JACKSON LABORATORY",
-                                    "department": "NIH R61"
+                                    "department": "NIH R61",
+                                    "tag_name": "GARS Gene Therapy"
                                 },
                                 {
                                     "project_title": "The Genetics of the Neuromuscular Junction: Mechanisms and Disease Models",
@@ -9064,7 +9127,8 @@
                                         "Robert W. Burgess"
                                     ],
                                     "institution": "JACKSON LABORATORY",
-                                    "department": "NIH R37"
+                                    "department": "NIH R37",
+                                    "tag_name": "Neuromuscular Genetics Modeling"
                                 },
                                 {
                                     "project_title": "The Genetics of the Neuromuscular Junction: Mechanisms and Disease Models",
@@ -9191,7 +9255,8 @@
                                         "Robert W. Burgess"
                                     ],
                                     "institution": "JACKSON LABORATORY",
-                                    "department": "NIH R37"
+                                    "department": "NIH R37",
+                                    "tag_name": "Genetic Neuromuscular Therapeutics"
                                 },
                                 {
                                     "project_title": "Summer Research Experience in Neurobiology at The Jackson Laboratory",
@@ -9285,7 +9350,8 @@
                                         "Robert W. Burgess"
                                     ],
                                     "institution": "JACKSON LABORATORY",
-                                    "department": "NIH R25"
+                                    "department": "NIH R25",
+                                    "tag_name": "Neurobiology Research Education"
                                 }
                             ]
                         },
@@ -9423,7 +9489,8 @@
                                         "Scott Q Harper"
                                     ],
                                     "institution": "JACKSON LABORATORY",
-                                    "department": "NIH R61"
+                                    "department": "NIH R61",
+                                    "tag_name": "GARS Gene Therapy"
                                 },
                                 {
                                     "project_title": "tRNA Gene Replacement Therapy for tRNA-Synthetase Related Charcot-Marie-Tooth Disorder",
@@ -9549,7 +9616,8 @@
                                         "Scott Q Harper"
                                     ],
                                     "institution": "JACKSON LABORATORY",
-                                    "department": "NIH R61"
+                                    "department": "NIH R61",
+                                    "tag_name": "GARS-Linked CMT Therapy"
                                 }
                             ]
                         }
@@ -9717,7 +9785,8 @@
                                         "Brianna  Gurdon"
                                     ],
                                     "institution": "JACKSON LABORATORY",
-                                    "department": "NIH F31"
+                                    "department": "NIH F31",
+                                    "tag_name": "AD Resilience Genomics"
                                 },
                                 {
                                     "project_title": "Lrfn2 as a Novel Resilience Factor to Protect Against Alzheimer's Disease-Related Cortical Neurodegeneration",
@@ -9866,7 +9935,8 @@
                                         "Brianna  Gurdon"
                                     ],
                                     "institution": "JACKSON LABORATORY",
-                                    "department": "NIH F31"
+                                    "department": "NIH F31",
+                                    "tag_name": "Alzheimer's Resilience Genomics"
                                 }
                             ]
                         }
@@ -9968,7 +10038,8 @@
                                         "Brian Robert Hoffmann"
                                     ],
                                     "institution": "JACKSON LABORATORY",
-                                    "department": "NIH S10"
+                                    "department": "NIH S10",
+                                    "tag_name": "Single-Cell Proteomics"
                                 }
                             ]
                         }
@@ -10141,7 +10212,8 @@
                                         "Julia  Oh"
                                     ],
                                     "institution": "JACKSON LABORATORY",
-                                    "department": "NIH U01"
+                                    "department": "NIH U01",
+                                    "tag_name": "Skin Microbiome Immunology"
                                 },
                                 {
                                     "project_title": "Molecular mechanisms of staphylococcal modulation of skin homeostasis",
@@ -10211,7 +10283,8 @@
                                         "Julia  Oh"
                                     ],
                                     "institution": "JACKSON LABORATORY",
-                                    "department": "NIH R01"
+                                    "department": "NIH R01",
+                                    "tag_name": "Staphylococcus Skin Mechanisms"
                                 },
                                 {
                                     "project_title": "Molecular mechanisms of staphylococcal modulation of skin homeostasis",
@@ -10327,7 +10400,8 @@
                                         "Julia  Oh"
                                     ],
                                     "institution": "JACKSON LABORATORY",
-                                    "department": "NIH R01"
+                                    "department": "NIH R01",
+                                    "tag_name": "Staphylococcal Skin Homeostasis"
                                 }
                             ]
                         }
@@ -10495,7 +10569,8 @@
                                         "Francesca  Menghi"
                                     ],
                                     "institution": "JACKSON LABORATORY",
-                                    "department": "NIH R03"
+                                    "department": "NIH R03",
+                                    "tag_name": "TNBC Biomarker Disparities"
                                 },
                                 {
                                     "project_title": "Assessing molecular predictors of triple negative breast cancer therapeutic response in Black, White, and Hispanic patients in a community healthcare system",
@@ -10644,7 +10719,8 @@
                                         "Francesca  Menghi"
                                     ],
                                     "institution": "JACKSON LABORATORY",
-                                    "department": "NIH R03"
+                                    "department": "NIH R03",
+                                    "tag_name": "TNBC Molecular Subtyping"
                                 }
                             ]
                         },
@@ -10805,7 +10881,8 @@
                                         "Francesca  Menghi"
                                     ],
                                     "institution": "JACKSON LABORATORY",
-                                    "department": "NIH R03"
+                                    "department": "NIH R03",
+                                    "tag_name": "TNBC Molecular Predictors"
                                 },
                                 {
                                     "project_title": "Assessing molecular predictors of triple negative breast cancer therapeutic response in Black, White, and Hispanic patients in a community healthcare system",
@@ -10954,7 +11031,8 @@
                                         "Francesca  Menghi"
                                     ],
                                     "institution": "JACKSON LABORATORY",
-                                    "department": "NIH R03"
+                                    "department": "NIH R03",
+                                    "tag_name": "TNBC Molecular Predictors"
                                 }
                             ]
                         }
@@ -11089,7 +11167,8 @@
                                         "William Kester Nash"
                                     ],
                                     "institution": "NATIONAL PARTNERSHIP/ENVIRONMNTL/TECH/ED",
-                                    "department": "NIH UH4"
+                                    "department": "NIH UH4",
+                                    "tag_name": "Nuclear HazMat Training"
                                 },
                                 {
                                     "project_title": "NPETE's  Community College Consortium for Health & Safety",
@@ -11198,7 +11277,8 @@
                                         "William Kester Nash"
                                     ],
                                     "institution": "NATIONAL PARTNERSHIP/ENVIRONMNTL/TECH/ED",
-                                    "department": "NIH U45"
+                                    "department": "NIH U45",
+                                    "tag_name": "Hazardous Materials Training"
                                 },
                                 {
                                     "project_title": "Community Partnerships in Disaster Site  Training",
@@ -11313,7 +11393,8 @@
                                         "William Kester Nash"
                                     ],
                                     "institution": "NATIONAL PARTNERSHIP/ENVIRONMNTL/TECH/ED",
-                                    "department": "NIH U45"
+                                    "department": "NIH U45",
+                                    "tag_name": "Disaster Site Training"
                                 },
                                 {
                                     "project_title": "NPETE'S Community College Consortium for Health & Safety",
@@ -11390,7 +11471,8 @@
                                         "William Kester Nash"
                                     ],
                                     "institution": "NATIONAL PARTNERSHIP/ENVIRONMNTL/TECH/ED",
-                                    "department": "NIH U45"
+                                    "department": "NIH U45",
+                                    "tag_name": "Hazardous Materials Training"
                                 }
                             ]
                         }
@@ -11571,7 +11653,8 @@
                                         "Julie Ann Gosse"
                                     ],
                                     "institution": "UNIVERSITY OF MAINE ORONO",
-                                    "department": "NIH R15"
+                                    "department": "NIH R15",
+                                    "tag_name": "Mitochondrial Toxicology"
                                 }
                             ]
                         },
@@ -11689,7 +11772,8 @@
                                         "MATTHEW Paul BRICHACEK"
                                     ],
                                     "institution": "UNIVERSITY OF MAINE ORONO",
-                                    "department": "NIH R15"
+                                    "department": "NIH R15",
+                                    "tag_name": "Glycan Biomaterials Engineering"
                                 }
                             ]
                         },
@@ -11810,7 +11894,8 @@
                                         "SAMUEL T HESS"
                                     ],
                                     "institution": "UNIVERSITY OF MAINE ORONO",
-                                    "department": "NIH R15"
+                                    "department": "NIH R15",
+                                    "tag_name": "Influenza Host Interactions"
                                 }
                             ]
                         },
@@ -11922,7 +12007,8 @@
                                         "Joshua Brian Kelley"
                                     ],
                                     "institution": "UNIVERSITY OF MAINE ORONO",
-                                    "department": "NIH R15"
+                                    "department": "NIH R15",
+                                    "tag_name": "Spatiotemporal RGS Signaling"
                                 }
                             ]
                         }
@@ -12039,7 +12125,8 @@
                                         "Hari Prasath  Palani"
                                     ],
                                     "institution": "UNIVERSITY OF MAINE ORONO",
-                                    "department": "NIH R61"
+                                    "department": "NIH R61",
+                                    "tag_name": "Inclusive Multisensory Navigation"
                                 }
                             ]
                         },
@@ -12149,7 +12236,8 @@
                                         "Hari Prasath  Palani"
                                     ],
                                     "institution": "UNIVERSITY OF MAINE ORONO",
-                                    "department": "NIH R61"
+                                    "department": "NIH R61",
+                                    "tag_name": "Gamified Multisensory Navigation"
                                 }
                             ]
                         }
@@ -12285,7 +12373,8 @@
                                         "Amanda Colleen Ignacz"
                                     ],
                                     "institution": "UNIVERSITY OF MAINE ORONO",
-                                    "department": "NIH F31"
+                                    "department": "NIH F31",
+                                    "tag_name": "Neuromuscular Disease Mechanisms"
                                 }
                             ]
                         }
@@ -12403,7 +12492,8 @@
                                         "Clarissa A Henry"
                                     ],
                                     "institution": "UNIVERSITY OF MAINE ORONO",
-                                    "department": "NIH R01"
+                                    "department": "NIH R01",
+                                    "tag_name": "Neuromuscular Disease Modeling"
                                 },
                                 {
                                     "project_title": "Zebrafish Habitat Expansion",
@@ -12485,7 +12575,8 @@
                                         "Clarissa A Henry"
                                     ],
                                     "institution": "UNIVERSITY OF MAINE ORONO",
-                                    "department": "NIH R24"
+                                    "department": "NIH R24",
+                                    "tag_name": "Zebrafish Habitat Expansion"
                                 }
                             ]
                         }
@@ -12646,7 +12737,8 @@
                                         "Prayag  Murawala"
                                     ],
                                     "institution": "MOUNT DESERT ISLAND BIOLOGICAL LAB",
-                                    "department": "NIH R25"
+                                    "department": "NIH R25",
+                                    "tag_name": "Regenerative Medicine Leadership"
                                 }
                             ]
                         }
@@ -12750,7 +12842,8 @@
                                         "IAIN A. DRUMMOND"
                                     ],
                                     "institution": "MOUNT DESERT ISLAND BIOLOGICAL LAB",
-                                    "department": "NIH P30"
+                                    "department": "NIH P30",
+                                    "tag_name": "Administrative Operations"
                                 },
                                 {
                                     "project_title": "The MDIBL Center for Comparative Biology of Tissue Repair, Regeneration and Aging",
@@ -12870,7 +12963,8 @@
                                         "IAIN A. DRUMMOND"
                                     ],
                                     "institution": "MOUNT DESERT ISLAND BIOLOGICAL LAB",
-                                    "department": "NIH P30"
+                                    "department": "NIH P30",
+                                    "tag_name": "Comparative Regenerative Biology"
                                 },
                                 {
                                     "project_title": "The MDIBL Center for Comparative Biology of Tissue Repair, Regeneration and Aging",
@@ -12993,7 +13087,8 @@
                                         "IAIN A. DRUMMOND"
                                     ],
                                     "institution": "MOUNT DESERT ISLAND BIOLOGICAL LAB",
-                                    "department": "NIH P30"
+                                    "department": "NIH P30",
+                                    "tag_name": "Comparative Regenerative Biology"
                                 },
                                 {
                                     "project_title": "Administrative Core",
@@ -13078,7 +13173,8 @@
                                         "IAIN A. DRUMMOND"
                                     ],
                                     "institution": "MOUNT DESERT ISLAND BIOLOGICAL LAB",
-                                    "department": "NIH P30"
+                                    "department": "NIH P30",
+                                    "tag_name": "Administrative Core"
                                 }
                             ]
                         },
@@ -13210,7 +13306,8 @@
                                         "JOEL H GRABER"
                                     ],
                                     "institution": "MOUNT DESERT ISLAND BIOLOGICAL LAB",
-                                    "department": "NIH P30"
+                                    "department": "NIH P30",
+                                    "tag_name": "Genomics Data Science"
                                 },
                                 {
                                     "project_title": "Comparative Genomics and Data Science Core",
@@ -13330,7 +13427,8 @@
                                         "JOEL H GRABER"
                                     ],
                                     "institution": "MOUNT DESERT ISLAND BIOLOGICAL LAB",
-                                    "department": "NIH P30"
+                                    "department": "NIH P30",
+                                    "tag_name": "Genomics Data Science"
                                 }
                             ]
                         },
@@ -13446,7 +13544,8 @@
                                         "Frederic Xavier Bonnet"
                                     ],
                                     "institution": "MOUNT DESERT ISLAND BIOLOGICAL LAB",
-                                    "department": "NIH P30"
+                                    "department": "NIH P30",
+                                    "tag_name": "Light Microscopy Core"
                                 },
                                 {
                                     "project_title": "Light Microscopy Facility Core",
@@ -13550,7 +13649,8 @@
                                         "Frederic Xavier Bonnet"
                                     ],
                                     "institution": "MOUNT DESERT ISLAND BIOLOGICAL LAB",
-                                    "department": "NIH P30"
+                                    "department": "NIH P30",
+                                    "tag_name": "Light Microscopy Core"
                                 }
                             ]
                         },
@@ -13701,7 +13801,8 @@
                                         "Edward  Seckeler"
                                     ],
                                     "institution": "MOUNT DESERT ISLAND BIOLOGICAL LAB",
-                                    "department": "NIH P30"
+                                    "department": "NIH P30",
+                                    "tag_name": "Comparative Animal Models"
                                 },
                                 {
                                     "project_title": "Comparative Animal Models (CAM) Core",
@@ -13839,7 +13940,8 @@
                                         "Edward  Seckeler"
                                     ],
                                     "institution": "MOUNT DESERT ISLAND BIOLOGICAL LAB",
-                                    "department": "NIH P30"
+                                    "department": "NIH P30",
+                                    "tag_name": "Comparative Animal Models"
                                 }
                             ]
                         }
@@ -13984,7 +14086,8 @@
                                         "JAMES A COFFMAN"
                                     ],
                                     "institution": "MOUNT DESERT ISLAND BIOLOGICAL LAB",
-                                    "department": "NIH R21"
+                                    "department": "NIH R21",
+                                    "tag_name": "Neurodevelopmental Toxicology"
                                 },
                                 {
                                     "project_title": "Long-term risk for psychiatric disorders following early life exposure to environmental arsenic",
@@ -14110,7 +14213,8 @@
                                         "JAMES A COFFMAN"
                                     ],
                                     "institution": "MOUNT DESERT ISLAND BIOLOGICAL LAB",
-                                    "department": "NIH R21"
+                                    "department": "NIH R21",
+                                    "tag_name": "Environmental Neurodevelopmental Toxicology"
                                 }
                             ]
                         }
@@ -14205,7 +14309,8 @@
                                         "Dustin Lynn Updike"
                                     ],
                                     "institution": "MOUNT DESERT ISLAND BIOLOGICAL LAB",
-                                    "department": "NIH R35"
+                                    "department": "NIH R35",
+                                    "tag_name": "Germ Granule Biology"
                                 },
                                 {
                                     "project_title": "The function of germ granule processes that maintain pluripotency in the C. elegans germline",
@@ -14272,7 +14377,8 @@
                                         "Dustin Lynn Updike"
                                     ],
                                     "institution": "MOUNT DESERT ISLAND BIOLOGICAL LAB",
-                                    "department": "NIH R35"
+                                    "department": "NIH R35",
+                                    "tag_name": "Germ Granule Biology"
                                 }
                             ]
                         }
@@ -14424,7 +14530,8 @@
                                         "Eben Grant Estell"
                                     ],
                                     "institution": "UNIVERSITY OF NEW ENGLAND",
-                                    "department": "NIH K01"
+                                    "department": "NIH K01",
+                                    "tag_name": "Irisin-Mediated Bone Signaling"
                                 }
                             ]
                         }
@@ -14595,7 +14702,8 @@
                                         "Michael A Burman"
                                     ],
                                     "institution": "UNIVERSITY OF NEW ENGLAND",
-                                    "department": "NIH R16"
+                                    "department": "NIH R16",
+                                    "tag_name": "Neonatal Sex Differences"
                                 },
                                 {
                                     "project_title": "Ontogeny of sex differences in amygdala and hypothalamus after neonatal trauma",
@@ -14747,7 +14855,8 @@
                                         "Michael A Burman"
                                     ],
                                     "institution": "UNIVERSITY OF NEW ENGLAND",
-                                    "department": "NIH R16"
+                                    "department": "NIH R16",
+                                    "tag_name": "Neonatal Pain Neuroendocrinology"
                                 }
                             ]
                         },
@@ -14859,7 +14968,8 @@
                                         "TAMARA E KING"
                                     ],
                                     "institution": "UNIVERSITY OF NEW ENGLAND",
-                                    "department": "NIH R16"
+                                    "department": "NIH R16",
+                                    "tag_name": "Sex-specific OA pain"
                                 },
                                 {
                                     "project_title": "Mechanisms underlying sex differences in emergence of advanced osteoarthritis pain",
@@ -14959,7 +15069,8 @@
                                         "TAMARA E KING"
                                     ],
                                     "institution": "UNIVERSITY OF NEW ENGLAND",
-                                    "department": "NIH R16"
+                                    "department": "NIH R16",
+                                    "tag_name": "Sex-specific OA pain"
                                 }
                             ]
                         },
@@ -15089,7 +15200,8 @@
                                         "RUSSELL JAMES FERLAND"
                                     ],
                                     "institution": "UNIVERSITY OF NEW ENGLAND",
-                                    "department": "NIH R16"
+                                    "department": "NIH R16",
+                                    "tag_name": "Ventromedial Epileptogenesis"
                                 },
                                 {
                                     "project_title": "The Role of the Ventromedial Nucleus of the Hypothalamus in Epileptogenesis",
@@ -15207,7 +15319,8 @@
                                         "RUSSELL JAMES FERLAND"
                                     ],
                                     "institution": "UNIVERSITY OF NEW ENGLAND",
-                                    "department": "NIH R16"
+                                    "department": "NIH R16",
+                                    "tag_name": "Ventromedial Epileptogenesis Genomics"
                                 }
                             ]
                         }
@@ -15362,7 +15475,8 @@
                                         "DEREK C MOLLIVER"
                                     ],
                                     "institution": "UNIVERSITY OF NEW ENGLAND",
-                                    "department": "NIH P20"
+                                    "department": "NIH P20",
+                                    "tag_name": "Cell Signaling Research"
                                 }
                             ]
                         },
@@ -15510,7 +15624,8 @@
                                         "Luis Fernando Queme Cobar"
                                     ],
                                     "institution": "UNIVERSITY OF NEW ENGLAND",
-                                    "department": "NIH P20"
+                                    "department": "NIH P20",
+                                    "tag_name": "Product Design"
                                 }
                             ]
                         }
@@ -15700,7 +15815,8 @@
                                         "KEVIN  STRANGE"
                                     ],
                                     "institution": "REVIDIA THERAPEUTICS, INC",
-                                    "department": "NIH R44"
+                                    "department": "NIH R44",
+                                    "tag_name": "Preclinical Toxicology"
                                 }
                             ]
                         }
@@ -15745,7 +15861,8 @@
                                         "Patrick  Shepard"
                                     ],
                                     "institution": "REDDE, LLC",
-                                    "department": "NIH T03"
+                                    "department": "NIH T03",
+                                    "tag_name": "Maritime Safety Solutions"
                                 }
                             ]
                         }
@@ -15853,7 +15970,8 @@
                                         "Selena  Neptune-Bear"
                                     ],
                                     "institution": "WABANAKI HEALTH AND WELLNESS",
-                                    "department": "NIH OT2"
+                                    "department": "NIH OT2",
+                                    "tag_name": "Wabanaki Pain Research"
                                 }
                             ]
                         },
@@ -15986,7 +16104,8 @@
                                         "Ralph  Cammack"
                                     ],
                                     "institution": "WABANAKI HEALTH AND WELLNESS",
-                                    "department": "NIH OT2"
+                                    "department": "NIH OT2",
+                                    "tag_name": "Indigenous Data Sovereignty"
                                 }
                             ]
                         }
@@ -16143,7 +16262,8 @@
                                         "Jeanette Irene Harris"
                                     ],
                                     "institution": "VA MAINE HEALTHCARE SYSTEM",
-                                    "department": "NIH I01"
+                                    "department": "NIH I01",
+                                    "tag_name": "Moral Injury Treatment"
                                 }
                             ]
                         }
@@ -16194,7 +16314,8 @@
                                         "JIM  COLE"
                                     ],
                                     "institution": null,
-                                    "department": "NIH N01"
+                                    "department": "NIH N01",
+                                    "tag_name": "Aging rodent pathology"
                                 }
                             ]
                         }
@@ -16351,7 +16472,8 @@
                                         "Matthew William Klingle"
                                     ],
                                     "institution": "BOWDOIN COLLEGE",
-                                    "department": "NIH G13"
+                                    "department": "NIH G13",
+                                    "tag_name": "Historical Diabetes Epidemiology"
                                 }
                             ]
                         }

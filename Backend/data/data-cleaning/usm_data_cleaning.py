@@ -182,44 +182,44 @@ if __name__ == "__main__":
             # This cost money to do, so i only did it once
             
             # Filter out empty strings or None values
-            filtered_expertise = [str(x).strip() for x in expertise_data if x and str(x).strip()]
+            # filtered_expertise = [str(x).strip() for x in expertise_data if x and str(x).strip()]
             
-            if not filtered_expertise:
-                # Nothing to generate from, skip entirely
-                print("No valid expertise data to generate tags from.")
-            else:
-                try:
-                    response = client.responses.create(
-                        model="gpt-5-nano",
-                        input=(
-                            "You are an expert at creating a comprehensive overview of the following expertise areas: "
-                            + " ".join(filtered_expertise)
-                            + """, generate four concise expertise tags that best represent the combined expertise areas listed.
-                            Each tag should be no more than three words long and should capture the essence of the expertise described.
-                            The first tag in the list should be the most relevant overall expertise area.
-                            Provide the tags in a comma-separated format. Do not say anything else other than the tags. If you cannot generate tags
-                            due to not scrolling the web, lack of content, or anything the prevents you,
-                            please response with the word "NoTags" """
-                        ),
-                        store=True,
-                    )
+            # if not filtered_expertise:
+            #     # Nothing to generate from, skip entirely
+            #     print("No valid expertise data to generate tags from.")
+            # else:
+            #     try:
+            #         response = client.responses.create(
+            #             model="gpt-5-nano",
+            #             input=(
+            #                 "You are an expert at creating a comprehensive overview of the following expertise areas: "
+            #                 + " ".join(filtered_expertise)
+            #                 + """, generate four concise expertise tags that best represent the combined expertise areas listed.
+            #                 Each tag should be no more than three words long and should capture the essence of the expertise described.
+            #                 The first tag in the list should be the most relevant overall expertise area.
+            #                 Provide the tags in a comma-separated format. Do not say anything else other than the tags. If you cannot generate tags
+            #                 due to not scrolling the web, lack of content, or anything the prevents you,
+            #                 please response with the word "NoTags" """
+            #             ),
+            #             store=True,
+            #         )
             
-                    print(response.output_text)
-                    if response.output_text != 'NoTags':
-                        expertise_tags = response.output_text.split(",")
+            #         print(response.output_text)
+            #         if response.output_text != 'NoTags':
+            #             expertise_tags = response.output_text.split(",")
 
-                        for i, tag in enumerate(expertise_tags):
-                            tag = tag.strip()
+            #             for i, tag in enumerate(expertise_tags):
+            #                 tag = tag.strip()
                 
-                            if i == 0:
-                                person_data["main_field"] = tag
-                            else:
-                                person_data[f"expertise_{i}"] = tag
+            #                 if i == 0:
+            #                     person_data["main_field"] = tag
+            #                 else:
+            #                     person_data[f"expertise_{i}"] = tag
                 
             
             
-                except Exception as e:
-                    print(f"Skipping expertise generation due to error: {e}")
+            #     except Exception as e:
+            #         print(f"Skipping expertise generation due to error: {e}")
     
     with open("../processed/post_cleaning_usm_data.json", "w", encoding="utf-8") as f:
         json.dump(data, f, indent=4)

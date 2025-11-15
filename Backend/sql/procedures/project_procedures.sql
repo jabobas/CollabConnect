@@ -8,14 +8,13 @@
 CREATE PROCEDURE InsertIntoProject(
     IN ProjectTitle VARCHAR(200),
     IN ProjectDescription TEXT,
-    IN LeadPersonID BIGINT UNSIGNED,
     IN PersonID BIGINT UNSIGNED,
     IN StartDate DATE,
     IN EndDate DATE
 )
 BEGIN
-    INSERT INTO Project (project_title, project_description, leadperson_id, person_id, start_date, end_date)
-    VALUES (ProjectTitle, ProjectDescription, LeadPersonID, PersonID, StartDate, EndDate);
+    INSERT INTO Project (project_title, project_description, person_id, start_date, end_date)
+    VALUES (ProjectTitle, ProjectDescription, PersonID, StartDate, EndDate);
     
     SELECT LAST_INSERT_ID() AS project_id;
 END;
@@ -24,7 +23,6 @@ CREATE PROCEDURE UpdateProjectDetails(
     IN ProjectID BIGINT UNSIGNED,
     IN ProjectTitle VARCHAR(200),
     IN ProjectDescription TEXT,
-    IN LeadPersonID BIGINT UNSIGNED,
     IN StartDate DATE,
     IN EndDate DATE
 )
@@ -32,7 +30,6 @@ BEGIN
     UPDATE Project
     SET project_title = ProjectTitle,
         project_description = ProjectDescription,
-        leadperson_id = LeadPersonID,
         start_date = StartDate,
         end_date = EndDate
     WHERE project_id = ProjectID;
@@ -55,16 +52,6 @@ CREATE PROCEDURE UpdateProjectDescription(
 BEGIN
     UPDATE Project
     SET project_description = ProjectDescription
-    WHERE project_id = ProjectID;
-END;
-
-CREATE PROCEDURE UpdateProjectLead(
-    IN ProjectID BIGINT UNSIGNED,
-    IN LeadPersonID BIGINT UNSIGNED
-)
-BEGIN
-    UPDATE Project
-    SET leadperson_id = LeadPersonID
     WHERE project_id = ProjectID;
 END;
 
@@ -108,11 +95,6 @@ END;
 CREATE PROCEDURE SelectProjectsByPersonID(IN PersonID BIGINT UNSIGNED)
 BEGIN
     SELECT * FROM Project WHERE person_id = PersonID;
-END;
-
-CREATE PROCEDURE SelectProjectsByLeadPersonID(IN LeadPersonID BIGINT UNSIGNED)
-BEGIN
-    SELECT * FROM Project WHERE leadperson_id = LeadPersonID;
 END;
 
 CREATE PROCEDURE SelectActiveProjects()
