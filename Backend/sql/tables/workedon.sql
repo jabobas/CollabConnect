@@ -8,7 +8,6 @@ CREATE TABLE IF NOT EXISTS WorkedOn (
     project_role   VARCHAR(100)    NOT NULL,
     start_date     DATE            NOT NULL,
     end_date       DATE            DEFAULT NULL,
-    notes          VARCHAR(255)    DEFAULT NULL,
     PRIMARY KEY (person_id, project_id, start_date),
     CONSTRAINT ck_workedon_dates CHECK (end_date IS NULL OR end_date >= start_date),
     CONSTRAINT fk_workedon_person

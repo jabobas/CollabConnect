@@ -16,6 +16,8 @@ CREATE PROCEDURE InsertIntoProject(
 BEGIN
     INSERT INTO Project (project_title, project_description, leadperson_id, person_id, start_date, end_date)
     VALUES (ProjectTitle, ProjectDescription, LeadPersonID, PersonID, StartDate, EndDate);
+    
+    SELECT LAST_INSERT_ID() AS project_id;
 END;
 
 CREATE PROCEDURE UpdateProjectDetails(

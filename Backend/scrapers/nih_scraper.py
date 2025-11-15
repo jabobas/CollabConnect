@@ -1,8 +1,7 @@
 """
-NIH Reporter Scraper - Outputs unified JSON format
-Fetches projects from https://reporter.nih.gov/ and transforms to CollabConnect schema.
-Usage:
-    python nih_scraper.py --keyword "machine learning" --fiscal-year 2025 --limit 50
+Author: Aubin Mugisha
+Description: Fetches Maine research projects from NIH Reporter API and exports to JSON
+
 """
 
 import argparse
@@ -56,15 +55,15 @@ def parse_date(value: Optional[str]) -> Optional[str]:
     if not value:
         return None
     try:
-        parsed = dt.datetime.strptime(value, "%Y-%m-%d").date()
+        # Try ISO 8601 datetime format first (2021-05-20T00:00:00)
+        if 'T' in value:
+            parsed = dt.datetime.fromisoformat(value.replace('Z', '+00:00')).date()
+        else:
+            # Fallback to simple date format (YYYY-MM-DD)
+            parsed = dt.datetime.strptime(value, "%Y-%m-%d").date()
         return parsed.isoformat()
-    except ValueError:
+    except (ValueError, AttributeError):
         return None
-
-
-def synthetic_email(profile_id: str) -> str:
-    """Generate synthetic email for NIH profile (used as lookup key)."""
-    return f"nih_{profile_id}@profiles.nih.gov"
 
 
 def transform_to_unified_schema(projects: List[Dict]) -> Dict:
@@ -83,9 +82,12 @@ def transform_to_unified_schema(projects: List[Dict]) -> Dict:
     belongsto_list = []
     
     # Track seen entities to avoid duplicates
-    seen_people = set()  # emails
+    seen_people = set()  # person keys
     seen_projects = set()  # project_num
     seen_belongsto = set()  # (dept_name, inst_name, start_date)
+    
+    # Track projects per person for nesting
+    person_projects_map = {}  # person_key -> list of project objects
     
     for project in projects:
         project_num = project.get("project_num")
@@ -101,10 +103,22 @@ def transform_to_unified_schema(projects: List[Dict]) -> Dict:
         start_date = parse_date(project.get("project_start_date")) or dt.date.today().isoformat()
         end_date = parse_date(project.get("project_end_date"))
         
+        # Get principal investigator (lead person)
+        investigators = project.get("principal_investigators") or []
+        leadperson_name = None
+        if investigators:
+            lead_inv = investigators[0]
+            leadperson_name = (
+                lead_inv.get("full_name")
+                or lead_inv.get("name")
+                or lead_inv.get("first_name")
+            )
+        
         projects_list.append({
             "project_title": project_title,
             "project_description": project_description,
             "project_tags": project_tags,
+            "leadperson_name": leadperson_name,  # Add lead person for linking
             "start_date": start_date,
             "end_date": end_date,
             "external_id": project_num,
@@ -154,29 +168,26 @@ def transform_to_unified_schema(projects: List[Dict]) -> Dict:
         investigators = project.get("principal_investigators") or []
         for idx, investigator in enumerate(investigators, start=1):
             profile_id = str(investigator.get("profile_id") or "").strip()
-            if not profile_id:
-                continue
+            name = (
+                investigator.get("full_name")
+                or investigator.get("name")
+                or investigator.get("first_name")
+                or "NIH Investigator"
+            )
             
-            email = synthetic_email(profile_id)
-            if email in seen_people:
-                # Person already added, just create WorkedOn relationship
-                pass
-            else:
-                seen_people.add(email)
-                name = (
-                    investigator.get("full_name")
-                    or investigator.get("name")
-                    or investigator.get("first_name")
-                    or "NIH Investigator"
-                )
+            # Use name as unique key since email is not available
+            person_key = f"{name}_{profile_id}" if profile_id else name
+            
+            if person_key not in seen_people:
+                seen_people.add(person_key)
                 
                 # Add person to department
                 if institution_name and dept_name in institutions_map[institution_name]["departments"]:
                     institutions_map[institution_name]["departments"][dept_name]["people"].append({
                         "person_name": name,
-                        "person_email": email,
+                        "person_email": None,  # Email not available from NIH API
                         "person_phone": None,
-                        "bio": f"NIH Investigator (profile {profile_id})",
+                        "bio": None,  # Bio not available from NIH API
                         "profile_url": None,
                         "expertise_1": None,
                         "expertise_2": None,
@@ -187,18 +198,42 @@ def transform_to_unified_schema(projects: List[Dict]) -> Dict:
             # WorkedOn relationship
             role = investigator.get("role") or "Principal Investigator" if idx == 1 else "Co-Investigator"
             workedon_list.append({
-                "person_email": email,
+                "person_email": None,  # Email not available from NIH API
+                "person_name": name,   # Use name for matching instead
                 "project_title": project_title,
                 "project_role": role,
                 "start_date": start_date,
                 "end_date": end_date,
-                "notes": f"NIH project {project_num}",
+            })
+            
+            # Add project to person's projects array
+            if person_key not in person_projects_map:
+                person_projects_map[person_key] = []
+            person_projects_map[person_key].append({
+                "project_title": project_title,
+                "project_description": project_description,
+                "project_role": role,
+                "start_date": start_date,
+                "end_date": end_date,
             })
     
-    # Convert institutions_map to list format (flatten departments dict to list)
+    # Convert institutions_map to list format and add projects to each person
     institutions_list = []
     for inst in institutions_map.values():
         inst["departments"] = list(inst["departments"].values())
+        # Add projects array to each person
+        for dept in inst["departments"]:
+            for person in dept["people"]:
+                person_name = person["person_name"]
+                # Find person_key (try with and without profile_id)
+                person_key = None
+                for key in person_projects_map.keys():
+                    if key.startswith(person_name):
+                        person_key = key
+                        break
+                
+                person["projects"] = person_projects_map.get(person_key, [])
+        
         institutions_list.append(inst)
     
     return {
@@ -240,8 +275,8 @@ def main():
     parser.add_argument(
         "--output",
         type=str,
-        default="Backend/scrapers/data/nih_projects.json",
-        help="Output JSON file path (default: Backend/scrapers/data/nih_projects.json)",
+        default="../data/nih_projects.json",
+        help="Output JSON file path (default: ../data/nih_projects.json)",
     )
     
     args = parser.parse_args()

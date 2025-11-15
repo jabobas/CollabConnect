@@ -134,6 +134,7 @@ def create_procedures():
         "./sql/procedures/project_tag_procedures.sql",
         "./sql/procedures/tag_procedures.sql",
         "./sql/procedures/workedon_crud.sql",
+        "./sql/procedures/worksin_crud.sql",
     ]
     
     cursor = mysql.connection.cursor()
@@ -198,6 +199,13 @@ def insert_initial_data():
         "./data/processed/nih_maine_data_formatted.json",
         "./data/processed/nih_projects_formatted.json"
     ]
+    
+    # Track department-institution relationships and earliest project dates for BelongsTo
+    department_institution_map = {}  # {dept_id: inst_id}
+    department_earliest_dates = {}   # {dept_id: earliest_start_date}
+    
+    # Track inserted emails/names to prevent duplicates
+    global_inserted_emails = set()
 
     def _normalize_institutions(json_data):
         """
@@ -333,6 +341,9 @@ def insert_initial_data():
                     row = cursor.fetchone()
                     if row:
                         department_id = row[0]
+                        # Track department-institution relationship for BelongsTo
+                        if institution_id:
+                            department_institution_map[department_id] = institution_id
 
                     # Consume all result sets
                     while cursor.nextset():
@@ -355,6 +366,14 @@ def insert_initial_data():
                         people_items = []
 
                     for person_name, person_data in people_items:
+                        email = person_data.get("person_email")
+                        
+                        # Check for duplicates using email or name
+                        if email and email in global_inserted_emails:
+                            continue
+                        if not email and person_name in global_inserted_emails:
+                            continue
+                        
                         phone_num = person_data.get("person_phone")
                         # ToDo: this needs to be added to the cleaning for usm data
                         if (
@@ -368,7 +387,7 @@ def insert_initial_data():
                             "InsertPerson",
                             (
                                 person_name,
-                                person_data.get("person_email"),
+                                email,
                                 phone_num,
                                 person_data.get("bio"),
                                 person_data.get("expertise_1"),
@@ -379,11 +398,105 @@ def insert_initial_data():
                             ),
                         )
 
+                        # Get person_id from stored procedure
+                        row = cursor.fetchone()
+                        person_id = row[0] if row else None
+                        
+                        # Track this person to prevent duplicates
+                        if email:
+                            global_inserted_emails.add(email)
+                        else:
+                            global_inserted_emails.add(person_name)
+
                         # Consume all result sets
                         while cursor.nextset():
                             pass
 
                         mysql.connection.commit()
+                        
+                        # Insert WorksIn relationship (person works in this department)
+                        if person_id and department_id:
+                            cursor.callproc(
+                                "InsertWorksIn",
+                                [person_id, department_id]
+                            )
+                            
+                            # Consume all result sets
+                            while cursor.nextset():
+                                pass
+                            
+                            mysql.connection.commit()
+                        
+                        # Insert projects and WorkedOn relationships
+                        projects = person_data.get("projects", [])
+                        if projects and person_id:
+                            for project in projects:
+                                project_title = project.get("project_title")
+                                start_date = project.get("start_date")
+                                
+                                # Skip projects without title or start_date (required fields)
+                                if not project_title or not start_date:
+                                    continue
+                                
+                                # Parse dates
+                                end_date = project.get("end_date")
+                                
+                                # Handle year-only dates
+                                if start_date and len(str(start_date)) == 4:
+                                    start_date = f"{start_date}-01-01"
+                                if end_date and len(str(end_date)) == 4:
+                                    end_date = f"{end_date}-12-31"
+                                
+                                # Insert project
+                                cursor.callproc(
+                                    "InsertIntoProject",
+                                    [
+                                        project_title,
+                                        project.get("project_description"),
+                                        person_id,  # leadperson_id (use current person as lead)
+                                        person_id,  # person_id (required field)
+                                        start_date,
+                                        end_date,
+                                    ],
+                                )
+                                
+                                # Get project_id
+                                row = cursor.fetchone()
+                                project_id = row[0] if row else None
+                                
+                                # Consume all result sets
+                                while cursor.nextset():
+                                    pass
+                                
+                                mysql.connection.commit()
+                                
+                                # Track earliest project date for BelongsTo
+                                if start_date and department_id:
+                                    current_earliest = department_earliest_dates.get(department_id)
+                                    if not current_earliest or start_date < current_earliest:
+                                        department_earliest_dates[department_id] = start_date
+                                
+                                # Insert WorkedOn relationship
+                                if project_id:
+                                    # Get role from project data, fallback to person data, then default
+                                    project_role = project.get("project_role") or person_data.get("project_role") or "Researcher"
+                                    
+                                    cursor.callproc(
+                                        "sp_insert_workedon",
+                                        [
+                                            person_id,
+                                            project_id,
+                                            project_role,
+                                            start_date,
+                                            end_date,
+                                        ],
+                                    )
+                                    
+                                    # Consume all result sets
+                                    while cursor.nextset():
+                                        pass
+                                    
+                                    mysql.connection.commit()
 
         except Exception as e:
             mysql.connection.rollback()
@@ -392,6 +505,38 @@ def insert_initial_data():
             raise
         finally:
             cursor.close()
+    
+    # Insert BelongsTo relationships after all data is loaded
+    print("Inserting BelongsTo relationships...")
+    cursor = mysql.connection.cursor(MySQLdb.cursors.Cursor)
+    try:
+        for dept_id, inst_id in department_institution_map.items():
+            effective_start = department_earliest_dates.get(dept_id, "2000-01-01")
+            
+            cursor.callproc(
+                "sp_insert_belongsto",
+                [
+                    dept_id,
+                    inst_id,
+                    effective_start,
+                    None,  # effective_end is NULL (still active)
+                ],
+            )
+            
+            # Consume all result sets
+            while cursor.nextset():
+                pass
+            
+            mysql.connection.commit()
+        
+        print(f"Inserted {len(department_institution_map)} BelongsTo relationships")
+        
+    except Exception as e:
+        mysql.connection.rollback()
+        print(f"Error inserting BelongsTo relationships: {e}")
+        raise
+    finally:
+        cursor.close()
 
 def get_json_data(file_path: str):
     # util function that needs to read in all the json data and return it based on file path
