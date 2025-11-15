@@ -1,10 +1,8 @@
 import json
-
-# Todo: research the implications of using two different cursors in a flask project
-#       Or how to do it properly
 import MySQLdb
 from app import app, mysql, config
 import re
+
 
 """
 Filename: db_init.py
@@ -22,130 +20,172 @@ then procedures, then insert all the scraped data found in the data folder.
 
 
 def check_db() -> bool:
+
+    original_db = app.config.get("MYSQL_DB")
+    
     try:
-        # temporarily set no DB to check for existence
+        # Temporarily set no DB to check for existence
         app.config["MYSQL_DB"] = None
 
         with app.app_context():
             cursor = mysql.connection.cursor()
-
-            db_exists = cursor.execute(
-                """SELECT SCHEMA_NAME
+            
+            try:
+                cursor.execute("""
+                    SELECT SCHEMA_NAME
                     FROM INFORMATION_SCHEMA.SCHEMATA
-                    WHERE SCHEMA_NAME = 'collab_connect_db';
-                """
-            )
+                    WHERE SCHEMA_NAME = %s
+                """, ('collab_connect_db',))
+                
+                db_exists = cursor.fetchone() is not None
 
-            # ToDo: this is improper and not robust, needs fixing
-            if db_exists == 1:
-                print("Database 'collab_connect_db' already exists")
-                app.config["MYSQL_DB"] = config.get(
-                    "Database", "db_name", fallback="collab_connect_db"
-                )
+                if db_exists:
+                    print("Database 'collab_connect_db' already exists")
+                    app.config["MYSQL_DB"] = config.get(
+                        "Database", "db_name", fallback="collab_connect_db"
+                    )
+                else:
+                    create_db()
+                    app.config["MYSQL_DB"] = config.get(
+                        "Database", "db_name", fallback="collab_connect_db"
+                    )
+                    print("Database 'collab_connect_db' created successfully")
 
-            else:
-                create_db()
-                print("Database 'collab_connect_db' checked/created successfully")
-
-            cursor.close()
-            return True
+                return True
+                
+            finally:
+                cursor.close()
 
     except Exception as e:
-        print("Database check/creation failed:", e)
-        print(
-            "Ensure that the MySQL server is running and the connection details are correct."
-        )
+        print(f"Database check/creation failed: {e}")
+        print("Ensure that the MySQL server is running and the connection details are correct.")
+        # Restore original config on failure
+        app.config["MYSQL_DB"] = original_db
         return False
 
 
 def create_db():
-
+    """Create database schema and initialize with tables, procedures, and data."""
     print("Creating database")
+    
     cursor = mysql.connection.cursor()
-    cursor.execute("CREATE SCHEMA collab_connect_db")
-    cursor.execute("USE collab_connect_db")
-    mysql.connection.commit()
-
+    
     try:
-        #  This will create all our tables
-        with open("./sql_queries/creation_scripts/1_create_all_tables.sql", "r") as f:
-            sql_script = f.read()
+        # Create database
+        cursor.execute("CREATE SCHEMA collab_connect_db")
+        cursor.execute("USE collab_connect_db")
+        mysql.connection.commit()
 
-            statements = sql_script.split(";")
-
-            # When doing all the tables at once, you end up with a
-            # Error creating tables: (2014, "Commands out of sync; you can't run this command now")
-            # So, split the create tables up into seperate statements, then execute
-            for statement in statements:
-                create_table = statement.strip()
-                if create_table:
-                    cursor.execute(create_table)
-
-            # Commit all the changes
-            mysql.connection.commit()
+        create_tables(cursor)
+        
+        create_procedures()
+        
+        insert_initial_data()
+        
+        create_indexes()
+        
     except Exception as e:
-        print("Error creating tables: ", {str(e)})
+        print(f"Error during database creation: {e}")
+        # Database creation failed, drop the schema as the db should not exist half complete
+        try:
+            cursor.execute("DROP SCHEMA IF EXISTS collab_connect_db")
+            mysql.connection.commit()
+            print("Rolled back partial database creation")
+        except Exception as cleanup_error:
+            print("Error during cleanup: ", cleanup_error)
         raise
     finally:
         cursor.close()
 
-    try:
-        create_procedures()
-    except Exception as e:
-        print("Error creating procedures: ", {str(e)})
-        raise
+
+def create_tables(cursor):
 
     try:
-        insert_initial_data()
+        with open("./sql/tables/create_all_tables.sql", "r") as f:
+            sql_script = f.read()
+
+        # Split by semicolon and execute each statement
+        statements = [stmt.strip() for stmt in sql_script.split(";") if stmt.strip()]
+
+        for statement in statements:
+            cursor.execute(statement)
+
+        mysql.connection.commit()
+        print("Tables created successfully")
+        
+    except FileNotFoundError:
+        print("Error: SQL script file not found at ./sql/tables/create_all_tables.sql")
+        raise
     except Exception as e:
-        print(f"Error inserting initial data: {str(e)}")
+        print(f"Error creating tables: {e}")
         raise
 
 
 def create_procedures():
+
     print("Creating stored procedures...")
+    
+    procedure_files = [
+        "./sql/procedures/department_procedures.sql",
+        "./sql/procedures/institution_procedures.sql",
+        "./sql/procedures/person_procedures.sql",
+        "./sql/procedures/project_procedures.sql",
+        "./sql/procedures/belongsto_crud.sql",
+        "./sql/procedures/project_tag_procedures.sql",
+        "./sql/procedures/tag_procedures.sql",
+        "./sql/procedures/workedon_crud.sql",
+    ]
+    
     cursor = mysql.connection.cursor()
-    procedures_file_paths = [
-        "./sql_queries/procedures/institution_procedures.sql",
-        "./sql_queries/procedures/department_procedures.sql",
-        "./sql_queries/procedures/person_procedures.sql",
-        "./sql_queries/procedures/project_procedures.sql",
-        "./sql_queries/procedures/belongsto_crud.sql",
-        "./sql_queries/procedures/project_tag_procedures.sql",
-        "./sql_queries/procedures/tag_procedures.sql",
-        "./sql_queries/procedures/workedon_crud.sql",
+    
+    try:
+        for file_path in procedure_files:
+            with open(file_path, "r") as f:
+                sql_script = f.read()
+            
+            # Find all CREATE PROCEDURE statements
+            pattern = r"CREATE\s+PROCEDURE[\s\S]*?END;"
+            procedures = re.findall(pattern, sql_script, flags=re.IGNORECASE)
+            
+            for procedure in procedures:
+                cursor.execute(procedure)
+                mysql.connection.commit()
+                
+    except Exception as e:
+        print(f"Error creating procedures: {e}")
+        raise
+    finally:
+        cursor.close()
+
+
+def create_indexes():
+    print("Creating indexes...")
+    cursor = mysql.connection.cursor()
+    index_file_paths = [
+        "./sql/indexes/belongsto_indexes.sql",
+        "./sql/indexes/department_indexes.sql",
+        "./sql/indexes/general_indexes.sql",
+        "./sql/indexes/person_indexes.sql",
+        "./sql/indexes/workedon_indexes.sql",
+        "./sql/indexes/worksin_indexes.sql",
     ]
     try:
-        for file_path in procedures_file_paths:
+        for file_path in index_file_paths:
             with open(file_path, "r") as f:
 
                 sql_script = f.read()
 
-                # some procedures have header comments, these should be ignored
-                # Remove single-line comments: -- comment
-                sql_script = re.sub(r"--.*", "", sql_script)
 
-                # Remove multi-line comments: /* comment */
-                sql_script = re.sub(r"/\*[\s\S]*?\*/", "", sql_script)
+            statements = sql_script.split(";")
 
-                # Remove DELIMITER statements (they're MySQL client commands, not SQL), my bad for saying you needed them
-                sql_script = sql_script.replace("DELIMITER $$", "").replace(
-                    "DELIMITER ;", ""
-                )
-            procedures = sql_script.split("CREATE PROCEDURE")
 
-            for curr in procedures:
-                if curr.strip():
-                    try:
-                        stmt = "CREATE PROCEDURE " + curr.strip()
-                        # Remove trailing $$ if present (replace with ;)
-                        stmt = stmt.rstrip("$").rstrip() + ";"
-                        cursor.execute(stmt)
-                        mysql.connection.commit()
-                    except Exception as e:
-                        print("Error creating procedure: ", {str(e)})
-                        print("Failed procedure: ", {stmt[:200]})
-                        raise
+            for statement in statements:
+                create_index = statement.strip()
+                if create_index:
+                    cursor.execute(create_index)
+
+            # Commit all the changes
+            mysql.connection.commit()
     finally:
         cursor.close()
 
@@ -153,97 +193,146 @@ def create_procedures():
 def insert_initial_data():
     print("Inserting initial data...")
     file_paths = [
-        "./data/post_cleaning_usm_data.json",
-        "./data/post_formatting_roux_data.json",
+        "./data/processed/post_cleaning_usm_data.json",
+        "./data/processed/post_formatting_roux_data.json",
+        "./data/processed/nih_maine_data_formatted.json",
+        "./data/processed/nih_projects_formatted.json"
     ]
-    for path in file_paths:
-        json_data = get_json_data(path)
 
+    def _normalize_institutions(json_data):
+        """
+        Normalize json_data into a list of dicts with keys:
+            { "institution": <dict>, "departments": <dict_or_list> }
+        Handles these common shapes:
+          - {"institution": {...}, "departments": {...}}                => 1 item
+          - {"institution": [{...}, {...}], "departments": ...}         => multiple (departments may be per-item)
+          - {"institutions": [{...}, {...}]}                            => multiple
+          - [ {...}, {...} ]                                            => list of institution-like dicts
+          - {"some keys for an institution": ...}                       => treated as single institution
+        """
+        insts = []
+
+        # Case: top-level dict
+        if isinstance(json_data, dict):
+            # explicit "institution" key
+            if "institution" in json_data:
+                inst = json_data["institution"]
+                top_depts = json_data.get("departments", {})
+
+                if isinstance(inst, list):
+                    for item in inst:
+                        if isinstance(item, dict):
+                            inst_entry = item
+                            depts = item.get("departments", top_depts)
+                        else:
+                            inst_entry = {"institution_name": item}
+                            depts = top_depts
+                        insts.append({"institution": inst_entry, "departments": depts})
+                else:
+                    insts.append({"institution": inst if isinstance(inst, dict) else {"institution_name": inst},
+                                  "departments": top_depts})
+            # explicit "institutions" key
+            elif "institutions" in json_data:
+                for item in json_data["institutions"] or []:
+                    if isinstance(item, dict):
+                        insts.append({"institution": item.get("institution", item),
+                                      "departments": item.get("departments", item.get("departments", {}))})
+                    else:
+                        insts.append({"institution": {"institution_name": item}, "departments": {}})
+            else:
+                # Assume the whole dict is a single institution (backwards compatibility)
+                insts.append({"institution": json_data, "departments": json_data.get("departments", {})})
+
+        # Case: top-level list
+        elif isinstance(json_data, list):
+            for item in json_data:
+                if isinstance(item, dict):
+                    insts.append({"institution": item.get("institution", item),
+                                  "departments": item.get("departments", item.get("departments", {}))})
+                else:
+                    insts.append({"institution": {"institution_name": item}, "departments": {}})
+        else:
+            # Unknown shape -> empty placeholder to keep behavior safe
+            insts.append({"institution": {}, "departments": {}})
+
+        return insts
+
+    for path in file_paths:
+
+        json_data = get_json_data(path)
+        print('get file')
         try:
             # Use default cursor (tuple cursor) instead of DictCursor for stored procedures
             # This is because the inserts return the id of the last inserted tuple to be used
             # in the next inserts.
             cursor = mysql.connection.cursor(MySQLdb.cursors.Cursor)
 
-            # Insert institution data
-            institution = json_data.get("institution", {})
-            institution_id = None
-            department_id = None
-            if institution:
-                cursor.callproc(
-                    "InsertIntoInstitution",
-                    [
-                        institution.get("institution_name"),
-                        institution.get("institution_type"),
-                        institution.get("street"),
-                        institution.get("city"),
-                        institution.get("state"),
-                        institution.get("zipcode"),
-                        institution.get("institution_phone"),
-                    ],
-                )
+            # Normalize to a list of institutions (handles single or multiple)
+            institution_entries = _normalize_institutions(json_data)
 
-                # get the LAST_INSERT_ID() result
-                row = cursor.fetchone()
-                if row:
-                    institution_id = row[0]
+            for inst_entry in institution_entries:
+            
+                institution = inst_entry.get("institution", {}) or {}
+                departments = inst_entry.get("departments", {}) or {}
+                if not institution.get("institution_name"):
+                    print(f"Skipping institution with no name: {institution}")
+                    continue
+                institution_id = None
+                department_id = None
 
-                while cursor.nextset():
-                    pass
-
-                mysql.connection.commit()
-
-            # Insert departments and people
-            departments = json_data.get("departments", {})
-
-            for dept_key, dept_data in departments.items():
-                dept_name = dept_data.get("department_name", dept_key)
-                dept_email = dept_data.get("department_email")
-                dept_phone = dept_data.get("department_phone")
-
-                cursor.callproc(
-                    "InsertIntoDepartment",
-                    [dept_phone, dept_email, dept_name, institution_id],
-                )
-
-                # Fetch the LAST_INSERT_ID() result
-                row = cursor.fetchone()
-                if row:
-                    department_id = row[0]
-
-                # Consume all result sets
-                while cursor.nextset():
-                    pass
-
-                mysql.connection.commit()
-
-                # Insert people in this department
-                # ToDo: Use the data cleaning to get the main feild using the chat gpt api
-                people = dept_data.get("people", {})
-                for person_name, person_data in people.items():
-                    phone_num = person_data.get("person_phone")
-                    # ToDo: this needs to be added to the cleaning for usm data
-                    if (
-                        person_data.get("person_phone")
-                        and len(person_data.get("person_phone")) > 15
-                    ):
-                        print(person_name)
-                        print(person_data.get("person_phone"))
-                        phone_num = None
+                # Insert institution data (skip if empty)
+                if institution:
                     cursor.callproc(
-                        "InsertPerson",
-                        (
-                            person_name,
-                            person_data.get("person_email"),
-                            phone_num,
-                            person_data.get("bio"),
-                            person_data.get("expertise_1"),
-                            person_data.get("expertise_2"),
-                            person_data.get("expertise_3"),
-                            "main_field",
-                            department_id,
-                        ),
+                        "InsertIntoInstitution",
+                        [
+                            institution.get("institution_name"),
+                            institution.get("institution_type"),
+                            institution.get("street"),
+                            institution.get("city"),
+                            institution.get("state"),
+                            institution.get("zipcode"),
+                            institution.get("institution_phone"),
+                        ],
                     )
+
+                    # get the LAST_INSERT_ID() result
+                    row = cursor.fetchone()
+                    if row:
+                        institution_id = row[0]
+
+                    while cursor.nextset():
+                        pass
+
+                    mysql.connection.commit()
+
+                # Insert departments and people
+                # departments may be a dict keyed by dept_key or a list of dept dicts; handle both
+                if isinstance(departments, dict):
+                    dept_items = departments.items()
+                elif isinstance(departments, list):
+                    # convert list of dept dicts to (name, dict) pairs, using department_name when available
+                    dept_items = []
+                    for d in departments:
+                        if isinstance(d, dict):
+                            key = d.get("department_name") or d.get("department_email") or str(len(dept_items))
+                            dept_items.append((key, d))
+                else:
+                    dept_items = []
+
+                for dept_key, dept_data in dept_items:
+                    dept_name = dept_data.get("department_name", dept_key)
+                    dept_email = dept_data.get("department_email")
+                    dept_phone = dept_data.get("department_phone")
+
+                    cursor.callproc(
+                        "InsertIntoDepartment",
+                        [dept_phone, dept_email, dept_name, institution_id],
+                    )
+
+                    # Fetch the LAST_INSERT_ID() result
+                    row = cursor.fetchone()
+                    if row:
+                        department_id = row[0]
 
                     # Consume all result sets
                     while cursor.nextset():
@@ -251,123 +340,62 @@ def insert_initial_data():
 
                     mysql.connection.commit()
 
-                    # Todo: When using the rest of the data, ensure to update the Nones
-                    # Also, there is no person that we have where we need to save the
-                    # previous work history, so this table may be irrevelent
-                    # cursor.callproc(
-                    #     "sp_insert_belongsto",
-                    #     (
-                    #         department_id,
-                    #         institution_id,
-                    #         'None',
-                    #         'None',
-                    #         'None'
-                    #     )
-                    # )
+                    # Insert people in this department
+                    people = dept_data.get("people", {}) or {}
+                    # support people as list or dict
+                    if isinstance(people, dict):
+                        people_items = people.items()
+                    elif isinstance(people, list):
+                        people_items = []
+                        for p in people:
+                            if isinstance(p, dict):
+                                pname = p.get("person_name") or p.get("name") or str(len(people_items))
+                                people_items.append((pname, p))
+                    else:
+                        people_items = []
 
-                    # while cursor.nextset():
-                    #     pass
+                    for person_name, person_data in people_items:
+                        phone_num = person_data.get("person_phone")
+                        # ToDo: this needs to be added to the cleaning for usm data
+                        if (
+                            person_data.get("person_phone")
+                            and len(person_data.get("person_phone")) > 15
+                        ):
+                            print(person_name)
+                            print(person_data.get("person_phone"))
+                            phone_num = None
+                        cursor.callproc(
+                            "InsertPerson",
+                            (
+                                person_name,
+                                person_data.get("person_email"),
+                                phone_num,
+                                person_data.get("bio"),
+                                person_data.get("expertise_1"),
+                                person_data.get("expertise_2"),
+                                person_data.get("expertise_3"),
+                                person_data["main_field"] if person_data["main_field"] is not None else "main_field",
+                                department_id,
+                            ),
+                        )
 
-                    # mysql.connection.commit()
+                        # Consume all result sets
+                        while cursor.nextset():
+                            pass
 
-                    # Insert projects for this person
-
-                    # Skip for now, Need some details on lead person and implement selects to get the cooresponding ids
-
-                    # projects = person_data.get("projects", [])
-                    # for project in projects:
-                    #     project_title = project.get("project_title")
-                    #     if project_title:
-                    #         cursor.callproc(
-                    #             "InsertIntoProject",
-                    #             [
-                    #                 project_title,
-                    #                 project.get("project_description"),
-                    #                 project.get("start_date"),
-                    #                 project.get("end_date"),
-                    #                 person_name,
-                    #             ],
-                    #         )
-
-                    #         # Consume all result sets
-                    #         while cursor.nextset():
-                    #             pass
-
-                    #         mysql.connection.commit()
-
-                    #         # Insert worked-on relationship
-                    #         cursor.callproc(
-                    #             "sp_insert_workedon", [person_name, project_title]
-                    #         )
-
-                    # Consume all result sets
-                    """
-                    Note to self:
-                    
-                    A result set is a table of data that is generated when a database query is executed. 
-                    It is a temporary table of rows and columns that contains the data matching the query's 
-                    criteria and is typically navigated using a cursor.
-                    
-                    So, this loop iterates through all remaining result sets returned by a database query.
-                    If you don't do this but try to use the cursor again, it can cause errors since result sets
-                    still exist while you try to grab more
-                    """
-                    # while cursor.nextset():
-                    #     pass
-
-                    # mysql.connection.commit()
+                        mysql.connection.commit()
 
         except Exception as e:
             mysql.connection.rollback()
             print(f"Error during data insertion: {e}")
+            print(person_name, ' ', person_data["main_field"])
             raise
         finally:
             cursor.close()
 
-
-# Some data needs formatting to be inserted using one method
-def format_data():
-    json_data = get_json_data("./data/roux_institute_data.json")
-    """ 
-    Example of Wyatt's data
-        "Institution": [
-        {
-        "institution_name": "Roux Institute at Northeastern University",
-        "institution_type": "Academic",
-        "street": null,
-        "city": "Portland",
-        "state": "ME",
-        "zipcode": null,
-        "institution_phone": null
-        }
-    ],
-    "Department": [
-        {
-        "institution_id": 1,
-        "department_name": "General Faculty and Staff",
-        "department_email": null,
-        "department_phone": null
-        }
-    ],
-    "Person": [
-        {
-        "person_name": "Eva Balog",
-        "person_email": null,
-        "person_phone": null,
-        "bio": "Dr. Balog is currently on a sabbatical appointment as a Visiting Associate Professor at the Roux Institute and a Life Sciences Fellow with the Institute for Experiential AI. She is an Associate Professor of Chemistry at the University of New England and an inaugural member of UNE\u2019s Portland Laboratory for Biotechnology and Health Sciences and the Center for Cell Signaling Research. Dr. Balog received her Ph.D. in Molecular, Cell, and Developmental Biology from the University of California, Santa Cruz, and completed postdoctoral training at Los Alamos National Laboratory\u2019s Center for Integrated Nanotechnologies. Dr. Balog\u2019s research is focused on the biophysical characterization of engineered proteins for biomaterials and biotechnology applications, with an especial interest in protein-based tools for the study and control of cellular activities.",
-        "expertise_1": null,
-        "expertise_2": null,
-        "expertise_3": null,
-        "main_field": "Visiting Associate Professor",
-        "department_id": null
-        },
-    """
-    print(json_data)
-
-
 def get_json_data(file_path: str):
     # util function that needs to read in all the json data and return it based on file path
-    with open(file_path, "r") as f:
+    with open(file_path, "r", encoding="utf-8") as f:
         return json.load(f)
 
 
