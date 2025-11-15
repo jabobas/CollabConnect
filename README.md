@@ -33,9 +33,9 @@ CollabConnect is an application that facilitates collaboration and connection be
 # Team contributions Phase 2
 Phase 2 Project Responsibilities
 Websites scraped: 
-https://usm.maine.edu/department-computer-science/people/ 
-https://reporter.nih.gov/
-https://roux.northeastern.edu/our-people/
+- https://usm.maine.edu/department-computer-science/people/ 
+- https://reporter.nih.gov/
+- https://roux.northeastern.edu/our-people/
 
 Abbas: 
 - Create Table Project, Tag, ProjectTag (Nov 2)
