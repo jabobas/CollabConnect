@@ -32,32 +32,46 @@ CollabConnect is an application that facilitates collaboration and connection be
 
 # Team contributions Phase 2
 Phase 2 Project Responsibilities
+Websites scraped: 
+https://usm.maine.edu/department-computer-science/people/ 
+https://reporter.nih.gov/
+https://roux.northeastern.edu/our-people/
 
-## Database schema creation scripts (Deadline Sunday November 2)
-- Wyatt - Person
-- Abbas - Project
-- Aubin - Worked on - may not be necessary
-- Lucas - Department
-- Wyatt - Institution
-- Lucas - Work History - may not be necessary
-- We will meet again to put these together with foreign keys
-and then add indexing scripts if necessary.
-
-## Stored Procedures and Functions (Wednesday November 5)
-- Saved SQL queries for common activities like insert, update, delete
-- Lucas will look into this and then we will discuss
-- We will update our own tables based on these procedures
-## Scraping (Due Saturday November 8)
-- wyatt will try scraping the usm faculty website
-- All of us will try to scrape a website for information. If struggling, reach out to a successful team member.
-
-## Data cleanup (Due Monday November 10)
-- Have data prepared for the table the teammember worked on.
-- If for whatever reason data is hard to acquire then generate your own data.
-## Query Optimization (Due Wednesday November 12)
-- prepare python scripts to show query optimization before and after on queries.
-## Readme and video (Due Thursday November 14)
-- Create a slideshow
-- Group up to record a video and present our work.
+Abbas: 
+- Create Table Project, Tag, ProjectTag (Nov 2)
+- CRUD for Project, Tag, ProjectTag (Nov 5)
+- Provide Index Commands for Project, Tag, ProjectTag (Nov 2)
+- Function/Stored Procedure Project, Tag, ProjectTag (Nov 5)
+- Try to scrape https://reporter.nih.gov/ for industry(Nov 10)
+- Try to scrape or find a library of tags for the Tags table (Nov 10)
 
 
+Lucas: 
+- Table Department, Institution
+- CRUD for Department, Institution 
+- Function/Stored Procedure Department, Institution
+- Scrape USM’s departments
+- Starting with https://usm.maine.edu/department-computer-science/people/
+- Created general db creation in python
+- app.py creates database, all tables, indexes, and procedures
+- Insert all cleaned, scraped data 
+- Baseline Flask and Frontend
+- Gets a heads start on phase three
+
+
+Wyatt: 
+- Created Table Person, relation WorksIn (Nov 2) 
+- Write CRUD for Person, WorksIn (Nov 5)
+- Write Index commands for Person, WorksIn (Nov 2)
+- Create Function/Stored Procedure Person (Nov 5)
+- Query Optimization on 1 query
+-> Scraping the https://roux.northeastern.edu/our-people/ for all tables
+
+
+Aubin: 
+- Create Tables WorkedOn, BelongsTo  (Nov 2)
+- Write CRUD for WorkedOn, BelongsTo (Nov 5)
+- Create Index commands for WorkedOn, BelongsTo (Nov 2)
+- CreateFunction/Stored Procedure WorkedOn, BelongsTo (Nov 10)
+- Scrape site https://reporter.nih.gov/ (Nov 10)
+- Query Optimization on 1 query
