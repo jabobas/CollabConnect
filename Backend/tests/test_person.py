@@ -5,7 +5,7 @@ Author: Lucas Matheson
 Edited by: Lucas Matheson
 Date: November 15, 2025
 
-This is the unit test that will check to ensure all the procedures for department
+This is the unit test that will check to ensure all the procedures for person
 are running accordingly. This also checks to ensure the cursor is connected to 
 the database.
 
@@ -55,6 +55,20 @@ def sample_department():
         "department_name": "test dept",
     }
 
+@pytest.fixture
+def sample_person():
+    """ Defines the sample data for the test"""
+    return {
+        "person_name": 'Mr. Test',
+        "person_email": "test@test.com",
+        "person_phone": "(123) 456 7890",
+        "bio": 'test bio',
+        "expertise_1": "test expertise_1",
+        "expertise_2": "test expertise_2",
+        "expertise_3": 'test expertise_3',
+        "main_field": "test field",
+    }
+
 def call_procedure(cursor, proc_name, params):
     """
     Helper function to call stored procedure and handle results.
@@ -71,8 +85,7 @@ def call_procedure(cursor, proc_name, params):
         pass
     return result
 
-
-def test_insert_department(db_cursor, sample_institution, sample_department):
+def test_insert_person(db_cursor, sample_institution, sample_department, sample_person):
     """Unit test for InsertIntoInstitution procedure."""
     # You need an instituiton to insert a department
     result_institution = call_procedure(
@@ -91,7 +104,8 @@ def test_insert_department(db_cursor, sample_institution, sample_department):
     mysql.connection.commit()
 
     institution_id = result_institution['new_id'] if result_institution else None
-
+    
+    # You need an department to insert a person
     result_department = call_procedure(
         db_cursor,
         "InsertIntoDepartment",
@@ -105,80 +119,59 @@ def test_insert_department(db_cursor, sample_institution, sample_department):
     mysql.connection.commit()
     dept_id = result_department['new_id'] if result_department else None
 
-    
+    result_person = call_procedure(
+        db_cursor,
+        "InsertPerson",
+        [
+            sample_person["person_name"],
+            sample_person["person_email"],
+            sample_person["person_phone"],
+            sample_person["bio"],
+            sample_person["expertise_1"],
+            sample_person["expertise_2"],
+            sample_person["expertise_3"],
+            sample_person["main_field"],
+            dept_id
+        ]
+    )
+    mysql.connection.commit()
+    person_id = result_person['person_id'] if result_person else None
+
     # Assert that the insert returned a valid ID
-    assert dept_id is not None
-    assert isinstance(dept_id, int)
+    assert person_id is not None
+    assert isinstance(person_id, int)
 
     mysql.connection.commit()
 
-
-
     
-    
-def test_update_institution_details(db_cursor, sample_department):
-    """Unit test for UpdateInstitutionDetails procedure."""
-    dept = call_procedure(db_cursor, "SelectDepartmentByName", [sample_department["department_name"]])
-
-    
-    # Update the department
-    new_name = "Updated Name"
-    new_email = "newmail@lucas.com"
-    new_phone = "555-1234"
-    
-    call_procedure(
-        db_cursor,
-        "UpdateDepartmentDetails",
-        [
-            [dept['department_id']],
-            new_phone,
-            new_email,
-            new_name,
-        ]
-    )
-    mysql.connection.commit()
-    
-    # Verify the update
-    dept = call_procedure(db_cursor, "SelectDepartmentByName", [new_name])
-
-    assert dept is not None
-    assert dept['department_name'] == new_name
-    assert dept['department_email'] == new_email
-    assert dept['department_phone'] == new_phone
-    # If we make it here, updates are a success, change entry back to default
-    
-    call_procedure(
-        db_cursor,
-        "UpdateDepartmentDetails",
-        [
-            dept['department_id'],
-            sample_department['department_phone'],
-            sample_department['department_email'],
-            sample_department['department_name'],
-        ]
-    )
-    mysql.connection.commit()
-    
-
 # Ensure delete tests are last if not inserting and deleting each time
-def test_delete_select_deptartment(db_cursor, sample_institution, sample_department):
+def test_delete_select_deptartment(db_cursor, sample_institution, sample_department, sample_person):
     """Unit test for DeleteDepartment and SelectDepartment procedure."""
+    
+    
+    person = call_procedure(db_cursor, "SelectPersonByName", [sample_person["person_name"]])
+  
     dept = call_procedure(db_cursor, "SelectDepartmentByName", [sample_department["department_name"]])
-    # Run checks on department select
-    assert dept['department_name'] == sample_department["department_name"]
-    assert dept['department_email'] == sample_department["department_email"]
-    # I need the id for this
+    # Run checks on person select
+    assert person['person_name'] == sample_person["person_name"]
+    assert person['person_email'] == sample_person["person_email"]
+    assert person['person_phone'] == sample_person["person_phone"]
+    assert person['bio'] == sample_person["bio"]
+    assert person['expertise_1'] == sample_person["expertise_1"]
+    assert person['expertise_2'] == sample_person["expertise_2"]
+    assert person['expertise_3'] == sample_person["expertise_3"]
+    assert person['main_field'] == sample_person["main_field"]
+    
+    call_procedure(db_cursor, "DeletePerson", [person['person_id']])
+
     call_procedure(db_cursor, "DeleteDepartment", [dept['department_id']])
     
-    # Delete the institution
     call_procedure(db_cursor, "DeleteInstitution", [sample_institution["institution_name"]])
     
-
-
     mysql.connection.commit()
     
     # Verify deletion
-    result = call_procedure(db_cursor, "SelectDepartmentByName", [sample_department["department_name"]])
+    result = call_procedure(db_cursor, "SelectPersonByName", [sample_person["person_name"]])
 
     
     assert result is None

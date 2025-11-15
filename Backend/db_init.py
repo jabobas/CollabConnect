@@ -17,9 +17,10 @@ using port 3306. After creating the schema, this file will creates the tables,
 then procedures, then insert all the scraped data found in the data folder. 
 
 After creation of the file, I ran the file through claude to split up certian
-methods since some were becoming extremely long and cumbersome. This is the reason
-that many methods are found with titles starting with an underscore, as it was taken
-by AI and split into multiple methods
+methods since some were becoming extremely long and cumbersome. The file is still long,
+but the readability is improved. The AI split up the methods and named them with underscores,
+along with generating comments in each that seem complex. Previous versions of the db_init file
+without the AI cleaning can be viewed in the GitHub
 
 todo:
 - Fix Cursor handling

@@ -73,6 +73,13 @@ BEGIN
     WHERE person_id = p_person_id;
 END;
 
+CREATE PROCEDURE SelectPersonByName(IN p_person_name VARCHAR(150))
+BEGIN 
+    SELECT *
+    FROM Person
+    WHERE person_name = p_person_name;
+END;
+
 -- Additional things it could be useful to add
 -- Get all people with a shared expertise
 -- Get all people in a department

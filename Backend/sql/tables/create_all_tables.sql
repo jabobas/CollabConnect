@@ -3,6 +3,7 @@
 -- Author: Abbas Jabor
 -- Edited by: Lucas Matheson
 -- Date: November 5, 2025
+-- This is the file used to create the tables in db_init
 
 -- 1. Institution (independent table)
 CREATE TABLE Institution (

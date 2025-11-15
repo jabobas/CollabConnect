@@ -1,3 +1,19 @@
+
+"""
+Filename: db_init.py
+Author: Lucas Matheson
+Edited by: Lucas Matheson
+Date: November 15, 2025
+
+This is the unit test that will check to ensure all the procedures for instituion
+are running accordingly. This also checks to ensure the cursor is connected to 
+the database.
+
+To run - pytest
+    - Note these run upon each db_init
+"""
+
+
 import pytest
 from app import app, mysql
 
