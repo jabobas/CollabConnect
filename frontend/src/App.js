@@ -4,7 +4,6 @@ import { Route, Routes } from "react-router-dom";
 import LegacyTopbar from "./scenes/global/LegacyTopbar";
 import Dashboard from "./scenes/dashboard";
 import LegacySidebar from "./scenes/global/LegacySidebar";
-import Team from "./scenes/team";
 
 import SearchCollab from "./scenes/SearchCollab"
 
