@@ -16,7 +16,8 @@ import PieChartOutlineOutlinedIcon from "@mui/icons-material/PieChartOutlineOutl
 import TimelineOutlinedIcon from "@mui/icons-material/TimelineOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
-import logo from '../../assets/logo.png';
+import logo from "../../assets/logo.png";
+import { Users } from "lucide-react";
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
@@ -36,7 +37,7 @@ const Item = ({ title, to, icon, selected, setSelected }) => {
   );
 };
 
-const Sidebar = () => {
+const LegacySidebar = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -52,7 +53,7 @@ const Sidebar = () => {
           backgroundColor: "transparent !important",
         },
         "& .pro-inner-item": {
-          padding: "5px 35px 5px 20px !important",
+          padding: "5px 20px 5px 20px !important",
         },
         "& .pro-inner-item:hover": {
           color: "#868dfb !important",
@@ -78,12 +79,50 @@ const Sidebar = () => {
                 display="flex"
                 justifyContent="space-between"
                 alignItems="center"
+                gap="10px"
               >
-                <img
+                {/* <img
                   alt="CollabConnect logo"
                   src={logo}
                   style={{ maxHeight: "55px", maxWidth: "170px" }}
-                />
+                /> */}
+
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "12px",
+                  }}
+                >
+                  <Users
+                    style={{
+                      width: "32px",
+                      height: "32px",
+                      color: colors.blueAccent[500],
+                    }}
+                  />
+                  <div>
+                    <h2
+                      style={{
+                        color: colors.grey[100],
+                        fontSize: "20px",
+                        fontWeight: "bold",
+                        margin: 0,
+                      }}
+                    >
+                      CollabConnect
+                    </h2>
+                    <p
+                      style={{
+                        color: colors.grey[300],
+                        fontSize: "12px",
+                        margin: 0,
+                      }}
+                    >
+                      Discover Excellence
+                    </p>
+                  </div>
+                </div>
                 <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
                   <MenuOutlinedIcon />
                 </IconButton>
@@ -91,7 +130,7 @@ const Sidebar = () => {
             )}
           </MenuItem>
 
-{/*           
+          {/*           
            {!isCollapsed && (
             <Box mb="25px">
               <Box display="flex" justifyContent="center" alignItems="center">
@@ -134,7 +173,8 @@ const Sidebar = () => {
               selected={selected}
               setSelected={setSelected}
             />
-
+            {/* ToDo: This align needs to be fixed, the margin works when expanded but when the sidebar
+  Is collapsed it appears off center */}
             <Typography
               variant="h6"
               color={colors.grey[300]}
@@ -142,7 +182,7 @@ const Sidebar = () => {
             >
               Connect
             </Typography>
-          
+
             <Item
               title="Manage Connections"
               to="/connections"
@@ -157,7 +197,6 @@ const Sidebar = () => {
               selected={selected}
               setSelected={setSelected}
             />
-     
 
             <Typography
               variant="h6"
@@ -195,4 +234,4 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar;
+export default LegacySidebar;

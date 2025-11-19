@@ -18,7 +18,7 @@ export const tokens = (mode) => ({
     200: mode === "dark" ? "#a1a4ab" : "#080b12",
     300: mode === "dark" ? "#727681" : "#0c101b",
     400: mode === "dark" ? "#1F2A40" : "#f2f0f0",
-    500: mode === "dark" ? "#141b2d" : "#141b2d",
+    500: mode === "dark" ? "#141b2d" : "#ffffff",
     600: mode === "dark" ? "#101624" : "#434957",
     700: mode === "dark" ? "#0c101b" : "#727681",
     800: mode === "dark" ? "#080b12" : "#a1a4ab",
