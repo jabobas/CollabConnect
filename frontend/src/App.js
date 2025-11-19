@@ -5,13 +5,7 @@ import LegacyTopbar from "./scenes/global/LegacyTopbar";
 import Dashboard from "./scenes/dashboard";
 import LegacySidebar from "./scenes/global/LegacySidebar";
 import Team from "./scenes/team";
-// import Invoices from "./scenes/invoices";
-// import Bar from "./scenes/bar";
-// import Form from "./scenes/form";
-// import Line from "./scenes/line";
-// import Pie from "./scenes/pie";
-// import FAQ from "./scenes/faq";
-// import Geography from "./scenes/geography";
+
 import SearchCollab from "./scenes/SearchCollab"
 
 function App() {
