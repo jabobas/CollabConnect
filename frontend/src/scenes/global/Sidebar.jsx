@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ProSidebar, Menu, MenuItem } from "react-pro-sidebar";
 import { Box, IconButton, Typography, useTheme } from "@mui/material";
 import { Link } from "react-router-dom";
@@ -12,6 +12,7 @@ import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import { Users } from "lucide-react";
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
+import { useLocation } from "react-router-dom";
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
@@ -32,10 +33,21 @@ const Item = ({ title, to, icon, selected, setSelected }) => {
 };
 
 const Sidebar = () => {
+  const location = useLocation();
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [selected, setSelected] = useState("Dashboard");
+  const [selected, setSelected] = useState();
+
+  // Add in your page details here 
+    useEffect(() => {
+    const pathToMenu = {
+      "/search": "Search Collaberators",
+      "/": "Dashboard",
+    };
+
+    setSelected(pathToMenu[location.pathname] || "Dashboard");
+  }, [location.pathname]);
 
   return (
     <Box

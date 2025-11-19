@@ -69,7 +69,21 @@ Your route definition can be whatever you would like it to be, just remember wha
 The Sidebar is our primary navigator for CollabConnect. So, if a new route is defined, it needs to be added to our 
 sidebar. The sidebar can be found in src -> scenes -> global -> Sidebar.jsx
 
-This file is longer and can be harder to navigate, but the only thing you are looking for this comment:
+There are two things to update here. The first is found at the top of the file. It is a useEffect 
+that enables proper sidebar management. So, if a user starts the application at /search, 
+the UI will know to highlight Search Collaberators. The code you are looking for looks like this
+
+```
+    useEffect(() => {
+    const pathToMenu = {
+      "/search": "Search Collaberators",
+      "/": "Dashboard",
+    };
+```
+
+Add in your defined route path here, and map it to the title you want to give your page. 
+
+Afterwards, you need to create your sidebar item. Look for this comment found deeper in the code:
 `  {/* DEFINE YOUR ROUTE PUSHES HERE  */}`, which states where the route definitions begin in the sidebar. 
 
 Each one is defined in an Item, which will look like this:
@@ -94,7 +108,7 @@ come from the website https://mui.com/material-ui/material-icons/?query=search T
 like to use. Once you pick an icon from the website, the website will give you the import you need to use to use the icon which can be 
 defined atop the page. 
 
-Once these two steps are complete and saved, your icon should appear on the sidebar, and when clicked it will take you to your page.
+Once these two steps are fully complete and saved, your icon should appear on the sidebar, and when clicked it will take you to your page.
 
 
 
