@@ -1,9 +1,9 @@
 import { ColorModeContext, useMode } from "./theme";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { Route, Routes } from "react-router-dom";
-import LegacyTopbar from "./scenes/global/LegacyTopbar";
+import Topbar from "./scenes/global/Topbar";
 import Dashboard from "./scenes/dashboard";
-import LegacySidebar from "./scenes/global/LegacySidebar";
+import Sidebar from "./scenes/global/Sidebar";
 
 import SearchCollab from "./scenes/SearchCollab"
 
@@ -16,9 +16,9 @@ function App() {
         {/* On theme change, CssBaseLine resets css values to default */}
         <CssBaseline />
         <div className="app">
-          <LegacySidebar/>
+          <Sidebar/>
           <main className="content">
-            <LegacyTopbar />
+            <Topbar />
             <Routes>
               <Route path="/" element={<Dashboard />} />
               {/* <Route path="/connections" element={ }/> */}
