@@ -1,28 +1,200 @@
-import React, { useEffect, useState } from "react";
+/*
+Filename: index.jsx
+Author: Lucas Matheson
+Edited by: Lucas Matheson
+Date: November 20, 2025
+
+The goal of this page is to allow a user to search for researchers based on 
+a name, expertise, or institution. 
+
+*/
+
+
+import React, { memo, useCallback, useMemo, useState, useEffect } from 'react';
 import { Box } from "@mui/material";
 import {
   Search,
   Users,
   BookOpen,
-  Award,
   MapPin,
   Mail,
-  ExternalLink,
 } from "lucide-react";
 import { tokens } from "../../theme";
 import Header from "../../components/Header";
 import { useTheme } from "@mui/material";
 import axios from "axios";
 
-// Note for myself later
-// async function postData(data) {
-//   try {
-//     const response = await axios.post('/api/submit', data); // POST request
-//     console.log(response.data);
-//   } catch (error) {
-//     console.error('Error submitting data:', error);
-//   }
-// }
+const ResearcherCard = memo(({ researcher, projects, colors, theme }) => {
+  const handleMouseEnter = useCallback((e) => {
+    e.currentTarget.style.transform = "translateY(-4px)";
+    e.currentTarget.style.boxShadow =
+      theme.palette.mode === "dark"
+        ? "0 8px 24px rgba(0,0,0,0.4)"
+        : "0 8px 24px rgba(0,0,0,0.1)";
+  }, [theme.palette.mode]);
+
+  const handleMouseLeave = useCallback((e) => {
+    e.currentTarget.style.transform = "translateY(0)";
+    e.currentTarget.style.boxShadow = "none";
+  }, []);
+
+  // Memoize filtered expertises
+  const validExpertises = useMemo(
+    () => researcher.expertises.filter((exp) => exp),
+    [researcher.expertises]
+  );
+
+  return (
+    <div
+      style={{
+        backgroundColor: colors.primary[400],
+        borderRadius: "12px",
+        border: `1px solid ${colors.primary[300]}`,
+        padding: "24px",
+        transition: "transform 0.2s, box-shadow 0.2s",
+        cursor: "pointer",
+        display: "flex",
+        flexDirection: "column",
+        minHeight: "260px",
+      }}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      <div style={{ marginBottom: "16px" }}>
+        <h3
+          style={{
+            color: colors.grey[100],
+            fontSize: "18px",
+            fontWeight: "600",
+            margin: "0 0 4px 0",
+          }}
+        >
+          {researcher.person_name}
+        </h3>
+      </div>
+
+      <div style={{ marginBottom: "16px" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+            marginBottom: "8px",
+          }}
+        >
+          <MapPin
+            style={{
+              width: "16px",
+              height: "16px",
+              color: colors.grey[300],
+            }}
+          />
+          <span style={{ color: colors.grey[300], fontSize: "13px" }}>
+            {researcher.institution_name}
+          </span>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+          <MapPin
+            style={{
+              width: "16px",
+              height: "16px",
+              color: colors.grey[300],
+            }}
+          />
+          <span style={{ color: colors.grey[300], fontSize: "13px" }}>
+            {researcher.department_name}
+          </span>
+        </div>
+      </div>
+
+      <div style={{ marginBottom: "16px" }}>
+        <p
+          style={{
+            color: colors.grey[300],
+            fontSize: "11px",
+            fontWeight: "600",
+            marginBottom: "8px",
+            textTransform: "uppercase",
+          }}
+        >
+          Research Areas
+        </p>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
+          {validExpertises.length > 0 ? (
+            validExpertises.map((exp, idx) => (
+              <span
+                key={idx}
+                style={{
+                  padding: "4px 12px",
+                  backgroundColor: colors.blueAccent[800],
+                  color: colors.blueAccent[200],
+                  borderRadius: "16px",
+                  fontSize: "12px",
+                  fontWeight: "500",
+                }}
+              >
+                {exp}
+              </span>
+            ))
+          ) : (
+            <span style={{ fontSize: "12px", color: colors.grey[400] }}>
+              No Research Areas Listed
+            </span>
+          )}
+        </div>
+      </div>
+
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          marginBottom: "16px",
+          paddingTop: "16px",
+          borderTop: `1px solid ${colors.primary[300]}`,
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+          <BookOpen
+            style={{
+              width: "16px",
+              height: "16px",
+              color: colors.grey[300],
+            }}
+          />
+          <span style={{ color: colors.grey[300], fontSize: "13px" }}>
+            {projects} Total Number of Projects
+          </span>
+        </div>
+      </div>
+
+      <div style={{ display: "flex", gap: "8px", marginTop: "auto" }}>
+        <a
+          href={`mailto:${researcher.person_email}`}
+          style={{
+            flex: 1,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "8px",
+            padding: "10px 16px",
+            backgroundColor: colors.greenAccent[600],
+            color: colors.grey[900],
+            border: "none",
+            borderRadius: "8px",
+            textDecoration: "none",
+            fontSize: "13px",
+            fontWeight: "600",
+            cursor: "pointer",
+          }}
+        >
+          <Mail style={{ width: "16px", height: "16px" }} />
+          Contact
+        </a>
+      </div>
+    </div>
+  );
+});
+
 
 const SearchCollab = () => {
   const theme = useTheme();
@@ -32,13 +204,12 @@ const SearchCollab = () => {
   const [selectedExpertise, setSelectedExpertise] = useState("all");
   const [selectedInstitution, setSelectedInstitution] = useState("all");
   const [researchers, setResearchers] = useState([]);
+  const [numProjectsPerPerson, setProjects] = useState({});
 
   useEffect(() => {
     axios
       .get("http://127.0.0.1:5000/institution/all")
       .then((response) => {
-        console.log(response.data.data);
-
         setResearchers(response.data.data);
       })
       .catch((err) => {
@@ -46,36 +217,55 @@ const SearchCollab = () => {
       });
   }, []);
 
-  const allExpertises = [
-    ...new Set((researchers || []).flatMap((r) => r.expertises || [])),
-  ].sort();
+  useEffect(() => {
+    axios
+      .get("http://127.0.0.1:5000/project/num-projects-per-person")
+      .then((response) => {
+        setProjects(response.data.data);
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  }, []);
+  console.log(numProjectsPerPerson)
+  const allExpertises = useMemo(
+    () => [
+      ...new Set((researchers || []).flatMap((r) => r.expertises || [])),
+    ].sort(),
+    [researchers]
+  );
 
-  const allInstitutions = [
-    ...new Set((researchers || []).map((r) => r.institution || "")),
-  ].sort();
+  const allInstitutions = useMemo(
+    () => [
+      ...new Set((researchers || []).map((r) => r.institution_name || "")),
+    ].sort(),
+    [researchers]
+  );
 
-  const filteredResearchers = researchers.filter((researcher) => {
-    const expertises = researcher.expertises || [];
+  const filteredResearchers = useMemo(() => {
+    return researchers.filter((researcher) => {
+      const expertises = researcher.expertises || [];
 
-    const matchesSearch =
-      searchTerm === "" ||
-      researcher.person_name
-        ?.toLowerCase()
-        .includes(searchTerm.toLowerCase()) ||
-      expertises.some((exp) =>
-        exp?.toLowerCase().includes(searchTerm.toLowerCase())
-      ) ||
-      researcher.title?.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesSearch =
+        searchTerm === "" ||
+        researcher.person_name
+          ?.toLowerCase()
+          .includes(searchTerm.toLowerCase()) ||
+        expertises.some((exp) =>
+          exp?.toLowerCase().includes(searchTerm.toLowerCase())
+        ) ||
+        researcher.title?.toLowerCase().includes(searchTerm.toLowerCase());
 
-    const matchesExpertise =
-      selectedExpertise === "all" || expertises.includes(selectedExpertise);
+      const matchesExpertise =
+        selectedExpertise === "all" || expertises.includes(selectedExpertise);
 
-    const matchesInstitution =
-      selectedInstitution === "all" ||
-      researcher.institution === selectedInstitution;
+      const matchesInstitution =
+        selectedInstitution === "all" ||
+        researcher.institution_name === selectedInstitution;
 
-    return matchesSearch && matchesExpertise && matchesInstitution;
-  });
+      return matchesSearch && matchesExpertise && matchesInstitution;
+    });
+  }, [researchers, searchTerm, selectedExpertise, selectedInstitution]);
 
   return (
     <div
@@ -274,181 +464,13 @@ const SearchCollab = () => {
           }}
         >
           {filteredResearchers.map((researcher) => (
-            <div
-              key={researcher.id}
-              style={{
-                backgroundColor: colors.primary[400],
-                borderRadius: "12px",
-                border: `1px solid ${colors.primary[300]}`,
-                padding: "24px",
-                transition: "transform 0.2s, box-shadow 0.2s",
-                cursor: "pointer",
-                display: "flex",
-                flexDirection: "column",
-                minHeight: "260px",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = "translateY(-4px)";
-                e.currentTarget.style.boxShadow =
-                  theme.palette.mode === "dark"
-                    ? "0 8px 24px rgba(0,0,0,0.4)"
-                    : "0 8px 24px rgba(0,0,0,0.1)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = "translateY(0)";
-                e.currentTarget.style.boxShadow = "none";
-              }}
-            >
-              <div style={{ marginBottom: "16px" }}>
-                <h3
-                  style={{
-                    color: colors.grey[100],
-                    fontSize: "18px",
-                    fontWeight: "600",
-                    margin: "0 0 4px 0",
-                  }}
-                >
-                  {researcher.person_name}
-                </h3>
-                <p
-                  style={{
-                    color: colors.grey[300],
-                    fontSize: "14px",
-                    margin: 0,
-                  }}
-                >
-                  {/* {researcher.title} */}
-                </p>
-              </div>
-
-              <div style={{ marginBottom: "16px" }}>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    marginBottom: "8px",
-                  }}
-                >
-                  <MapPin
-                    style={{
-                      width: "16px",
-                      height: "16px",
-                      color: colors.grey[300],
-                    }}
-                  />
-                  <span style={{ color: colors.grey[300], fontSize: "13px" }}>
-                    {researcher.institution_name}
-                  </span>
-                </div>
-                <div
-                  style={{ display: "flex", alignItems: "center", gap: "8px" }}
-                >
-                  <MapPin
-                    style={{
-                      width: "16px",
-                      height: "16px",
-                      color: colors.grey[300],
-                    }}
-                  />
-                  <span style={{ color: colors.grey[300], fontSize: "13px" }}>
-                    {researcher.department_name}
-                  </span>
-                </div>
-              </div>
-
-              <div style={{ marginBottom: "16px" }}>
-                <p
-                  style={{
-                    color: colors.grey[300],
-                    fontSize: "11px",
-                    fontWeight: "600",
-                    marginBottom: "8px",
-                    textTransform: "uppercase",
-                  }}
-                >
-                  Research Areas
-                </p>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
-                  {researcher.expertises.filter((exp) => exp).length > 0 ? (
-                    researcher.expertises
-                      .filter((exp) => exp)
-                      .map((exp, idx) => (
-                        <span
-                          key={idx}
-                          style={{
-                            padding: "4px 12px",
-                            backgroundColor: colors.blueAccent[800],
-                            color: colors.blueAccent[200],
-                            borderRadius: "16px",
-                            fontSize: "12px",
-                            fontWeight: "500",
-                          }}
-                        >
-                          {exp}
-                        </span>
-                      ))
-                  ) : (
-                    <span style={{ fontSize: "12px", color: colors.grey[400] }}>
-                      No Research Areas Listed
-                    </span>
-                  )}
-                </div>
-              </div>
-
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  marginBottom: "16px",
-                  paddingTop: "16px",
-                  borderTop: `1px solid ${colors.primary[300]}`,
-                }}
-              >
-                <div
-                  style={{ display: "flex", alignItems: "center", gap: "6px" }}
-                >
-                  <BookOpen
-                    style={{
-                      width: "16px",
-                      height: "16px",
-                      color: colors.grey[300],
-                    }}
-                  />
-                  <span style={{ color: colors.grey[300], fontSize: "13px" }}>
-                    {researcher.projects} Total Number of Projects
-                  </span>
-                </div>
-                <div
-                  style={{ display: "flex", alignItems: "center", gap: "6px" }}
-                ></div>
-              </div>
-
-              <div style={{ display: "flex", gap: "8px", marginTop: "auto" }}>
-                <a
-                  href={`mailto:${researcher.person_email}`}
-                  style={{
-                    flex: 1,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: "8px",
-                    padding: "10px 16px",
-                    backgroundColor: colors.greenAccent[600],
-                    color: colors.grey[900],
-                    border: "none",
-                    borderRadius: "8px",
-                    textDecoration: "none",
-                    fontSize: "13px",
-                    fontWeight: "600",
-                    cursor: "pointer",
-                  }}
-                >
-                  <Mail style={{ width: "16px", height: "16px" }} />
-                  Contact
-                </a>
-              </div>
-            </div>
+            <ResearcherCard
+              key={researcher.person_id}
+              researcher={researcher}
+              projects={numProjectsPerPerson[researcher.person_id]?.num_projects ?? 0}
+              colors={colors}
+              theme={theme}
+            />
           ))}
         </div>
 
