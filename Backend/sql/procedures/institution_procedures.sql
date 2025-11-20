@@ -88,3 +88,22 @@ CREATE PROCEDURE SelectInstitutionByName(IN InstitutionName VARCHAR(100))
 BEGIN
     SELECT * FROM Institution WHERE institution_name = InstitutionName;
 END;
+
+CREATE PROCEDURE GetDepartmentsAndPeopleByInstitutionId(IN InstitutionId BIGINT UNSIGNED)
+BEGIN
+    SELECT dept.*, p.* FROM Institution as inst 
+    LEFT JOIN Department as dept on 
+    dept.institution_id = inst.institution_id
+    LEFT JOIN person as p ON
+    p.department_id = dept.department_id
+    WHERE inst.institution_id = InstitutionId;
+END;
+
+CREATE PROCEDURE GetAllInstitutionsDepartmentsAndPeople()
+BEGIN
+    SELECT * FROM Institution as inst 
+    LEFT JOIN Department as dept on 
+    dept.institution_id = inst.institution_id
+    LEFT JOIN person as p ON
+    p.department_id = dept.department_id;
+END;

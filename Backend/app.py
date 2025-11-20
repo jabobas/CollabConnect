@@ -1,8 +1,10 @@
 from flask import Flask
+from flask_cors import CORS
 from flask_mysqldb import MySQL
 import os
 import configparser
-
+from routes.institution_routes import institution_bp
+from routes.project_routes import project_bp
 """
 Filename: app.py
 Author: Lucas Matheson
@@ -22,6 +24,7 @@ All default routes, such as health, are defined here.
 
 
 app = Flask(__name__)
+CORS(app)  
 
 config = configparser.ConfigParser()
 config.read("config.ini")
@@ -36,6 +39,11 @@ app.config["MYSQL_CURSORCLASS"] = config.get(
 )
 
 mysql = MySQL(app)
+
+# Define your routes here
+app.register_blueprint(institution_bp)
+app.register_blueprint(project_bp)
+
 
 @app.route("/health")
 def health():
