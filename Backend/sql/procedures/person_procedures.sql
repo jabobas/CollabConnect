@@ -80,6 +80,16 @@ BEGIN
     WHERE person_name = p_person_name;
 END;
 
+-- 5. Select full context (person + department + institution) by person id
+CREATE PROCEDURE SelectPersonFullContextByID(IN p_person_id BIGINT)
+BEGIN
+    SELECT p.*, d.*, i.*
+    FROM Person p
+    LEFT JOIN Department d ON p.department_id = d.department_id
+    LEFT JOIN Institution i ON d.institution_id = i.institution_id
+    WHERE p.person_id = p_person_id;
+END;
+
 -- Additional things it could be useful to add
 -- Get all people with a shared expertise
 -- Get all people in a department
