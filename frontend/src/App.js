@@ -5,15 +5,16 @@ import Topbar from "./scenes/global/Topbar";
 import Dashboard from "./scenes/dashboard";
 import Sidebar from "./scenes/global/Sidebar";
 
-import SearchCollab from "./scenes/SearchCollab"
+import SearchCollab from "./scenes/SearchCollab";
+// import Person from "./scenes/Person";
+// import Institution from "./scenes/Institution";
+// import Department from "./scenes/Department";
 
 function App() {
   const [theme, colorMode] = useMode();
   return (
-    // Since this is a context, .provider is used to wrap all the child components, then supply the value
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
-        {/* On theme change, CssBaseLine resets css values to default */}
         <CssBaseline />
         <div className="app">
           <Sidebar/>
@@ -23,6 +24,11 @@ function App() {
               <Route path="/" element={<Dashboard />} />
               {/* <Route path="/connections" element={ }/> */}
               <Route path="/search" element={<SearchCollab />} />
+
+              {/* <Route path="/person/:id" element={<Person />} /> */}
+              {/* <Route path="/institution/:id" element={<Institution />} /> */}
+              {/* <Route path="/department/:id" element={<Department />} /> */}
+
               {/* <Route path="/data-collection" element={< />} /> */}
               {/* <Route path="/faq" element={< />} /> */}
               {/* <Route path="/data-request element={< />} /> */}

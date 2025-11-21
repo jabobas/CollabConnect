@@ -9,7 +9,6 @@ a name, expertise, or institution.
 
 */
 
-
 import React, { memo, useCallback, useMemo, useState, useEffect } from 'react';
 import { Box } from "@mui/material";
 import {
@@ -22,9 +21,12 @@ import {
 import { tokens } from "../../theme";
 import Header from "../../components/Header";
 import { useTheme } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const ResearcherCard = memo(({ researcher, projects, colors, theme }) => {
+  const navigate = useNavigate();
+
   const handleMouseEnter = useCallback((e) => {
     e.currentTarget.style.transform = "translateY(-4px)";
     e.currentTarget.style.boxShadow =
@@ -38,7 +40,24 @@ const ResearcherCard = memo(({ researcher, projects, colors, theme }) => {
     e.currentTarget.style.boxShadow = "none";
   }, []);
 
-  // Memoize filtered expertises
+  const handleCardClick = useCallback(() => {
+    navigate(`/person/${researcher.person_id}`);
+  }, [navigate, researcher.person_id]);
+
+  const handleInstitutionClick = useCallback((e) => {
+    e.stopPropagation();
+    navigate(`/institution/${researcher.institution_id}`);
+  }, [navigate, researcher.institution_id]);
+
+  const handleDepartmentClick = useCallback((e) => {
+    e.stopPropagation();
+    navigate(`/department/${researcher.department_id}`);
+  }, [navigate, researcher.department_id]);
+
+  const handleEmailClick = useCallback((e) => {
+    e.stopPropagation();
+  }, []);
+
   const validExpertises = useMemo(
     () => researcher.expertises.filter((exp) => exp),
     [researcher.expertises]
@@ -59,6 +78,7 @@ const ResearcherCard = memo(({ researcher, projects, colors, theme }) => {
       }}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      onClick={handleCardClick}
     >
       <div style={{ marginBottom: "16px" }}>
         <h3
@@ -75,11 +95,23 @@ const ResearcherCard = memo(({ researcher, projects, colors, theme }) => {
 
       <div style={{ marginBottom: "16px" }}>
         <div
+          onClick={handleInstitutionClick}
           style={{
             display: "flex",
             alignItems: "center",
             gap: "8px",
             marginBottom: "8px",
+            cursor: "pointer",
+            padding: "4px 8px",
+            marginLeft: "-8px",
+            borderRadius: "4px",
+            transition: "background-color 0.2s",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = colors.primary[300];
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = "transparent";
           }}
         >
           <MapPin
@@ -93,7 +125,25 @@ const ResearcherCard = memo(({ researcher, projects, colors, theme }) => {
             {researcher.institution_name}
           </span>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+        <div
+          onClick={handleDepartmentClick}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+            cursor: "pointer",
+            padding: "4px 8px",
+            marginLeft: "-8px",
+            borderRadius: "4px",
+            transition: "background-color 0.2s",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = colors.primary[300];
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = "transparent";
+          }}
+        >
           <MapPin
             style={{
               width: "16px",
@@ -170,6 +220,7 @@ const ResearcherCard = memo(({ researcher, projects, colors, theme }) => {
       <div style={{ display: "flex", gap: "8px", marginTop: "auto" }}>
         <a
           href={`mailto:${researcher.person_email}`}
+          onClick={handleEmailClick}
           style={{
             flex: 1,
             display: "flex",
