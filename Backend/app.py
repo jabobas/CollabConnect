@@ -5,6 +5,7 @@ import os
 import configparser
 from routes.institution_routes import institution_bp
 from routes.project_routes import project_bp
+from routes.person_routes import person_bp
 """
 Filename: app.py
 Author: Lucas Matheson
@@ -43,6 +44,7 @@ mysql = MySQL(app)
 # Define your routes here
 app.register_blueprint(institution_bp)
 app.register_blueprint(project_bp)
+app.register_blueprint(person_bp)
 
 
 @app.route("/health")
