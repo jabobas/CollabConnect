@@ -368,6 +368,7 @@ def run_tests() -> bool:
 
     result = pytest.main(["tests"])  # 'tests' is the folder containing your test files
     return result == 0  # pytest returns 0 if all tests pass
+
 def _process_departments(cursor, departments, institution_id, inserted_projects,
                          global_inserted_emails, department_institution_map, department_earliest_dates):
     """Process all departments for an institution."""

@@ -7,7 +7,7 @@ import Sidebar from "./scenes/global/Sidebar";
 
 import SearchCollab from "./scenes/SearchCollab";
 // import Person from "./scenes/Person";
-// import Institution from "./scenes/Institution";
+import Institution from "./scenes/Institution";
 // import Department from "./scenes/Department";
 
 function App() {
@@ -26,7 +26,7 @@ function App() {
               <Route path="/search" element={<SearchCollab />} />
 
               {/* <Route path="/person/:id" element={<Person />} /> */}
-              {/* <Route path="/institution/:id" element={<Institution />} /> */}
+              <Route path="/institution/:institutionId" element={<Institution />} />
               {/* <Route path="/department/:id" element={<Department />} /> */}
 
               {/* <Route path="/data-collection" element={< />} /> */}
