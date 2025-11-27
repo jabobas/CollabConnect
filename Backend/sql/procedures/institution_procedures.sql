@@ -91,7 +91,7 @@ END;
 
 CREATE PROCEDURE GetDepartmentsAndPeopleByInstitutionId(IN InstitutionId BIGINT UNSIGNED)
 BEGIN
-    SELECT dept.*, p.* FROM Institution as inst 
+    SELECT dept.*, p.*, inst.* FROM Institution as inst 
     LEFT JOIN Department as dept on 
     dept.institution_id = inst.institution_id
     LEFT JOIN person as p ON

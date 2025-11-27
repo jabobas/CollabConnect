@@ -56,6 +56,7 @@ const [institutionData, setInstitution] = useState();
       .get(`http://127.0.0.1:5000/institution/one/${institutionId}`)
       .then((response) => {
         setInstitution(response.data.data);
+        console.log(response.data.data)
       })
       .catch((err) => {
         console.log(err.message);
@@ -76,7 +77,7 @@ const [institutionData, setInstitution] = useState();
         <Box m="20px 20px 0px 20px">
         <Header
           title="Institution"
-          subtitle={"View more information about " + institutionId}
+          subtitle={"View more information about " + institutionData?.institution_name ?? '?'}
         />
       </Box>
 

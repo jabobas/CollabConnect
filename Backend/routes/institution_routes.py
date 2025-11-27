@@ -20,7 +20,7 @@ def get_institution(id: int):
         # key : value structure, making department and person name be keys so in the frontend, 
         # data can be accessed in O(1) instead of processing through it on the client side, Which is improper full-stack development
         # Note there are no person duplicates, so no need to check each person to see if they already exist
-        out = {}
+        out = {'institution_name': results[0]['institution_name']}
         for curr in results:
             print(curr)
             # if departmant name isn't already a key, a new key value
