@@ -118,7 +118,7 @@ def get_projects_by_person():
         if not person_id:
             return jsonify({"status": "error", "message": "Query param 'person_id' is required"}), 400
         cursor = mysql.connection.cursor()
-        cursor.callproc("SelectProjectsByPersonId", [person_id])
+        cursor.callproc("SelectProjectsByPersonID", [person_id])
         results = cursor.fetchall()
         cursor.close()
         return jsonify({"status": "success", "data": results, "count": len(results)}), 200
@@ -131,11 +131,46 @@ def get_project_by_id(project_id: int):
     from app import mysql
     try:
         cursor = mysql.connection.cursor()
-        cursor.callproc("SelectProjectById", [project_id])
+        cursor.callproc("SelectProjectByID", [project_id])
         result = cursor.fetchone()
         cursor.close()
         return jsonify({"status": "success", "data": result}), 200
     except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+
+@project_bp.route("/<int:project_id>/people", methods=["GET"])
+def get_people_by_project(project_id: int):
+    """Return list of people associated with a project via WorkedOn."""
+    from app import mysql
+    try:
+        log_info(f"Fetching people for project_id={project_id}")
+        cursor = mysql.connection.cursor()
+        query = (
+            """
+            SELECT 
+                p.person_id,
+                p.person_name,
+                p.email,
+                p.department_id,
+                d.department_name,
+                i.institution_id,
+                i.institution_name
+            FROM WorkedOn w
+            JOIN Person p ON w.person_id = p.person_id
+            LEFT JOIN Department d ON p.department_id = d.department_id
+            LEFT JOIN Institution i ON d.institution_id = i.institution_id
+            WHERE w.project_id = %s
+            ORDER BY p.person_name ASC
+            """
+        )
+        cursor.execute(query, [project_id])
+        results = cursor.fetchall()
+        cursor.close()
+        log_info(f"Fetched {len(results)} people for project_id={project_id}")
+        return jsonify({"status": "success", "data": results, "count": len(results)}), 200
+    except Exception as e:
+        log_error(f"Error fetching people for project_id={project_id}: {str(e)}")
         return jsonify({"status": "error", "message": str(e)}), 500
 
 # from flask import Blueprint, jsonify, request

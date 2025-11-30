@@ -5,6 +5,7 @@ databases
 *.vscode
 *.pytest_cache
 *__pycache__/
+*logs
 
 
 # macOS system files

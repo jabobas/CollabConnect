@@ -11,7 +11,6 @@ import React, { memo, useCallback, useMemo, useState, useEffect } from 'react';
 import { Box } from "@mui/material";
 import {
   Search,
-  MapPin,
   Calendar,
 } from "lucide-react";
 import { tokens } from "../../theme";
@@ -40,15 +39,14 @@ const ProjectCard = memo(({ project, colors, theme }) => {
     navigate(`/project/${project.project_id}`);
   }, [navigate, project.project_id]);
 
-  const handleInstitutionClick = useCallback((e) => {
-    e.stopPropagation();
-    navigate(`/institution/${project.institution_id}`);
-  }, [navigate, project.institution_id]);
+  // Institution details aren't available on the basic project list payload;
+  // navigate via the detail page instead.
 
-  const validTags = useMemo(
-    () => project.tags?.filter((tag) => tag) || [],
-    [project.tags]
-  );
+  const validTags = useMemo(() => {
+    if (Array.isArray(project.tags)) return project.tags.filter(Boolean);
+    if (project.tag_name) return [project.tag_name];
+    return [];
+  }, [project.tags, project.tag_name]);
 
   return (
     <div
@@ -76,44 +74,12 @@ const ProjectCard = memo(({ project, colors, theme }) => {
             margin: "0 0 4px 0",
           }}
         >
-          {project.project_name}
+          {project.project_title || project.title || project.project_name}
         </h3>
       </div>
 
       <div style={{ marginBottom: "16px" }}>
-        {project.institution_name && (
-          <div
-            onClick={handleInstitutionClick}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-              marginBottom: "8px",
-              cursor: "pointer",
-              padding: "4px 8px",
-              marginLeft: "-8px",
-              borderRadius: "4px",
-              transition: "background-color 0.2s",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = colors.primary[300];
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = "transparent";
-            }}
-          >
-            <MapPin
-              style={{
-                width: "16px",
-                height: "16px",
-                color: colors.grey[300],
-              }}
-            />
-            <span style={{ color: colors.grey[300], fontSize: "13px" }}>
-              {project.institution_name}
-            </span>
-          </div>
-        )}
+        {/* Institution is shown on the detail page; omitted here for now */}
         {project.start_date && (
           <div
             style={{
@@ -138,7 +104,7 @@ const ProjectCard = memo(({ project, colors, theme }) => {
         )}
       </div>
 
-      {project.description && (
+      {(project.project_description || project.description) && (
         <div style={{ marginBottom: "16px", flex: 1 }}>
           <p
             style={{
@@ -152,7 +118,7 @@ const ProjectCard = memo(({ project, colors, theme }) => {
               overflow: "hidden",
             }}
           >
-            {project.description}
+            {project.project_description || project.description}
           </p>
         </div>
       )}
@@ -204,9 +170,10 @@ const SearchProjects = () => {
     const fetchProjects = async () => {
       try {
         setIsLoading(true);
-        const response = await axios.get("http://localhost:5001/api/projects");
-        setProjects(response.data);
-        setFilteredProjects(response.data);
+        const response = await axios.get("http://localhost:5000/project/all");
+        const list = response.data?.data || [];
+        setProjects(list);
+        setFilteredProjects(list);
         setError(null);
       } catch (err) {
         console.error("Error fetching projects:", err);
@@ -227,14 +194,13 @@ const SearchProjects = () => {
 
     const query = searchQuery.toLowerCase();
     const filtered = projects.filter((project) => {
-      const nameMatch = project.project_name?.toLowerCase().includes(query);
-      const institutionMatch = project.institution_name?.toLowerCase().includes(query);
-      const descriptionMatch = project.description?.toLowerCase().includes(query);
-      const tagMatch = project.tags?.some((tag) =>
-        tag.toLowerCase().includes(query)
-      );
-
-      return nameMatch || institutionMatch || descriptionMatch || tagMatch;
+      const title = (project.project_title || project.title || project.project_name || "").toLowerCase();
+      const desc = (project.project_description || project.description || "").toLowerCase();
+      const tags = Array.isArray(project.tags) ? project.tags : (project.tag_name ? [project.tag_name] : []);
+      const titleMatch = title.includes(query);
+      const descMatch = desc.includes(query);
+      const tagMatch = tags.some((t) => (t || "").toLowerCase().includes(query));
+      return titleMatch || descMatch || tagMatch;
     });
 
     setFilteredProjects(filtered);
