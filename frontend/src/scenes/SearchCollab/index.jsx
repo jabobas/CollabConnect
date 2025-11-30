@@ -24,6 +24,8 @@ import { useTheme } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
+// todo: this researcher card can be converted into a general component, as the 
+// useage of showcasing a person in this format can repeat throughout the app
 const ResearcherCard = memo(({ researcher, projects, colors, theme }) => {
   const navigate = useNavigate();
 

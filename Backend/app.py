@@ -6,6 +6,7 @@ import configparser
 from routes.institution_routes import institution_bp
 from routes.project_routes import project_bp
 from routes.person_routes import person_bp
+
 """
 Filename: app.py
 Author: Lucas Matheson

@@ -1,5 +1,15 @@
 from flask import Blueprint, jsonify, request
+"""
 
+Filename: index.jsx
+Author: Lucas Matheson
+Edited by: Lucas Matheson
+Date: November 28, 2025
+
+These routes look to provide access to the database for all project data. 
+
+
+"""
 
 project_bp = Blueprint('project', __name__, url_prefix='/project')
 
