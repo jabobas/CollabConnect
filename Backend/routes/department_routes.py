@@ -41,6 +41,9 @@ def create_department():
     result = cursor.fetchone()
     department_id = result['new_id'] if result else None
     
+    while cursor.nextset():
+        pass
+    
     mysql.connection.commit()
     cursor.close()
     

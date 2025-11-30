@@ -6,11 +6,7 @@ import configparser
 from routes.institution_routes import institution_bp
 from routes.project_routes import project_bp
 from routes.person_routes import person_bp
-<<<<<<< HEAD
-
-=======
 from routes.department_routes import department_bp
->>>>>>> d1bb7becf099c8dbb7003fa9cf904ca0120de76d
 """
 Filename: app.py
 Author: Lucas Matheson
