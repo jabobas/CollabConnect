@@ -1,6 +1,11 @@
 *venv2
 *.ini
 databases
+*.venv
+*.vscode
+*.pytest_cache
+*__pycache__/
+
 
 # macOS system files
 .DS_Store
