@@ -5,7 +5,7 @@ It defines endpoints for associating and dissociating tags with projects.
 @date: November 25, 2025
 '''
 from flask import Blueprint, jsonify, request
-from Backend.utils.logger import log_info, log_error
+from utils.logger import log_info, log_error
 
 project_tag_bp = Blueprint("project_tag", __name__, url_prefix="/project_tag")
 

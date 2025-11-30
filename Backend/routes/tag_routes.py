@@ -5,7 +5,7 @@ It includes endpoints for creating, updating, deleting, and retrieving tags.
 @date: November 20, 2025
 '''
 from flask import Blueprint, jsonify, request
-from Backend.utils.logger import log_info, log_error
+from utils.logger import log_info, log_error
 
 tags_bp = Blueprint("tags", __name__, url_prefix="/tags")
 

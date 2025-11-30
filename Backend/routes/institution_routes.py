@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify
-from Backend.utils.logger import log_info, log_error
+from utils.logger import log_info, log_error
 
 
 institution_bp = Blueprint('institution', __name__, url_prefix='/institution')

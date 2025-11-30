@@ -5,7 +5,7 @@ It defines endpoints for creating, updating, deleting, and retrieving projects.
 @date: November 20, 2025
 '''
 from flask import Blueprint, jsonify, request
-from Backend.utils.logger import log_info, log_error
+from utils.logger import log_info, log_error
 
 project_bp = Blueprint("project", __name__, url_prefix="/project")
 

@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify
-from Backend.utils.logger import log_info, log_error
+from utils.logger import log_info, log_error
 
 # Blueprint for person-related endpoints
 person_bp = Blueprint('person', __name__, url_prefix='/person')

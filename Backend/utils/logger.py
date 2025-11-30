@@ -1,3 +1,9 @@
+'''
+Logger utility for CollabConnect Backend
+Provides logging functions with checkpointing for better traceability.
+@author: Abbas Jabor and Copilot
+@date: November 30, 2025
+'''
 import logging
 import os
 
