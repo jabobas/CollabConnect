@@ -5,6 +5,7 @@ It defines endpoints for creating, updating, deleting, and retrieving projects.
 @date: November 20, 2025
 '''
 from flask import Blueprint, jsonify, request
+from Backend.utils.logger import log_info, log_error
 
 project_bp = Blueprint("project", __name__, url_prefix="/project")
 
@@ -13,16 +14,19 @@ project_bp = Blueprint("project", __name__, url_prefix="/project")
 def get_all_projects():
     from app import mysql
     try:
+        log_info("Fetching all projects")
         cursor = mysql.connection.cursor()
         cursor.callproc("GetAllProjects")
         results = cursor.fetchall()
         cursor.close()
+        log_info(f"Fetched {len(results)} projects")
         return jsonify({
             "status": "success",
             "data": results,
             "count": len(results)
         }), 200
     except Exception as e:
+        log_error(f"Error fetching projects: {str(e)}")
         return jsonify({"status": "error", "message": str(e)}), 500
 
 
@@ -31,10 +35,13 @@ def create_project():
     from app import mysql
     try:
         data = request.get_json(force=True) or {}
+        log_info(f"Create project request: {data}")
         required = ["title", "description", "person_id", "start_date", "end_date", "tag_name"]
         missing = [k for k in required if data.get(k) in (None, "")]
         if missing:
+            log_error(f"Missing fields in create_project: {missing}")
             return jsonify({"status": "error", "message": f"Missing fields: {', '.join(missing)}"}), 400
+        log_info("Transaction started for project creation")
         cursor = mysql.connection.cursor()
         cursor.callproc("InsertIntoProject", [
             data["title"],
@@ -45,9 +52,13 @@ def create_project():
             data["tag_name"]
         ])
         mysql.connection.commit()
+        log_info("Transaction committed for project creation")
         cursor.close()
+        log_info(f"Project created: title={data['title']}, description={data['description']}, person_id={data['person_id']}, start_date={data['start_date']}, end_date={data['end_date']}, tag_name={data['tag_name']}")
         return jsonify({"status": "success", "message": "Project created successfully"}), 201
     except Exception as e:
+        mysql.connection.rollback()
+        log_error(f"Transaction rolled back for project creation: {str(e)} | data={data}")
         return jsonify({"status": "error", "message": str(e)}), 500
 
 
@@ -57,7 +68,9 @@ def update_project():
     try:
         data = request.get_json(force=True) or {}
         if not data.get("id"):
+            log_error("Update project failed: Field 'id' is required")
             return jsonify({"status": "error", "message": "Field 'id' is required"}), 400
+        log_info("Transaction started for project update")
         cursor = mysql.connection.cursor()
         cursor.callproc("UpdateProjectDetails", [
             data.get("id"),
@@ -68,9 +81,13 @@ def update_project():
             data.get("tag_name")
         ])
         mysql.connection.commit()
+        log_info("Transaction committed for project update")
         cursor.close()
+        log_info(f"Project updated: id={data.get('id')}, title={data.get('title')}, description={data.get('description')}, start_date={data.get('start_date')}, end_date={data.get('end_date')}, tag_name={data.get('tag_name')}")
         return jsonify({"status": "success", "message": "Project updated successfully"}), 200
     except Exception as e:
+        mysql.connection.rollback()
+        log_error(f"Transaction rolled back for project update: {str(e)} | data={data}")
         return jsonify({"status": "error", "message": str(e)}), 500
 
 
@@ -78,12 +95,18 @@ def update_project():
 def delete_project(project_id: int):
     from app import mysql
     try:
+        log_info(f"Delete project request: project_id={project_id}")
+        log_info("Transaction started for project deletion")
         cursor = mysql.connection.cursor()
         cursor.callproc("DeleteProject", [project_id])
         mysql.connection.commit()
+        log_info("Transaction committed for project deletion")
         cursor.close()
+        log_info(f"Project deleted: project_id={project_id}")
         return jsonify({"status": "success", "message": "Project deleted successfully"}), 200
     except Exception as e:
+        mysql.connection.rollback()
+        log_error(f"Transaction rolled back for project deletion: {str(e)} | project_id={project_id}")
         return jsonify({"status": "error", "message": str(e)}), 500
 
 
