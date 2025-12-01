@@ -6,9 +6,9 @@ import Dashboard from "./scenes/dashboard";
 import Sidebar from "./scenes/global/Sidebar";
 
 import SearchCollab from "./scenes/SearchCollab";
+import Department from "./scenes/department";
 // import Person from "./scenes/Person";
 // import Institution from "./scenes/Institution";
-// import Department from "./scenes/Department";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -27,7 +27,7 @@ function App() {
 
               {/* <Route path="/person/:id" element={<Person />} /> */}
               {/* <Route path="/institution/:id" element={<Institution />} /> */}
-              {/* <Route path="/department/:id" element={<Department />} /> */}
+              <Route path="/department/:id" element={<Department />} />
 
               {/* <Route path="/data-collection" element={< />} /> */}
               {/* <Route path="/faq" element={< />} /> */}
