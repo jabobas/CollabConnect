@@ -102,3 +102,11 @@ CREATE PROCEDURE SelectActiveProjects()
 BEGIN
     SELECT * FROM Project WHERE end_date IS NULL;
 END;
+
+CREATE PROCEDURE SelectNumProjectsPerPerson()
+BEGIN 
+    SELECT count(*) as num_projects, pro.person_id, per.person_name from WorkedOn w 
+    left join Project pro on w.project_id = pro.project_id
+    left join Person per on w.person_id = per.person_id
+    GROUP BY pro.person_id, per.person_name;
+END;
