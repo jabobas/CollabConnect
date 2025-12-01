@@ -5,6 +5,46 @@ department_bp = Blueprint('department', __name__, url_prefix='/department')
 
 # Get routes
 
+@department_bp.route('/<int:department_id>', methods=['GET'])
+def get_department_by_id(department_id):
+    from app import mysql
+    cursor = mysql.connection.cursor()
+    cursor.execute('''
+        SELECT d.*, i.institution_name, i.institution_id
+        FROM Department d
+        JOIN Institution i ON d.institution_id = i.institution_id
+        WHERE d.department_id = %s
+    ''', (department_id,))
+    result = cursor.fetchone()
+    cursor.close()
+    
+    if not result:
+        return jsonify({'status': 'not_found', 'message': 'Department not found'}), 404
+        
+    return jsonify({'status': 'success', 'data': result})
+
+# Fetch all people working in this department with their details
+@department_bp.route('/<int:department_id>/people', methods=['GET'])
+def get_department_people(department_id):
+    from app import mysql
+    cursor = mysql.connection.cursor()
+    cursor.execute('''
+        SELECT p.*, d.department_name, i.institution_name 
+        FROM Person p
+        JOIN WorksIn wi ON p.person_id = wi.person_id
+        JOIN Department d ON wi.department_id = d.department_id
+        JOIN Institution i ON d.institution_id = i.institution_id
+        WHERE d.department_id = %s
+    ''', (department_id,))
+    people = cursor.fetchall()
+    cursor.close()
+    
+    for person in people:
+        person['expertises'] = [e for e in [person.get('expertise_1'), person.get('expertise_2'), person.get('expertise_3')] if e]
+    
+    return jsonify({'status': 'success', 'data': people, 'count': len(people)})
+
+
 @department_bp.route('/by-name/<string:department_name>', methods=['GET'])
 def get_department_by_name(department_name):
     from app import mysql
