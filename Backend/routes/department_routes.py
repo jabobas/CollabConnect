@@ -12,6 +12,9 @@ def get_department_by_name(department_name):
     # Get department by name
     cursor.callproc('SelectDepartmentByName', [department_name])
     result = cursor.fetchone()
+    # Clear remaining result sets 
+    while cursor.nextset():
+        pass
     cursor.close()
     
     if not result:
@@ -40,6 +43,8 @@ def create_department():
     # Get the new department_id from the procedure result
     result = cursor.fetchone()
     department_id = result['new_id'] if result else None
+    while cursor.nextset():
+        pass
     
     mysql.connection.commit()
     cursor.close()
@@ -66,6 +71,8 @@ def update_department(department_id):
         data.get('department_email'),
         data.get('department_name')
     ])
+    while cursor.nextset():
+        pass
     mysql.connection.commit()
     cursor.close()
     
@@ -83,6 +90,8 @@ def delete_department(department_id):
     cursor = mysql.connection.cursor()
     # Delete department
     cursor.callproc('DeleteDepartment', [department_id])
+    while cursor.nextset():
+        pass
     mysql.connection.commit()
     cursor.close()
     
