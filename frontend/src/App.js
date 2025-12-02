@@ -6,12 +6,12 @@ import Dashboard from "./scenes/dashboard";
 import Sidebar from "./scenes/global/Sidebar";
 
 import SearchCollab from "./scenes/SearchCollab";
+import Person from "./scenes/person";
 import Department from "./scenes/department";
 import Login from "./scenes/login";
 import Register from "./scenes/register";
 import User from "./scenes/user";
 import CreateProfile from "./scenes/create-profile";
-// import Person from "./scenes/Person";
 // import Institution from "./scenes/Institution";
 
 function App() {
@@ -29,7 +29,7 @@ function App() {
               {/* <Route path="/connections" element={ }/> */}
               <Route path="/search" element={<SearchCollab />} />
 
-              {/* <Route path="/person/:id" element={<Person />} /> */}
+              <Route path="/person/:id" element={<Person />} />
               {/* <Route path="/institution/:id" element={<Institution />} /> */}
               <Route path="/department/:id" element={<Department />} />
               
