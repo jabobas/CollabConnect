@@ -12,6 +12,7 @@ import Login from "./scenes/login";
 import Register from "./scenes/register";
 import User from "./scenes/user";
 import CreateProfile from "./scenes/create-profile";
+import ClaimProfile from "./scenes/claim-profile";
 // import Institution from "./scenes/Institution";
 
 function App() {
@@ -37,6 +38,7 @@ function App() {
               <Route path="/register" element={<Register />} />
               <Route path="/user/:id" element={<User />} />
               <Route path="/create-profile" element={<CreateProfile />} />
+              <Route path="/people" element={<ClaimProfile />} />
 
               {/* <Route path="/data-collection" element={< />} /> */}
               {/* <Route path="/faq" element={< />} /> */}
