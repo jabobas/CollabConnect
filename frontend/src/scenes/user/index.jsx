@@ -10,9 +10,10 @@ with options to search/claim existing profile or create new one.
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Box, Button, useTheme, CircularProgress, Chip } from "@mui/material";
-import { Mail, Phone, Calendar, Award, User as UserIcon, Search } from "lucide-react";
+import { Mail, Phone, Calendar, Award, User as UserIcon, Search, Plus } from "lucide-react";
 import axios from "axios";
 import Header from "../../components/Header";
+import AddProjectModal from "../../components/AddProjectModal";
 import { tokens } from "../../theme";
 
 const User = () => {
@@ -25,6 +26,7 @@ const User = () => {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showAddProjectModal, setShowAddProjectModal] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -54,6 +56,18 @@ const User = () => {
 
     fetchData();
   }, [id]);
+
+  const handleProjectAdded = () => {
+    const fetchProjects = async () => {
+      try {
+        const projectsRes = await axios.get(`/user/${id}/projects`);
+        if (projectsRes.data.status === 'success') setProjects(projectsRes.data.data);
+      } catch (err) {
+        setProjects([]);
+      }
+    };
+    fetchProjects();
+  };
 
   if (loading) return <Box m="20px" display="flex" justifyContent="center" alignItems="center" height="80vh"><CircularProgress /></Box>;
   if (error) return <Box m="20px"><Header title="Error" subtitle={`Failed to load user: ${error}`} /></Box>;
@@ -223,19 +237,33 @@ const User = () => {
           <Box display="flex" flexDirection="column" gap="8px">
             {user.institution_name && (
               <Box display="flex" flexDirection="column">
-                <span style={{ 
-                  color: colors.grey[100], 
-                  fontSize: '16px',
-                  fontWeight: '500'
-                }}>
+                <span 
+                  onClick={() => user.institution_id && navigate(`/institution/${user.institution_id}`)}
+                  style={{ 
+                    color: colors.grey[100], 
+                    fontSize: '16px',
+                    fontWeight: '500',
+                    cursor: user.institution_id ? 'pointer' : 'default',
+                    transition: 'color 0.2s'
+                  }}
+                  onMouseEnter={(e) => user.institution_id && (e.target.style.color = colors.blueAccent[400])}
+                  onMouseLeave={(e) => (e.target.style.color = colors.grey[100])}
+                >
                   {user.institution_name}
                 </span>
                 {user.department_name && (
-                  <span style={{ 
-                    color: colors.grey[200], 
-                    fontSize: '14px',
-                    marginTop: '4px'
-                  }}>
+                  <span 
+                    onClick={() => user.department_id && navigate(`/department/${user.department_id}`)}
+                    style={{ 
+                      color: colors.grey[200], 
+                      fontSize: '14px',
+                      marginTop: '4px',
+                      cursor: user.department_id ? 'pointer' : 'default',
+                      transition: 'color 0.2s'
+                    }}
+                    onMouseEnter={(e) => user.department_id && (e.target.style.color = colors.blueAccent[400])}
+                    onMouseLeave={(e) => (e.target.style.color = colors.grey[200])}
+                  >
                     {user.department_name}
                   </span>
                 )}
@@ -342,7 +370,22 @@ const User = () => {
       ) : (
         <>
           <UserInfo />
-          <Header title="My Projects" subtitle={`${projects.length} project${projects.length !== 1 ? 's' : ''}`} />
+          <Box display="flex" justifyContent="space-between" alignItems="center" mb="20px">
+            <Header title="My Projects" subtitle={`${projects.length} project${projects.length !== 1 ? 's' : ''}`} />
+            <Button
+              variant="contained"
+              startIcon={<Plus size={18} />}
+              onClick={() => setShowAddProjectModal(true)}
+              sx={{
+                backgroundColor: colors.greenAccent[600],
+                color: colors.grey[100],
+                padding: '10px 20px',
+                '&:hover': { backgroundColor: colors.greenAccent[700] }
+              }}
+            >
+              Add Project
+            </Button>
+          </Box>
           
           {projects.length > 0 ? (
             <Box display="grid" gridTemplateColumns="repeat(auto-fill, minmax(350px, 1fr))" gap="20px">
@@ -362,6 +405,13 @@ const User = () => {
           )}
         </>
       )}
+      
+      <AddProjectModal
+        open={showAddProjectModal}
+        onClose={() => setShowAddProjectModal(false)}
+        userId={parseInt(id)}
+        onProjectAdded={handleProjectAdded}
+      />
     </Box>
   );
 };

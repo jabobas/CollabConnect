@@ -50,13 +50,16 @@ const CreateProfile = () => {
     setLoading(true);
     
     try {
-      // First create the person profile
-      const response = await axios.post('/person', formData);
+      const userId = localStorage.getItem('user_id');
+      const token = localStorage.getItem('access_token');
+      
+      const response = await axios.post(
+        '/user/create-profile-with-affiliation',
+        formData,
+        { headers: { 'Authorization': `Bearer ${token}` } }
+      );
       
       if (response.data.status === 'success') {
-        // Then automatically link it to current user account
-        const userId = localStorage.getItem('user_id');
-        await axios.post(`/user/${userId}/claim-person/${response.data.data.person_id}`);
         navigate(`/user/${userId}`);
       }
     } catch (err) {

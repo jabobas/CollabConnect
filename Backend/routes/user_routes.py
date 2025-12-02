@@ -38,7 +38,9 @@ def get_user(user_id):
             'expertise_1': user.get('expertise_1'),
             'expertise_2': user.get('expertise_2'),
             'expertise_3': user.get('expertise_3'),
+            'department_id': user.get('department_id'),
             'department_name': user.get('department_name'),
+            'institution_id': user.get('institution_id'),
             'institution_name': user.get('institution_name')
         }
     }), 200
@@ -164,3 +166,189 @@ def get_user_projects(user_id):
         })
     
     return jsonify({'status': 'success', 'data': project_list}), 200
+
+@user_bp.route('/user/<int:user_id>/projects', methods=['POST'])
+@token_required
+def add_user_project(user_id):
+    """Add a new project for the user"""
+    from app import mysql
+    
+    if request.current_user['user_id'] != user_id:
+        return jsonify({'status': 'error', 'message': 'Unauthorized'}), 403
+    
+    data = request.get_json()
+    
+    if not data.get('project_title'):
+        return jsonify({'status': 'error', 'message': 'Project title required'}), 400
+    
+    cursor = mysql.connection.cursor()
+    
+    try:
+        cursor.callproc('SelectUserById', [user_id])
+        user = cursor.fetchone()
+        while cursor.nextset():
+            pass
+        
+        if not user or not user.get('person_id'):
+            return jsonify({'status': 'error', 'message': 'No person profile linked'}), 404
+        
+        person_id = user['person_id']
+        
+        cursor.callproc('InsertIntoProject', [
+            data['project_title'],
+            data.get('project_description'),
+            person_id,
+            data.get('tag_name'),
+            data.get('start_date'),
+            data.get('end_date')
+        ])
+        result = cursor.fetchone()
+        project_id = result['project_id'] if result else None
+        while cursor.nextset():
+            pass
+        mysql.connection.commit()
+        
+        if not project_id:
+            raise Exception("Failed to create project")
+        
+        cursor.callproc('sp_insert_workedon', [
+            person_id,
+            project_id,
+            data.get('project_role', 'Contributor'),
+            data.get('start_date'),
+            data.get('end_date')
+        ])
+        while cursor.nextset():
+            pass
+        mysql.connection.commit()
+        
+        return jsonify({
+            'status': 'success',
+            'message': 'Project added',
+            'data': {'project_id': project_id}
+        }), 201
+        
+    except Exception as e:
+        mysql.connection.rollback()
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+    finally:
+        cursor.close()
+
+@user_bp.route('/user/create-profile-with-affiliation', methods=['POST'])
+@token_required
+def create_profile_with_affiliation():
+    """Create complete profile with institution/department relationships"""
+    from app import mysql
+    
+    user_id = request.current_user['user_id']
+    data = request.get_json()
+    
+    if not data.get('person_name') or not data.get('person_email'):
+        return jsonify({'status': 'error', 'message': 'Name and email required'}), 400
+    
+    cursor = mysql.connection.cursor()
+    
+    try:
+        # Find or create institution
+        institution_id = None
+        if data.get('institution_name'):
+            cursor.callproc('SelectInstitutionByName', [data['institution_name']])
+            inst = cursor.fetchone()
+            while cursor.nextset():
+                pass
+            
+            if inst:
+                institution_id = inst['institution_id']
+            else:
+                cursor.callproc('InsertIntoInstitution', [
+                    data['institution_name'],
+                    data.get('institution_type', 'Academic'),
+                    None, None, None, None, None
+                ])
+                result = cursor.fetchone()
+                institution_id = result['new_id'] if result else None
+                while cursor.nextset():
+                    pass
+                mysql.connection.commit()
+        
+        # Find or create department (only if institution exists)
+        department_id = None
+        if institution_id and data.get('department_name'):
+            cursor.execute("""
+                SELECT department_id FROM Department 
+                WHERE department_name = %s AND institution_id = %s
+            """, (data['department_name'], institution_id))
+            dept = cursor.fetchone()
+            
+            if dept:
+                department_id = dept['department_id']
+            else:
+                cursor.callproc('InsertIntoDepartment', [
+                    None,
+                    None,
+                    data['department_name'],
+                    institution_id
+                ])
+                result = cursor.fetchone()
+                department_id = result['new_id'] if result else None
+                while cursor.nextset():
+                    pass
+                mysql.connection.commit()
+        
+        # Create person with department_id
+        cursor.callproc('InsertPerson', [
+            data['person_name'],
+            data['person_email'],
+            data.get('person_phone'),
+            data.get('bio'),
+            data.get('expertise_1'),
+            data.get('expertise_2'),
+            data.get('expertise_3'),
+            data.get('expertise_1', 'General'),
+            department_id
+        ])
+        result = cursor.fetchone()
+        person_id = result['person_id'] if result else None
+        while cursor.nextset():
+            pass
+        mysql.connection.commit()
+        
+        if not person_id:
+            raise Exception("Failed to create person")
+        
+        # Create WorksIn relationship if department exists
+        if department_id:
+            cursor.callproc('InsertWorksIn', [person_id, department_id])
+            while cursor.nextset():
+                pass
+            mysql.connection.commit()
+            
+            # Create BelongsTo relationship
+            cursor.callproc('sp_insert_belongsto', [
+                department_id,
+                institution_id,
+                '2025-01-01',
+                None
+            ])
+            while cursor.nextset():
+                pass
+            mysql.connection.commit()
+        
+        # Link user to person
+        cursor.callproc('LinkUserToPerson', [user_id, person_id])
+        while cursor.nextset():
+            pass
+        mysql.connection.commit()
+        
+        return jsonify({
+            'status': 'success',
+            'message': 'Profile created',
+            'data': {'person_id': person_id, 'user_id': user_id}
+        }), 201
+        
+    except Exception as e:
+        mysql.connection.rollback()
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+    finally:
+        cursor.close()
+

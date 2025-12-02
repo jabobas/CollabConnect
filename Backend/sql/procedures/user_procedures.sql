@@ -49,6 +49,7 @@ BEGIN
         p.main_field,
         p.department_id,
         d.department_name,
+        i.institution_id,
         i.institution_name
     FROM User u
     LEFT JOIN Person p ON u.person_id = p.person_id
