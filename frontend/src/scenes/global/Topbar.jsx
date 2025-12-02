@@ -1,9 +1,6 @@
 /*
-Author: Aubin Mugisha
-Date: December 1, 2025
-
-Top navigation bar with theme toggle, search, notifications, settings,
-and authentication buttons (Login/Sign Up or Profile/Logout).
+Top navigation bar with search, theme toggle, notifications, settings, and
+user profile/login/logout buttons.
 */
 
 import { Box, IconButton, useTheme, Button } from "@mui/material";
@@ -47,7 +44,6 @@ const Topbar = () => {
     // Listen for storage changes (login/logout in other tabs)
     window.addEventListener('storage', checkAuth);
     
-    // Custom event for same-tab updates
     window.addEventListener('authChange', checkAuth);
 
     return () => {

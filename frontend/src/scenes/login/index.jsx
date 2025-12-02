@@ -2,8 +2,9 @@
 Author: Aubin Mugisha
 Date: December 1, 2025
 
-Login page for user authentication. Validates credentials and stores JWT
-token in localStorage for subsequent authenticated requests.
+Login page for user authentication. Allows users to log in with their email
+and password. On successful login, stores JWT token in local storage for
+authenticated requests.
 */
 
 import React, { useState } from 'react';
@@ -38,7 +39,6 @@ const Login = () => {
         localStorage.setItem('access_token', access_token);
         localStorage.setItem('user_id', user_id);
         
-        // Add token to all future axios requests automatically
         axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
         
         // Notify other components about auth state change
