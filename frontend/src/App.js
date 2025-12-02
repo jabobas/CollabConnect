@@ -7,6 +7,10 @@ import Sidebar from "./scenes/global/Sidebar";
 
 import SearchCollab from "./scenes/SearchCollab";
 import Department from "./scenes/department";
+import Login from "./scenes/login";
+import Register from "./scenes/register";
+import User from "./scenes/user";
+import CreateProfile from "./scenes/create-profile";
 // import Person from "./scenes/Person";
 // import Institution from "./scenes/Institution";
 
@@ -28,6 +32,11 @@ function App() {
               {/* <Route path="/person/:id" element={<Person />} /> */}
               {/* <Route path="/institution/:id" element={<Institution />} /> */}
               <Route path="/department/:id" element={<Department />} />
+              
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/user/:id" element={<User />} />
+              <Route path="/create-profile" element={<CreateProfile />} />
 
               {/* <Route path="/data-collection" element={< />} /> */}
               {/* <Route path="/faq" element={< />} /> */}

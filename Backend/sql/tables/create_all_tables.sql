@@ -107,3 +107,14 @@ CREATE TABLE WorksIn (
     FOREIGN KEY (person_id) REFERENCES Person(person_id),
     FOREIGN KEY (department_id) REFERENCES Department(department_id)
 );
+
+-- 4. User (authentication table linked to Person)
+CREATE TABLE User (
+    user_id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    person_id BIGINT UNSIGNED UNIQUE,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    last_login TIMESTAMP NULL,
+    FOREIGN KEY (person_id) REFERENCES Person(person_id) ON DELETE SET NULL
+);
