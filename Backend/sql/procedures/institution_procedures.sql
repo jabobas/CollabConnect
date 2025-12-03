@@ -94,7 +94,7 @@ BEGIN
     SELECT dept.*, p.* FROM Institution as inst 
     LEFT JOIN Department as dept on 
     dept.institution_id = inst.institution_id
-    LEFT JOIN person as p ON
+    LEFT JOIN Person as p ON
     p.department_id = dept.department_id
     WHERE inst.institution_id = InstitutionId;
 END;
@@ -104,6 +104,6 @@ BEGIN
     SELECT * FROM Institution as inst 
     LEFT JOIN Department as dept on 
     dept.institution_id = inst.institution_id
-    LEFT JOIN person as p ON
+    LEFT JOIN Person as p ON
     p.department_id = dept.department_id;
 END;
