@@ -47,16 +47,16 @@ Abbas:
 
 
 Lucas: 
-- Table Department, Institution
-- CRUD for Department, Institution 
-- Function/Stored Procedure Department, Institution
+- Created tables department and institution
+- Stored procedures for department and institution
 - Scrape USM’s departments
-- Starting with https://usm.maine.edu/department-computer-science/people/
+    - Starting with https://usm.maine.edu/department-computer-science/people/
 - Created general db creation in python
-- app.py creates database, all tables, indexes, and procedures
-- Insert all cleaned, scraped data 
-- Baseline Flask and Frontend
-- Gets a heads start on phase three
+- db_init.py creates database, all tables, indexes, and procedures
+- Formatted all json to be inserted into the database
+- app.py creates flask app to interact with MySQL Workbench
+- General code review, updates to procedures, tables, and functions to better fit project requirements
+- Created baseline unit tests for department, instituion, and person to ensure database is functional before data insertion
 
 
 Wyatt: 
