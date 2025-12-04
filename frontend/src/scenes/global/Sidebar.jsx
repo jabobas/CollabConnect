@@ -12,6 +12,7 @@ import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import { Users } from "lucide-react";
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
+import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import { useLocation } from "react-router-dom";
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
@@ -43,6 +44,7 @@ const Sidebar = () => {
     useEffect(() => {
     const pathToMenu = {
       "/search": "Search Collaberators",
+      "/projects": "Search Projects",
       "/": "Dashboard",
     };
 
@@ -201,6 +203,13 @@ const Sidebar = () => {
               title="Search Collaberators"
               to="/search"
               icon={<PersonSearchIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
+              title="Search Projects"
+              to="/projects"
+              icon={<FolderOpenIcon />}
               selected={selected}
               setSelected={setSelected}
             />

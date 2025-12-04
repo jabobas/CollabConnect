@@ -6,6 +6,8 @@ import configparser
 from routes.institution_routes import institution_bp
 from routes.project_routes import project_bp
 from routes.person_routes import person_bp
+from routes.tag_routes import tags_bp
+from routes.project_tag_routes import project_tag_bp
 from routes.department_routes import department_bp
 from routes.auth_routes import auth_bp
 from routes.user_routes import user_bp
@@ -48,6 +50,8 @@ mysql = MySQL(app)
 app.register_blueprint(institution_bp)
 app.register_blueprint(project_bp)
 app.register_blueprint(person_bp)
+app.register_blueprint(tags_bp)
+app.register_blueprint(project_tag_bp)
 app.register_blueprint(department_bp)
 app.register_blueprint(auth_bp)
 app.register_blueprint(user_bp)
