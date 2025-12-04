@@ -18,7 +18,6 @@ import {
   Building2,
   BookOpen,
   ArrowLeft,
-  ExternalLink,
   User,
   Briefcase
 } from "lucide-react";

@@ -144,7 +144,8 @@ export const useMode = () => {
     () => ({
       toggleColorMode: () => 
         setMode((prev) => (prev === "light" ? "dark" : "light"))
-    })
+    }),
+    []
   )
 
   // using mui, this will create the theme of the mode.
