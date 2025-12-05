@@ -62,21 +62,45 @@ def update_department(department_id):
     data = request.get_json()
     
     cursor = mysql.connection.cursor()
-    # Update all department fields at once
-    cursor.callproc('UpdateDepartmentDetails', [
-        department_id,
-        data.get('department_phone'),
-        data.get('department_email'),
-        data.get('department_name')
-    ])
-    mysql.connection.commit()
-    cursor.close()
     
-    return jsonify({
-        'status': 'success',
-        'message': 'Department updated successfully'
-    })
-
+    try:
+        # Lock the department row before updating
+        cursor.execute(
+            "SELECT department_id FROM departments WHERE department_id = %s FOR UPDATE",
+            (department_id,)
+        )
+        
+        # Verify the row exists
+        if cursor.fetchone() is None:
+            return jsonify({
+                'status': 'error',
+                'message': 'Department not found'
+            }), 404
+        
+        # Now call the stored procedure while holding the lock
+        cursor.callproc('UpdateDepartmentDetails', [
+            department_id,
+            data.get('department_phone'),
+            data.get('department_email'),
+            data.get('department_name')
+        ])
+        
+        mysql.connection.commit()  # Releases the lock
+        
+        return jsonify({
+            'status': 'success',
+            'message': 'Department updated successfully'
+        })
+        
+    except Exception as e:
+        mysql.connection.rollback()  # Release lock on error
+        return jsonify({
+            'status': 'error',
+            'message': str(e)
+        }), 500
+        
+    finally:
+        cursor.close()
 
 # Delete routes
 

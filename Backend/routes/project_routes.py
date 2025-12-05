@@ -1,4 +1,6 @@
 from flask import Blueprint, jsonify, request
+from threading import Lock
+
 """
 
 Filename: index.jsx
@@ -15,6 +17,7 @@ project_bp = Blueprint('project', __name__, url_prefix='/project')
 
 @project_bp.route("/num-projects-per-person", methods=['GET'])
 def get_num_projects_per_person():
+    
     from app import mysql 
     
     try:
