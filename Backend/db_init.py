@@ -158,6 +158,7 @@ def create_procedures():
         "./sql/procedures/tag_procedures.sql",
         "./sql/procedures/workedon_crud.sql",
         "./sql/procedures/worksin_crud.sql",
+        "./sql/procedures/user_procedures.sql",
     ]
     
     cursor = mysql.connection.cursor()

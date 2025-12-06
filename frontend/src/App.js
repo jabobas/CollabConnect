@@ -6,9 +6,17 @@ import Dashboard from "./scenes/dashboard";
 import Sidebar from "./scenes/global/Sidebar";
 
 import SearchCollab from "./scenes/SearchCollab";
+import SearchProjects from "./scenes/project";
+import ProjectDetail from "./scenes/project/Detail";
+// import Person from "./scenes/Person";
 import Person from "./scenes/person";
+import Department from "./scenes/department";
+import Login from "./scenes/login";
+import Register from "./scenes/register";
+import User from "./scenes/user";
+import CreateProfile from "./scenes/create-profile";
+import ClaimProfile from "./scenes/claim-profile";
 import Institution from "./scenes/Institution";
-// import Department from "./scenes/Department";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -24,9 +32,11 @@ function App() {
               <Route path="/" element={<Dashboard />} />
               {/* <Route path="/connections" element={ }/> */}
               <Route path="/search" element={<SearchCollab />} />
+              <Route path="/project/:id" element={<ProjectDetail />} />
+              <Route path="/projects" element={<SearchProjects />} />
 
               <Route path="/person/:id" element={<Person />} />
-              <Route path="/institution/:institutionId" element={<Institution />} />
+              {/* <Route path="/institution/:id" element={<Institution />} /> */}
               {/* <Route path="/department/:id" element={<Department />} /> */}
 
               {/* <Route path="/data-collection" element={< />} /> */}
