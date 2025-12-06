@@ -36,7 +36,7 @@ function App() {
               <Route path="/projects" element={<SearchProjects />} />
 
               <Route path="/person/:id" element={<Person />} />
-              {/* <Route path="/institution/:id" element={<Institution />} /> */}
+              <Route path="/institution/:id" element={<Institution />} />
               {/* <Route path="/department/:id" element={<Department />} /> */}
 
               {/* <Route path="/data-collection" element={< />} /> */}

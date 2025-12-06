@@ -1,7 +1,7 @@
 '''
 This file manages project related routes for the CollabConnect application.
 It defines endpoints for creating, updating, deleting, and retrieving projects.
-@author: Abbas Jabor
+@author: Abbas Jabor, Lucas Matheson
 @date: November 20, 2025
 '''
 from flask import Blueprint, jsonify, request
@@ -9,17 +9,6 @@ from utils.logger import log_info, log_error
 
 project_bp = Blueprint("project", __name__, url_prefix="/project")
 
-"""
-
-Filename: index.jsx
-Author: Lucas Matheson
-Edited by: Lucas Matheson
-Date: November 28, 2025
-
-These routes look to provide access to the database for all project data. 
-
-
-"""
 
 @project_bp.route("/all", methods=["GET"])
 def get_all_projects():
@@ -44,16 +33,31 @@ def get_all_projects():
 @project_bp.route("/", methods=["POST"])
 def create_project():
     from app import mysql
+    cursor = None
     try:
         data = request.get_json(force=True) or {}
         log_info(f"Create project request: {data}")
+        
         required = ["title", "description", "person_id", "start_date", "end_date", "tag_name"]
         missing = [k for k in required if data.get(k) in (None, "")]
         if missing:
             log_error(f"Missing fields in create_project: {missing}")
             return jsonify({"status": "error", "message": f"Missing fields: {', '.join(missing)}"}), 400
-        log_info("Transaction started for project creation")
+        
         cursor = mysql.connection.cursor()
+        
+        # Start transaction with proper isolation level for concurrency control
+        cursor.execute("SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED")
+        cursor.execute("START TRANSACTION")
+        
+        log_info("Transaction started for project creation")
+        
+        # Use row-level locking via SELECT FOR UPDATE instead of table locks
+        # This locks only the specific rows being checked/modified
+        cursor.execute("SELECT person_id FROM person WHERE person_id = %s FOR UPDATE", 
+                      (data["person_id"],))
+        
+        # Call the stored procedure (which should handle its own locking internally)
         cursor.callproc("InsertIntoProject", [
             data["title"],
             data["description"],
@@ -62,16 +66,31 @@ def create_project():
             data["end_date"],
             data["tag_name"]
         ])
+        
+        # Commit the transaction 
         mysql.connection.commit()
         log_info("Transaction committed for project creation")
-        cursor.close()
-        log_info(f"Project created: title={data['title']}, description={data['description']}, person_id={data['person_id']}, start_date={data['start_date']}, end_date={data['end_date']}, tag_name={data['tag_name']}")
+        
+        log_info(f"Project created: title={data['title']}, description={data['description']}, "
+                f"person_id={data['person_id']}, start_date={data['start_date']}, "
+                f"end_date={data['end_date']}, tag_name={data['tag_name']}")
+        
         return jsonify({"status": "success", "message": "Project created successfully"}), 201
+        
     except Exception as e:
-        mysql.connection.rollback()
+        # Rollback on error 
+        if mysql.connection:
+            try:
+                mysql.connection.rollback()
+            except:
+                pass
+      
         log_error(f"Transaction rolled back for project creation: {str(e)} | data={data}")
         return jsonify({"status": "error", "message": str(e)}), 500
-
+        
+    finally:
+        if cursor:
+            cursor.close()
 
 @project_bp.route("/", methods=["PUT"])
 def update_project():
