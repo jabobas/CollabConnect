@@ -10,6 +10,7 @@ import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
+import NetworkCheckIcon from "@mui/icons-material/NetworkCheck";
 import { Users } from "lucide-react";
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
@@ -210,6 +211,22 @@ const Sidebar = () => {
               title="Search Projects"
               to="/projects"
               icon={<FolderOpenIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+
+            <Typography
+              variant="h6"
+              color={colors.grey[300]}
+              sx={{ m: "15px 0 5px 20px" }}
+            >
+              Analytics
+            </Typography>
+
+            <Item
+              title="Network Visualization"
+              to="/analytics"
+              icon={<NetworkCheckIcon />}
               selected={selected}
               setSelected={setSelected}
             />

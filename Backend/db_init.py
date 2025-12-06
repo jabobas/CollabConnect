@@ -220,6 +220,7 @@ def insert_initial_data():
     print("Inserting initial data...")
     
     file_paths = [
+        "./data/processed/synthetic_demo_data.json",
         "./data/processed/post_cleaning_usm_data.json",
         "./data/processed/post_formatting_roux_data.json",
         "./data/processed/nih_maine_data_formatted.json",
@@ -550,6 +551,19 @@ def _process_projects(cursor, person_data, person_id, department_id, inserted_pr
         )
 
 
+def _get_project_id_by_title(cursor, project_title):
+    """Get project ID by title from database."""
+    if len(project_title) > 199:
+        project_title = project_title[:199]
+    
+    cursor.execute(
+        "SELECT project_id FROM Project WHERE project_title = %s LIMIT 1",
+        (project_title,)
+    )
+    result = cursor.fetchone()
+    return result[0] if result else None
+
+
 def _process_project(cursor, project, person_data, person_id, department_id,
                      inserted_projects, department_earliest_dates):
     """Process a single project."""
@@ -567,7 +581,7 @@ def _process_project(cursor, project, person_data, person_id, department_id,
     if end_date and len(str(end_date)) == 4:
         end_date = f"{end_date}-12-31"
     
-    # Insert project if it doesn't exist
+    # Insert project if it doesn't exist, otherwise look up existing project ID
     project_id = None
     if project_title not in inserted_projects:
         project_id = _insert_project(cursor, project, project_title, person_id, start_date, end_date)
@@ -575,6 +589,9 @@ def _process_project(cursor, project, person_data, person_id, department_id,
         
         # Add tags to project
         _add_project_tags(cursor, project, project_id)
+    else:
+        # Project already exists, look up its ID so we can create WorkedOn for additional collaborators
+        project_id = _get_project_id_by_title(cursor, project_title)
     
     # Track earliest project date for BelongsTo
     if start_date and department_id:

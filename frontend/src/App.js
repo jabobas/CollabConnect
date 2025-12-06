@@ -11,6 +11,7 @@ import ProjectDetail from "./scenes/project/Detail";
 // import Person from "./scenes/Person";
 import Person from "./scenes/person";
 import Department from "./scenes/department";
+import Analytics from "./scenes/analytics";
 import Login from "./scenes/login";
 import Register from "./scenes/register";
 import User from "./scenes/user";
@@ -34,6 +35,7 @@ function App() {
               <Route path="/search" element={<SearchCollab />} />
               <Route path="/project/:id" element={<ProjectDetail />} />
               <Route path="/projects" element={<SearchProjects />} />
+              <Route path="/analytics" element={<Analytics />} />
 
               <Route path="/person/:id" element={<Person />} />
               {/* <Route path="/institution/:id" element={<Institution />} /> */}
