@@ -4,6 +4,7 @@
 
 from flask import Blueprint, request, jsonify
 from utils.jwt_utils import token_required
+from utils.logger import log_info, log_error, get_request_user
 
 user_bp = Blueprint('user', __name__)
 
@@ -12,6 +13,7 @@ def get_user(user_id):
     """Get user profile information by user ID"""
     from app import mysql
     
+    log_info(f"[{get_request_user()}] Fetching user profile: user_id={user_id}")
     cursor = mysql.connection.cursor()
     cursor.callproc('SelectUserById', [user_id])
     user = cursor.fetchone()
@@ -21,8 +23,10 @@ def get_user(user_id):
     cursor.close()
     
     if not user:
+        log_error(f"User not found: user_id={user_id}")
         return jsonify({'status': 'error', 'message': 'User not found'}), 404
     
+    log_info(f"User profile fetched: user_id={user_id}")
     return jsonify({
         'status': 'success',
         'data': {
@@ -53,7 +57,10 @@ def search_profile():
     name = request.args.get('name', '')
     email = request.args.get('email', '')
     
+    log_info(f"Searching for profile: name={name}, email={email}")
+    
     if not name and not email:
+        log_error("Profile search failed: Missing name or email")
         return jsonify({'status': 'error', 'message': 'Name or email required'}), 400
     
     cursor = mysql.connection.cursor()
@@ -93,6 +100,7 @@ def search_profile():
             'is_claimed': bool(row['is_claimed'])
         })
     
+    log_info(f"Found {len(profiles)} matching profiles")
     return jsonify({'status': 'success', 'data': profiles}), 200
 
 @user_bp.route('/user/<int:user_id>/claim-person/<int:person_id>', methods=['POST'])
@@ -101,8 +109,12 @@ def claim_person(user_id, person_id):
     """Link user account to existing person profile - requires JWT authentication"""
     from app import mysql
     
+    auth_user_id = request.current_user['user_id']
+    log_info(f"[User: {auth_user_id}] Claiming profile: user_id={user_id}, person_id={person_id}")
+    
     # Security check: users can only claim profiles for their own account
-    if request.current_user['user_id'] != user_id:
+    if auth_user_id != user_id:
+        log_error(f"[User: {auth_user_id}] Unauthorized claim attempt: user_id={user_id}, person_id={person_id}")
         return jsonify({'status': 'error', 'message': 'Can only claim your own profile'}), 403
     
     # Link user to person using stored procedure
@@ -115,12 +127,15 @@ def claim_person(user_id, person_id):
     mysql.connection.commit()
     cursor.close()
     
+    log_info(f"Profile claimed successfully: user_id={user_id}, person_id={person_id}")
     return jsonify({'status': 'success', 'message': 'Profile claimed'}), 200
 
 @user_bp.route('/user/<int:user_id>/projects', methods=['GET'])
 def get_user_projects(user_id):
     """Get all projects for a user - requires linked person profile"""
     from app import mysql
+    
+    log_info(f"Fetching projects for user: user_id={user_id}")
     
     # First check if user has a linked person profile
     cursor = mysql.connection.cursor()
@@ -132,6 +147,7 @@ def get_user_projects(user_id):
     
     # Return 404 if no person profile is linked (expected for new users)
     if not user or not user.get('person_id'):
+        log_error(f"No person profile linked for user_id={user_id}")
         return jsonify({'status': 'error', 'message': 'No person profile'}), 404
     
     query = """
@@ -165,6 +181,7 @@ def get_user_projects(user_id):
             'project_role': row['project_role']
         })
     
+    log_info(f"Fetched {len(project_list)} projects for user_id={user_id}")
     return jsonify({'status': 'success', 'data': project_list}), 200
 
 @user_bp.route('/user/<int:user_id>/projects', methods=['POST'])
@@ -173,7 +190,11 @@ def add_user_project(user_id):
     """Add a new project for the user"""
     from app import mysql
     
-    if request.current_user['user_id'] != user_id:
+    auth_user_id = request.current_user['user_id']
+    log_info(f"[User: {auth_user_id}] Adding project for user_id={user_id}")
+    
+    if auth_user_id != user_id:
+        log_error(f"[User: {auth_user_id}] Unauthorized project add attempt for user_id={user_id}")
         return jsonify({'status': 'error', 'message': 'Unauthorized'}), 403
     
     data = request.get_json()
@@ -230,6 +251,7 @@ def add_user_project(user_id):
         
     except Exception as e:
         mysql.connection.rollback()
+        log_error(f"Failed to add project for user_id={user_id}: {str(e)}")
         return jsonify({'status': 'error', 'message': str(e)}), 500
     finally:
         cursor.close()
@@ -243,7 +265,10 @@ def create_profile_with_affiliation():
     user_id = request.current_user['user_id']
     data = request.get_json()
     
+    log_info(f"[User: {user_id}] Creating profile with affiliation")
+    
     if not data.get('person_name') or not data.get('person_email'):
+        log_error("Profile creation failed: Missing name or email")
         return jsonify({'status': 'error', 'message': 'Name and email required'}), 400
     
     cursor = mysql.connection.cursor()
@@ -340,6 +365,7 @@ def create_profile_with_affiliation():
             pass
         mysql.connection.commit()
         
+        log_info(f"Profile created with affiliation: user_id={user_id}, person_id={person_id}")
         return jsonify({
             'status': 'success',
             'message': 'Profile created',
@@ -348,6 +374,7 @@ def create_profile_with_affiliation():
         
     except Exception as e:
         mysql.connection.rollback()
+        log_error(f"Failed to create profile with affiliation for user_id={user_id}: {str(e)}")
         return jsonify({'status': 'error', 'message': str(e)}), 500
     finally:
         cursor.close()
