@@ -72,7 +72,10 @@ const ClaimProfile = () => {
       );
 
       if (response.data.status === 'success') {
-        navigate(`/user/${userId}`);
+        // Store person_id in localStorage for future use
+        localStorage.setItem('person_id', personId);
+        // Redirect to the person profile page instead of user page
+        navigate(`/person/${personId}`);
       }
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to claim profile');

@@ -115,7 +115,11 @@ def claim_person(user_id, person_id):
     mysql.connection.commit()
     cursor.close()
     
-    return jsonify({'status': 'success', 'message': 'Profile claimed'}), 200
+    return jsonify({
+        'status': 'success', 
+        'message': 'Profile claimed',
+        'data': {'person_id': person_id}
+    }), 200
 
 @user_bp.route('/user/<int:user_id>/projects', methods=['GET'])
 def get_user_projects(user_id):

@@ -92,20 +92,18 @@ def create_project():
         if cursor:
             cursor.close()
 
-@project_bp.route("/", methods=["PUT"])
-def update_project():
+@project_bp.route("/<int:project_id>", methods=["PUT"])
+def update_project(project_id: int):
     from app import mysql
     try:
         data = request.get_json(force=True) or {}
-        if not data.get("id"):
-            log_error("Update project failed: Field 'id' is required")
-            return jsonify({"status": "error", "message": "Field 'id' is required"}), 400
+        log_info(f"Update project request: project_id={project_id}, data={data}")
         log_info("Transaction started for project update")
         cursor = mysql.connection.cursor()
         cursor.callproc("UpdateProjectDetails", [
-            data.get("id"),
-            data.get("title"),
-            data.get("description"),
+            project_id,
+            data.get("project_title"),
+            data.get("project_description"),
             data.get("start_date"),
             data.get("end_date"),
             data.get("tag_name")
@@ -113,11 +111,11 @@ def update_project():
         mysql.connection.commit()
         log_info("Transaction committed for project update")
         cursor.close()
-        log_info(f"Project updated: id={data.get('id')}, title={data.get('title')}, description={data.get('description')}, start_date={data.get('start_date')}, end_date={data.get('end_date')}, tag_name={data.get('tag_name')}")
+        log_info(f"Project updated: id={project_id}, title={data.get('project_title')}, description={data.get('project_description')}, start_date={data.get('start_date')}, end_date={data.get('end_date')}, tag_name={data.get('tag_name')}")
         return jsonify({"status": "success", "message": "Project updated successfully"}), 200
     except Exception as e:
         mysql.connection.rollback()
-        log_error(f"Transaction rolled back for project update: {str(e)} | data={data}")
+        log_error(f"Transaction rolled back for project update: {str(e)} | project_id={project_id}, data={data}")
         return jsonify({"status": "error", "message": str(e)}), 500
 
 

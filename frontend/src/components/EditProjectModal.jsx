@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
-import { Box, Button, TextField, Dialog, DialogTitle, DialogContent, DialogActions, Alert } from "@mui/material";
+import React, { useState, useEffect } from 'react';
+import { Box, Button, TextField, Dialog, DialogTitle, DialogContent, DialogActions, Alert, IconButton } from "@mui/material";
 import { useTheme } from "@mui/material";
+import { Trash2 } from "lucide-react";
 import { tokens } from "../theme";
 import axios from "axios";
 
-const AddProjectModal = ({ open, onClose, userId, onProjectAdded }) => {
+const EditProjectModal = ({ open, onClose, project, userId, onProjectUpdated, onProjectDeleted }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   
@@ -19,9 +20,28 @@ const AddProjectModal = ({ open, onClose, userId, onProjectAdded }) => {
   
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+
+  useEffect(() => {
+    if (project) {
+      setFormData({
+        project_title: project.project_title || '',
+        project_description: project.project_description || '',
+        project_role: project.project_role || '',
+        tag_name: project.tag_name || '',
+        start_date: project.start_date ? project.start_date.split('T')[0] : '',
+        end_date: project.end_date ? project.end_date.split('T')[0] : ''
+      });
+    }
+  }, [project]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleMarkAsEnded = () => {
+    const today = new Date().toISOString().split('T')[0];
+    setFormData({ ...formData, end_date: today });
   };
 
   const handleSubmit = async (e) => {
@@ -56,30 +76,45 @@ const AddProjectModal = ({ open, onClose, userId, onProjectAdded }) => {
         end_date: formData.end_date || null
       };
       
-      const response = await axios.post(
-        `/user/${userId}/projects`,
+      const response = await axios.put(
+        `/project/${project.project_id}`,
         projectData,
         { headers: { 'Authorization': `Bearer ${token}` } }
       );
       
       if (response.data.status === 'success') {
-        setFormData({
-          project_title: '',
-          project_description: '',
-          project_role: '',
-          tag_name: '',
-          start_date: '',
-          end_date: ''
-        });
-        onProjectAdded();
+        onProjectUpdated();
         onClose();
       }
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to add project');
+      setError(err.response?.data?.message || 'Failed to update project');
     } finally {
       setLoading(false);
     }
   };
+
+  const handleDelete = async () => {
+    setLoading(true);
+    try {
+      const token = localStorage.getItem('access_token');
+      const response = await axios.delete(
+        `/project/${project.project_id}`,
+        { headers: { 'Authorization': `Bearer ${token}` } }
+      );
+      
+      if (response.data.status === 'success') {
+        onProjectDeleted();
+        onClose();
+      }
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to delete project');
+    } finally {
+      setLoading(false);
+      setShowDeleteConfirm(false);
+    }
+  };
+
+  if (!project) return null;
 
   return (
     <Dialog 
@@ -94,13 +129,57 @@ const AddProjectModal = ({ open, onClose, userId, onProjectAdded }) => {
         }
       }}
     >
-      <DialogTitle style={{ color: colors.grey[100], fontSize: '24px', fontWeight: '600' }}>
-        Add New Project
+      <DialogTitle style={{ 
+        color: colors.grey[100], 
+        fontSize: '24px', 
+        fontWeight: '600',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center'
+      }}>
+        Edit Project
+        <IconButton 
+          onClick={() => setShowDeleteConfirm(true)}
+          sx={{ 
+            color: colors.redAccent[500],
+            '&:hover': { backgroundColor: colors.redAccent[800] }
+          }}
+          title="Delete Project"
+        >
+          <Trash2 size={20} />
+        </IconButton>
       </DialogTitle>
       
       <DialogContent>
         <Box component="form" onSubmit={handleSubmit} display="flex" flexDirection="column" gap="20px" mt="10px">
           {error && <Alert severity="error">{error}</Alert>}
+
+          {showDeleteConfirm && (
+            <Alert 
+              severity="warning"
+              action={
+                <Box display="flex" gap="8px">
+                  <Button 
+                    size="small" 
+                    onClick={handleDelete}
+                    disabled={loading}
+                    sx={{ color: colors.redAccent[400] }}
+                  >
+                    Delete
+                  </Button>
+                  <Button 
+                    size="small" 
+                    onClick={() => setShowDeleteConfirm(false)}
+                    sx={{ color: colors.grey[300] }}
+                  >
+                    Cancel
+                  </Button>
+                </Box>
+              }
+            >
+              Are you sure you want to delete this project? This action cannot be undone.
+            </Alert>
+          )}
 
           <TextField
             label="Project Title"
@@ -156,17 +235,33 @@ const AddProjectModal = ({ open, onClose, userId, onProjectAdded }) => {
               InputLabelProps={{ shrink: true }}
             />
             
-            <TextField
-              label="End Date (Optional)"
-              name="end_date"
-              type="date"
-              value={formData.end_date}
-              onChange={handleChange}
-              fullWidth
-              variant="filled"
-              InputLabelProps={{ shrink: true }}
-              helperText="Leave empty for ongoing projects"
-            />
+            <Box flex={1}>
+              <TextField
+                label="End Date (Optional)"
+                name="end_date"
+                type="date"
+                value={formData.end_date}
+                onChange={handleChange}
+                fullWidth
+                variant="filled"
+                InputLabelProps={{ shrink: true }}
+                helperText="Leave empty for ongoing projects"
+              />
+              {!formData.end_date && (
+                <Button
+                  size="small"
+                  onClick={handleMarkAsEnded}
+                  sx={{
+                    mt: 1,
+                    color: colors.blueAccent[400],
+                    fontSize: '12px',
+                    textTransform: 'none'
+                  }}
+                >
+                  Mark as Ended Today
+                </Button>
+              )}
+            </Box>
           </Box>
         </Box>
       </DialogContent>
@@ -191,11 +286,11 @@ const AddProjectModal = ({ open, onClose, userId, onProjectAdded }) => {
             '&:hover': { backgroundColor: colors.greenAccent[700] }
           }}
         >
-          {loading ? 'Adding...' : 'Add Project'}
+          {loading ? 'Saving...' : 'Save Changes'}
         </Button>
       </DialogActions>
     </Dialog>
   );
 };
 
-export default AddProjectModal;
+export default EditProjectModal;

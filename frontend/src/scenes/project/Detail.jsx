@@ -62,9 +62,9 @@ export default function ProjectDetail() {
       try {
         setLoading(true);
         const [pRes, peepRes, tagRes] = await Promise.all([
-          axios.get(`http://localhost:5000/project/${id}`),
-          axios.get(`http://localhost:5000/project/${id}/people`),
-          axios.get(`http://localhost:5000/project_tag/by-project`, { params: { project_id: id } }),
+          axios.get(`http://localhost:5001/project/${id}`),
+          axios.get(`http://localhost:5001/project/${id}/people`),
+          axios.get(`http://localhost:5001/project_tag/by-project`, { params: { project_id: id } }),
         ]);
 
         if (ignore) return;

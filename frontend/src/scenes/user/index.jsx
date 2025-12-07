@@ -35,7 +35,14 @@ const User = () => {
         const userRes = await axios.get(`/user/${id}`);
         
         if (userRes.data.status === 'success') {
-          setUser(userRes.data.data);
+          const userData = userRes.data.data;
+          setUser(userData);
+          
+          // If user has claimed a person profile, redirect to person page instead
+          if (userData.person_id) {
+            navigate(`/person/${userData.person_id}`, { replace: true });
+            return;
+          }
           
           // Try to fetch projects, but don't fail if user has no person_id yet
           try {
@@ -55,7 +62,7 @@ const User = () => {
     };
 
     fetchData();
-  }, [id]);
+  }, [id, navigate]);
 
   const handleProjectAdded = () => {
     const fetchProjects = async () => {

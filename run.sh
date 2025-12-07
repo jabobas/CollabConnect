@@ -10,7 +10,7 @@ FRONTEND_DIR="$ROOT_DIR/frontend"
 
 source "$VENV_DIR/bin/activate"
 
-echo "==> Starting Flask backend on http://127.0.0.1:5000"
+echo "==> Starting Flask backend on http://127.0.0.1:5001"
 pushd "$BACKEND_DIR" >/dev/null
 "$VENV_DIR/bin/python" app.py &
 BACKEND_PID=$!
