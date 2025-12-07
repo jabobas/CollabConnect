@@ -9,7 +9,7 @@ including their bio, expertise, department, institution, and projects.
 
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Box, CircularProgress } from "@mui/material";
+import { Box, CircularProgress, Button } from "@mui/material";
 import { useTheme } from "@mui/material";
 import {
   Mail,
@@ -19,11 +19,13 @@ import {
   BookOpen,
   ArrowLeft,
   User,
-  Briefcase
+  Briefcase,
+  Plus
 } from "lucide-react";
 import axios from "axios";
 import { tokens } from "../../theme";
 import Header from "../../components/Header";
+import AddProjectModal from "../../components/AddProjectModal";
 
 const Person = () => {
   const { id } = useParams();
@@ -35,11 +37,30 @@ const Person = () => {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showAddProjectModal, setShowAddProjectModal] = useState(false);
+  const [isOwnProfile, setIsOwnProfile] = useState(false);
 
   useEffect(() => {
     const fetchPersonData = async () => {
       try {
         setLoading(true);
+        
+        // Check if this is the logged-in user's profile
+        const storedPersonId = localStorage.getItem('person_id');
+        const accessToken = localStorage.getItem('access_token');
+        
+        // Debug logging
+        console.log('Profile Check:', {
+          storedPersonId,
+          urlId: id,
+          hasToken: !!accessToken,
+          match: storedPersonId === String(id)
+        });
+        
+        // User must be logged in (have token) and the person_id must match
+        const isOwn = !!accessToken && storedPersonId && storedPersonId === String(id);
+        setIsOwnProfile(isOwn);
+        console.log('isOwnProfile set to:', isOwn);
         
         // Fetch person details
         const personResponse = await axios.get(`http://127.0.0.1:5001/person/${id}`);
@@ -61,6 +82,15 @@ const Person = () => {
       fetchPersonData();
     }
   }, [id]);
+
+  const handleProjectAdded = async () => {
+    try {
+      const projectsResponse = await axios.get(`http://127.0.0.1:5001/person/${id}/projects`);
+      setProjects(projectsResponse.data.data || []);
+    } catch (err) {
+      console.error('Failed to refresh projects', err);
+    }
+  };
 
   if (loading) {
     return (
@@ -402,7 +432,7 @@ const Person = () => {
                       padding: "8px 16px",
                       backgroundColor: colors.blueAccent[800],
                       color: colors.blueAccent[200],
-                      borderRadius: "20px",
+                      borderRadius: "12px",
                       fontSize: "13px",
                       fontWeight: "500"
                     }}
@@ -421,20 +451,43 @@ const Person = () => {
             border={`1px solid ${colors.primary[300]}`}
             padding="24px"
           >
-            <h3
-              style={{
-                color: colors.grey[100],
-                fontSize: "16px",
-                fontWeight: "600",
-                marginBottom: "16px",
-                display: "flex",
-                alignItems: "center",
-                gap: "8px"
-              }}
+            <Box 
+              display="flex" 
+              justifyContent="space-between" 
+              alignItems="center" 
+              marginBottom="16px"
             >
-              <BookOpen style={{ width: "20px", height: "20px" }} />
-              Projects ({projects.length})
-            </h3>
+              <h3
+                style={{
+                  color: colors.grey[100],
+                  fontSize: "16px",
+                  fontWeight: "600",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px"
+                }}
+              >
+                <BookOpen style={{ width: "20px", height: "20px" }} />
+                Projects ({projects.length})
+              </h3>
+              
+              {isOwnProfile && (
+                <Button
+                  variant="contained"
+                  startIcon={<Plus size={16} />}
+                  onClick={() => setShowAddProjectModal(true)}
+                  sx={{
+                    backgroundColor: colors.greenAccent[600],
+                    color: colors.grey[100],
+                    padding: '8px 16px',
+                    fontSize: '14px',
+                    '&:hover': { backgroundColor: colors.greenAccent[700] }
+                  }}
+                >
+                  Add Project
+                </Button>
+              )}
+            </Box>
 
             {projects.length === 0 ? (
               <p style={{ color: colors.grey[400], fontSize: "14px" }}>
@@ -490,8 +543,6 @@ const Person = () => {
                       display="flex"
                       justifyContent="space-between"
                       alignItems="center"
-                      flexWrap="wrap"
-                      gap="8px"
                     >
                       {(project.start_date || project.end_date) && (
                         <span
@@ -528,6 +579,16 @@ const Person = () => {
           </Box>
         </Box>
       </Box>
+
+      {/* Add Project Modal */}
+      {isOwnProfile && (
+        <AddProjectModal
+          open={showAddProjectModal}
+          onClose={() => setShowAddProjectModal(false)}
+          userId={parseInt(localStorage.getItem('user_id'))}
+          onProjectAdded={handleProjectAdded}
+        />
+      )}
     </Box>
   );
 };

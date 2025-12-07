@@ -56,6 +56,7 @@ const Topbar = () => {
     // Clear all authentication data
     localStorage.removeItem('access_token');
     localStorage.removeItem('user_id');
+    localStorage.removeItem('person_id');
     delete axios.defaults.headers.common['Authorization'];
     setIsLoggedIn(false);
     setUserId(null);

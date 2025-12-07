@@ -33,13 +33,32 @@ const AddProjectModal = ({ open, onClose, userId, onProjectAdded }) => {
       return;
     }
 
+    // Validate dates if both are provided
+    if (formData.start_date && formData.end_date) {
+      const startDate = new Date(formData.start_date);
+      const endDate = new Date(formData.end_date);
+      
+      if (endDate < startDate) {
+        setError('End date must be after start date');
+        return;
+      }
+    }
+
     setLoading(true);
     
     try {
       const token = localStorage.getItem('access_token');
+      
+      // Prepare data - convert empty date strings to null for MySQL
+      const projectData = {
+        ...formData,
+        start_date: formData.start_date || null,
+        end_date: formData.end_date || null
+      };
+      
       const response = await axios.post(
         `/user/${userId}/projects`,
-        formData,
+        projectData,
         { headers: { 'Authorization': `Bearer ${token}` } }
       );
       
@@ -138,7 +157,7 @@ const AddProjectModal = ({ open, onClose, userId, onProjectAdded }) => {
             />
             
             <TextField
-              label="End Date"
+              label="End Date (Optional)"
               name="end_date"
               type="date"
               value={formData.end_date}
@@ -146,6 +165,7 @@ const AddProjectModal = ({ open, onClose, userId, onProjectAdded }) => {
               fullWidth
               variant="filled"
               InputLabelProps={{ shrink: true }}
+              helperText="Leave empty for ongoing projects"
             />
           </Box>
         </Box>
