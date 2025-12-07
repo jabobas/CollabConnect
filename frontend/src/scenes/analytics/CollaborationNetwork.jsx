@@ -42,7 +42,7 @@ const CollaborationNetwork = () => {
 
     try {
       const response = await fetch(
-        `http://127.0.0.1:5000/api/analytics/network?include_isolated=${includeIsolated}&force_rebuild=${forceRebuild}`
+        `http://127.0.0.1:5001/api/analytics/network?include_isolated=${includeIsolated}&force_rebuild=${forceRebuild}`
       );
 
       if (!response.ok) {

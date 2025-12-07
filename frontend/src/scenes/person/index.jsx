@@ -42,11 +42,11 @@ const Person = () => {
         setLoading(true);
         
         // Fetch person details
-        const personResponse = await axios.get(`http://127.0.0.1:5000/person/${id}`);
+        const personResponse = await axios.get(`http://127.0.0.1:5001/person/${id}`);
         setPerson(personResponse.data.data);
 
         // Fetch person's projects
-        const projectsResponse = await axios.get(`http://127.0.0.1:5000/person/${id}/projects`);
+        const projectsResponse = await axios.get(`http://127.0.0.1:5001/person/${id}/projects`);
         setProjects(projectsResponse.data.data || []);
 
         setLoading(false);
