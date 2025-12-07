@@ -1,0 +1,270 @@
+{
+  "Advanced Computing": {
+    "institution_name": "University of Maine - Advanced Computing Institute",
+    "institution_city": "Orono",
+    "institution_state": "ME",
+    "people": {
+      "Dr. Sarah Chen": {
+        "person_email": "s.chen@maine.edu",
+        "phone_number": "207-581-1234",
+        "bio": "Professor specializing in distributed systems and machine learning applications.",
+        "expertise_1": "Machine Learning",
+        "expertise_2": "Distributed Systems",
+        "expertise_3": "Cloud Computing",
+        "main_field": "Computer Science",
+        "projects": [
+          {
+            "project_title": "Federated Learning Framework",
+            "project_description": "Developing privacy-preserving collaborative machine learning framework.",
+            "start_date": "2023-01-15",
+            "end_date": "2024-12-31",
+            "tag_name": "Machine Learning"
+          },
+          {
+            "project_title": "Cross-Institutional Data Integration",
+            "project_description": "Standardizing data formats across multiple research institutions.",
+            "start_date": "2023-06-01",
+            "end_date": "2025-05-31",
+            "tag_name": "Data Integration"
+          }
+        ]
+      },
+      "Dr. James Wilson": {
+        "person_email": "j.wilson@maine.edu",
+        "phone_number": "207-581-2345",
+        "bio": "Expert in cybersecurity and network protocols.",
+        "expertise_1": "Cybersecurity",
+        "expertise_2": "Network Architecture",
+        "expertise_3": "Data Privacy",
+        "main_field": "Computer Science",
+        "projects": [
+          {
+            "project_title": "Federated Learning Framework",
+            "project_description": "Developing privacy-preserving collaborative machine learning framework.",
+            "start_date": "2023-01-15",
+            "end_date": "2024-12-31",
+            "tag_name": "Machine Learning"
+          },
+          {
+            "project_title": "Privacy-Preserving Analytics",
+            "project_description": "Building secure analytics pipeline for sensitive health data.",
+            "start_date": "2023-03-01",
+            "end_date": "2025-02-28",
+            "tag_name": "Privacy"
+          }
+        ]
+      },
+      "Dr. Elena Rodriguez": {
+        "person_email": "e.rodriguez@maine.edu",
+        "phone_number": "207-581-3456",
+        "bio": "Researcher focused on high-performance computing and optimization.",
+        "expertise_1": "High Performance Computing",
+        "expertise_2": "Algorithm Optimization",
+        "expertise_3": "Parallel Processing",
+        "main_field": "Computer Science",
+        "projects": [
+          {
+            "project_title": "Cross-Institutional Data Integration",
+            "project_description": "Standardizing data formats across multiple research institutions.",
+            "start_date": "2023-06-01",
+            "end_date": "2025-05-31",
+            "tag_name": "Data Integration"
+          }
+        ]
+      },
+      "Dr. Michael Park": {
+        "person_email": "m.park@maine.edu",
+        "phone_number": "207-581-4567",
+        "bio": "Specializes in quantum computing and theoretical computer science.",
+        "expertise_1": "Quantum Computing",
+        "expertise_2": "Theoretical CS",
+        "expertise_3": "Algorithms",
+        "main_field": "Computer Science",
+        "projects": [
+          {
+            "project_title": "Privacy-Preserving Analytics",
+            "project_description": "Building secure analytics pipeline for sensitive health data.",
+            "start_date": "2023-03-01",
+            "end_date": "2025-02-28",
+            "tag_name": "Privacy"
+          }
+        ]
+      },
+      "Dr. Lisa Anderson": {
+        "person_email": "l.anderson@maine.edu",
+        "phone_number": "207-581-5678",
+        "bio": "Works on AI ethics and responsible machine learning.",
+        "expertise_1": "AI Ethics",
+        "expertise_2": "Responsible AI",
+        "expertise_3": "Social Impact",
+        "main_field": "Computer Science",
+        "projects": [
+          {
+            "project_title": "Federated Learning Framework",
+            "project_description": "Developing privacy-preserving collaborative machine learning framework.",
+            "start_date": "2023-01-15",
+            "end_date": "2024-12-31",
+            "tag_name": "Machine Learning"
+          }
+        ]
+      }
+    }
+  },
+  "Biomedical Research": {
+    "institution_name": "University of Maine - Biomedical Research Center",
+    "institution_city": "Portland",
+    "institution_state": "ME",
+    "people": {
+      "Dr. Robert Thompson": {
+        "person_email": "r.thompson@maine.edu",
+        "phone_number": "207-780-4123",
+        "bio": "Oncologist focused on precision medicine and genetic analysis.",
+        "expertise_1": "Oncology",
+        "expertise_2": "Genetic Analysis",
+        "expertise_3": "Precision Medicine",
+        "main_field": "Medicine",
+        "projects": [
+          {
+            "project_title": "Multi-Omics Integration",
+            "project_description": "Integrating genomics, proteomics, and metabolomics for cancer research.",
+            "start_date": "2023-02-01",
+            "end_date": "2025-01-31",
+            "tag_name": "Genomics"
+          },
+          {
+            "project_title": "Collaborative Immunotherapy",
+            "project_description": "Multi-institutional study on innovative immunotherapy approaches.",
+            "start_date": "2023-07-15",
+            "end_date": "2026-07-14",
+            "tag_name": "Immunotherapy"
+          }
+        ]
+      },
+      "Dr. Patricia Lee": {
+        "person_email": "p.lee@maine.edu",
+        "phone_number": "207-780-5234",
+        "bio": "Immunologist specializing in T-cell engineering and CAR-T therapies.",
+        "expertise_1": "Immunotherapy",
+        "expertise_2": "Cell Engineering",
+        "expertise_3": "CAR-T Therapies",
+        "main_field": "Medicine",
+        "projects": [
+          {
+            "project_title": "Multi-Omics Integration",
+            "project_description": "Integrating genomics, proteomics, and metabolomics for cancer research.",
+            "start_date": "2023-02-01",
+            "end_date": "2025-01-31",
+            "tag_name": "Genomics"
+          },
+          {
+            "project_title": "Collaborative Immunotherapy",
+            "project_description": "Multi-institutional study on innovative immunotherapy approaches.",
+            "start_date": "2023-07-15",
+            "end_date": "2026-07-14",
+            "tag_name": "Immunotherapy"
+          }
+        ]
+      },
+      "Dr. David Martinez": {
+        "person_email": "d.martinez@maine.edu",
+        "phone_number": "207-780-6345",
+        "bio": "Computational biologist developing bioinformatics pipelines.",
+        "expertise_1": "Bioinformatics",
+        "expertise_2": "Computational Biology",
+        "expertise_3": "Data Analysis",
+        "main_field": "Biology",
+        "projects": [
+          {
+            "project_title": "Multi-Omics Integration",
+            "project_description": "Integrating genomics, proteomics, and metabolomics for cancer research.",
+            "start_date": "2023-02-01",
+            "end_date": "2025-01-31",
+            "tag_name": "Genomics"
+          }
+        ]
+      }
+    }
+  },
+  "Environmental Sciences": {
+    "institution_name": "University of Maine - Environmental Research Institute",
+    "institution_city": "Winslow",
+    "institution_state": "ME",
+    "people": {
+      "Dr. Jennifer Garcia": {
+        "person_email": "j.garcia@maine.edu",
+        "phone_number": "207-445-3567",
+        "bio": "Ecological researcher studying climate change impacts on marine ecosystems.",
+        "expertise_1": "Ecology",
+        "expertise_2": "Climate Science",
+        "expertise_3": "Marine Biology",
+        "main_field": "Environmental Science",
+        "projects": [
+          {
+            "project_title": "Climate-Ecosystem Modeling",
+            "project_description": "Developing coupled models of climate and ecosystem dynamics.",
+            "start_date": "2022-09-01",
+            "end_date": "2025-08-31",
+            "tag_name": "Climate"
+          },
+          {
+            "project_title": "Ocean Health and Sustainability",
+            "project_description": "Assessing and improving marine ecosystem health across regions.",
+            "start_date": "2023-04-01",
+            "end_date": "2025-03-31",
+            "tag_name": "Marine"
+          }
+        ]
+      },
+      "Dr. Christopher Brown": {
+        "person_email": "c.brown@maine.edu",
+        "phone_number": "207-445-4678",
+        "bio": "Forest ecologist and sustainable resource manager.",
+        "expertise_1": "Forest Ecology",
+        "expertise_2": "Sustainable Management",
+        "expertise_3": "Carbon Cycles",
+        "main_field": "Environmental Science",
+        "projects": [
+          {
+            "project_title": "Climate-Ecosystem Modeling",
+            "project_description": "Developing coupled models of climate and ecosystem dynamics.",
+            "start_date": "2022-09-01",
+            "end_date": "2025-08-31",
+            "tag_name": "Climate"
+          },
+          {
+            "project_title": "Sustainable Resource Management",
+            "project_description": "Best practices for sustainable forestry and resource extraction.",
+            "start_date": "2023-05-15",
+            "end_date": "2025-05-14",
+            "tag_name": "Sustainability"
+          }
+        ]
+      },
+      "Dr. Amanda White": {
+        "person_email": "a.white@maine.edu",
+        "phone_number": "207-445-5789",
+        "bio": "Marine biologist specializing in coastal conservation.",
+        "expertise_1": "Marine Conservation",
+        "expertise_2": "Coastal Ecology",
+        "expertise_3": "Biodiversity",
+        "main_field": "Environmental Science",
+        "projects": [
+          {
+            "project_title": "Ocean Health and Sustainability",
+            "project_description": "Assessing and improving marine ecosystem health across regions.",
+            "start_date": "2023-04-01",
+            "end_date": "2025-03-31",
+            "tag_name": "Marine"
+          },
+          {
+            "project_title": "Sustainable Resource Management",
+            "project_description": "Best practices for sustainable forestry and resource extraction.",
+            "start_date": "2023-05-15",
+            "end_date": "2025-05-14",
+            "tag_name": "Sustainability"
+          }
+        ]
+      }
+    }
+  }
+}

@@ -11,6 +11,7 @@ from routes.project_tag_routes import project_tag_bp
 from routes.department_routes import department_bp
 from routes.auth_routes import auth_bp
 from routes.user_routes import user_bp
+from routes.analytics_routes import analytics_bp
 """
 Filename: app.py
 Author: Lucas Matheson
@@ -55,6 +56,7 @@ app.register_blueprint(project_tag_bp)
 app.register_blueprint(department_bp)
 app.register_blueprint(auth_bp)
 app.register_blueprint(user_bp)
+app.register_blueprint(analytics_bp)
 
 
 @app.route("/health")
