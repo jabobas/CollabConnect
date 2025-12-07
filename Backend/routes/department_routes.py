@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify, request
+from utils.logger import log_info, log_error, get_request_user
 
 # Create blueprint for department routes
 department_bp = Blueprint('department', __name__, url_prefix='/department')
@@ -8,6 +9,7 @@ department_bp = Blueprint('department', __name__, url_prefix='/department')
 @department_bp.route('/<int:department_id>', methods=['GET'])
 def get_department_by_id(department_id):
     from app import mysql
+    log_info(f"[{get_request_user()}] Fetching department: department_id={department_id}")
     cursor = mysql.connection.cursor()
     cursor.execute('''
         SELECT d.*, i.institution_name, i.institution_id
@@ -19,14 +21,17 @@ def get_department_by_id(department_id):
     cursor.close()
     
     if not result:
+        log_error(f"Department not found: department_id={department_id}")
         return jsonify({'status': 'not_found', 'message': 'Department not found'}), 404
-        
+    
+    log_info(f"Department fetched: department_id={department_id}")
     return jsonify({'status': 'success', 'data': result})
 
 # Fetch all people working in this department with their details
 @department_bp.route('/<int:department_id>/people', methods=['GET'])
 def get_department_people(department_id):
     from app import mysql
+    log_info(f"Fetching people for department: department_id={department_id}")
     cursor = mysql.connection.cursor()
     cursor.execute('''
         SELECT p.*, d.department_name, i.institution_name 
@@ -42,12 +47,14 @@ def get_department_people(department_id):
     for person in people:
         person['expertises'] = [e for e in [person.get('expertise_1'), person.get('expertise_2'), person.get('expertise_3')] if e]
     
+    log_info(f"Fetched {len(people)} people for department_id={department_id}")
     return jsonify({'status': 'success', 'data': people, 'count': len(people)})
 
 
 @department_bp.route('/by-name/<string:department_name>', methods=['GET'])
 def get_department_by_name(department_name):
     from app import mysql
+    log_info(f"Fetching department by name: {department_name}")
     cursor = mysql.connection.cursor()
     # Get department by name
     cursor.callproc('SelectDepartmentByName', [department_name])
@@ -58,8 +65,10 @@ def get_department_by_name(department_name):
     cursor.close()
     
     if not result:
+        log_error(f"Department not found: {department_name}")
         return jsonify({'status': 'not_found', 'message': 'Department not found'}), 404
-        
+    
+    log_info(f"Department fetched by name: {department_name}")
     return jsonify({'status': 'success', 'data': result})
 
 
@@ -71,6 +80,7 @@ def create_department():
     # Get JSON data from request body
     data = request.get_json()
     
+    log_info(f"Creating department: {data.get('department_name')}")
     cursor = mysql.connection.cursor()
     # Insert new department with provided data
     cursor.callproc('InsertIntoDepartment', [
@@ -89,6 +99,7 @@ def create_department():
     mysql.connection.commit()
     cursor.close()
     
+    log_info(f"Department created: department_id={department_id}, name={data.get('department_name')}")
     return jsonify({
         'status': 'success',
         'message': 'Department created successfully',
@@ -103,6 +114,7 @@ def update_department(department_id):
     from app import mysql
     data = request.get_json()
     
+    log_info(f"Updating department: department_id={department_id}")
     cursor = mysql.connection.cursor()
     # Update all department fields at once
     cursor.callproc('UpdateDepartmentDetails', [
@@ -116,6 +128,7 @@ def update_department(department_id):
     mysql.connection.commit()
     cursor.close()
     
+    log_info(f"Department updated: department_id={department_id}")
     return jsonify({
         'status': 'success',
         'message': 'Department updated successfully'
@@ -127,6 +140,7 @@ def update_department(department_id):
 @department_bp.route('/<int:department_id>', methods=['DELETE'])
 def delete_department(department_id):
     from app import mysql
+    log_info(f"Deleting department: department_id={department_id}")
     cursor = mysql.connection.cursor()
     # Delete department
     cursor.callproc('DeleteDepartment', [department_id])
@@ -135,6 +149,7 @@ def delete_department(department_id):
     mysql.connection.commit()
     cursor.close()
     
+    log_info(f"Department deleted: department_id={department_id}")
     return jsonify({
         'status': 'success',
         'message': 'Department deleted successfully'
