@@ -9,7 +9,7 @@ including their bio, expertise, department, institution, and projects.
 
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Box, CircularProgress, Button } from "@mui/material";
+import { Box, CircularProgress, Button, IconButton } from "@mui/material";
 import { useTheme } from "@mui/material";
 import {
   Mail,
@@ -20,12 +20,14 @@ import {
   ArrowLeft,
   User,
   Briefcase,
-  Plus
+  Plus,
+  Edit
 } from "lucide-react";
 import axios from "axios";
 import { tokens } from "../../theme";
 import Header from "../../components/Header";
 import AddProjectModal from "../../components/AddProjectModal";
+import EditProjectModal from "../../components/EditProjectModal";
 
 const Person = () => {
   const { id } = useParams();
@@ -38,6 +40,8 @@ const Person = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showAddProjectModal, setShowAddProjectModal] = useState(false);
+  const [showEditProjectModal, setShowEditProjectModal] = useState(false);
+  const [selectedProject, setSelectedProject] = useState(null);
   const [isOwnProfile, setIsOwnProfile] = useState(false);
 
   useEffect(() => {
@@ -90,6 +94,19 @@ const Person = () => {
     } catch (err) {
       console.error('Failed to refresh projects', err);
     }
+  };
+
+  const handleEditProject = (project) => {
+    setSelectedProject(project);
+    setShowEditProjectModal(true);
+  };
+
+  const handleProjectUpdated = async () => {
+    await handleProjectAdded();
+  };
+
+  const handleProjectDeleted = async () => {
+    await handleProjectAdded();
   };
 
   if (loading) {
@@ -515,16 +532,39 @@ const Person = () => {
                       e.currentTarget.style.borderColor = colors.primary[300];
                     }}
                   >
-                    <h4
-                      style={{
-                        color: colors.grey[100],
-                        fontSize: "15px",
-                        fontWeight: "600",
-                        marginBottom: "8px"
-                      }}
-                    >
-                      {project.project_title}
-                    </h4>
+                    <Box display="flex" justifyContent="space-between" alignItems="flex-start" marginBottom="8px">
+                      <h4
+                        style={{
+                          color: colors.grey[100],
+                          fontSize: "15px",
+                          fontWeight: "600",
+                          margin: 0,
+                          flex: 1
+                        }}
+                      >
+                        {project.project_title}
+                      </h4>
+                      
+                      {isOwnProfile && (
+                        <IconButton
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleEditProject(project);
+                          }}
+                          sx={{
+                            padding: '4px',
+                            color: colors.blueAccent[400],
+                            '&:hover': { 
+                              backgroundColor: colors.blueAccent[800],
+                              color: colors.blueAccent[300]
+                            }
+                          }}
+                          title="Edit Project"
+                        >
+                          <Edit size={16} />
+                        </IconButton>
+                      )}
+                    </Box>
 
                     {project.project_description && (
                       <p
@@ -544,33 +584,52 @@ const Person = () => {
                       justifyContent="space-between"
                       alignItems="center"
                     >
-                      {(project.start_date || project.end_date) && (
-                        <span
-                          style={{
-                            color: colors.grey[400],
-                            fontSize: "12px"
-                          }}
-                        >
-                          {project.start_date && new Date(project.start_date).getFullYear()}
-                          {project.start_date && project.end_date && ' - '}
-                          {project.end_date && new Date(project.end_date).getFullYear()}
-                        </span>
-                      )}
+                      <Box display="flex" alignItems="center" gap="8px">
+                        {(project.start_date || project.end_date) && (
+                          <span
+                            style={{
+                              color: colors.grey[400],
+                              fontSize: "12px"
+                            }}
+                          >
+                            {project.start_date && new Date(project.start_date).getFullYear()}
+                            {project.start_date && project.end_date && ' - '}
+                            {project.end_date && new Date(project.end_date).getFullYear()}
+                          </span>
+                        )}
+                      </Box>
 
-                      {project.tag_name && (
+                      <Box display="flex" alignItems="center" gap="8px">
                         <span
                           style={{
-                            padding: "4px 12px",
-                            backgroundColor: colors.greenAccent[800],
-                            color: colors.greenAccent[200],
-                            borderRadius: "12px",
-                            fontSize: "11px",
-                            fontWeight: "500"
+                            padding: "2px 8px",
+                            backgroundColor: project.end_date ? colors.grey[700] : colors.greenAccent[800],
+                            color: project.end_date ? colors.grey[300] : colors.greenAccent[200],
+                            borderRadius: "8px",
+                            fontSize: "10px",
+                            fontWeight: "600",
+                            textTransform: "uppercase",
+                            letterSpacing: "0.5px"
                           }}
                         >
-                          {project.tag_name}
+                          {project.end_date ? 'Ended' : 'Ongoing'}
                         </span>
-                      )}
+                        
+                        {project.tag_name && (
+                          <span
+                            style={{
+                              padding: "4px 12px",
+                              backgroundColor: colors.blueAccent[800],
+                              color: colors.blueAccent[200],
+                              borderRadius: "12px",
+                              fontSize: "11px",
+                              fontWeight: "500"
+                            }}
+                          >
+                            {project.tag_name}
+                          </span>
+                        )}
+                      </Box>
                     </Box>
                   </Box>
                 ))}
@@ -587,6 +646,21 @@ const Person = () => {
           onClose={() => setShowAddProjectModal(false)}
           userId={parseInt(localStorage.getItem('user_id'))}
           onProjectAdded={handleProjectAdded}
+        />
+      )}
+
+      {/* Edit Project Modal */}
+      {isOwnProfile && (
+        <EditProjectModal
+          open={showEditProjectModal}
+          onClose={() => {
+            setShowEditProjectModal(false);
+            setSelectedProject(null);
+          }}
+          project={selectedProject}
+          userId={parseInt(localStorage.getItem('user_id'))}
+          onProjectUpdated={handleProjectUpdated}
+          onProjectDeleted={handleProjectDeleted}
         />
       )}
     </Box>
