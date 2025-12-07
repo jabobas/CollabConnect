@@ -17,16 +17,18 @@ import User from "./scenes/user";
 import CreateProfile from "./scenes/create-profile";
 import ClaimProfile from "./scenes/claim-profile";
 import Institution from "./scenes/Institution";
-
+import DataCollection from "./scenes/data-collection";
+import Faq from "./scenes/faq";
+import Settings from "./scenes/settings";
 function App() {
   const [theme, colorMode] = useMode();
   return (
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <div className="app">
+        <div className="app" style={{ display: "flex", minHeight: "100vh" }}>
           <Sidebar/>
-          <main className="content">
+          <main className="content" style={{ flex: 1 }}>
             <Topbar />
             <Routes>
               <Route path="/" element={<Dashboard />} />
@@ -39,8 +41,10 @@ function App() {
               <Route path="/institution/:id" element={<Institution />} />
               {/* <Route path="/department/:id" element={<Department />} /> */}
 
-              {/* <Route path="/data-collection" element={< />} /> */}
-              {/* <Route path="/faq" element={< />} /> */}
+              <Route path="/data-collection" element={<DataCollection />} />
+              <Route path="/faq" element={<Faq/>} />
+              <Route path="/settings" element={<Settings/>} />
+
               {/* <Route path="/data-request element={< />} /> */}
             </Routes>
           </main>
@@ -49,5 +53,4 @@ function App() {
     </ColorModeContext.Provider>
   );
 }
-
 export default App;

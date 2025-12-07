@@ -69,34 +69,34 @@ const Topbar = () => {
   };
 
   return (
-    <Box display="flex" justifyContent="space-between" p={2}>
+  <Box display="flex" justifyContent="space-between" p="1.25rem"> {/* p={2} -> p="1.25rem" */}
       {/* SEARCH BAR */}
-      <Box
-        display="flex"
-        backgroundColor={colors.primary[400]}
-        borderRadius="3px"
-      >
-        <InputBase sx={{ ml: 2, flex: 1 }} placeholder="Search" />
-        <IconButton type="button" sx={{ p: 1 }}>
-          <SearchIcon />
-        </IconButton>
-      </Box>
-
+ <Box
+      display="flex"
+      backgroundColor={colors.primary[400]}
+      borderRadius="0.1875rem" // 3px
+    >
+      <InputBase sx={{ ml: "1.25rem", flex: 1 }} placeholder="Search" /> {/* ml: 2 -> ml: "1.25rem" */}
+      <IconButton type="button" sx={{ p: "0.625rem" }}> {/* p: 1 -> p: "0.625rem" */}
+        <SearchIcon />
+      </IconButton>
+    </Box>
       {/* ICONS */}
-      <Box display="flex" alignItems="center" gap="10px">
-        <IconButton onClick={colorMode.toggleColorMode}>
-          {theme.palette.mode === "dark" ? (
-            <DarkModeOutlinedIcon />
-          ) : (
-            <LightModeOutlinedIcon />
-          )}
-        </IconButton>
+    <Box display="flex" alignItems="center" gap="0.625rem"> {/* gap="10px" -> gap="0.625rem" */}
+      <IconButton onClick={colorMode.toggleColorMode}>
+        {theme.palette.mode === "dark" ? (
+          <DarkModeOutlinedIcon />
+        ) : (
+          <LightModeOutlinedIcon />
+        )}
+      </IconButton>
         <IconButton>
           <NotificationsOutlinedIcon />
         </IconButton>
-        <IconButton>
-          <SettingsOutlinedIcon />
-        </IconButton>
+<IconButton onClick={() => navigate('/settings')}>
+  <SettingsOutlinedIcon />
+</IconButton>
+
 
         {isLoggedIn ? (
           <>
