@@ -29,11 +29,9 @@ def _send_email(recipient_email: str, subject: str, html_body: str, text_body: s
         bool: True if email sent successfully (or email disabled),
               False if there was a sending error.
     """
-    # If email is not configured, just pretend it worked
+    # If email is not configured, return False so caller can handle it
     if not SENDER_EMAIL or not SENDER_PASSWORD:
-        print("WARNING: Email credentials not configured in config.ini")
-        print(f"Email to {recipient_email} with subject '{subject}' would be sent here.")
-        return True
+        return False
 
     try:
         message = MIMEMultipart("alternative")
