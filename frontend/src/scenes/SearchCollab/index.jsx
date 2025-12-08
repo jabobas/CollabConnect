@@ -259,7 +259,7 @@ const SearchCollab = () => {
 
   useEffect(() => {
     axios
-      .get("http://127.0.0.1:5001/institution/all")
+      .get("http://127.0.0.1:5000/institution/all")
       .then((response) => {
         setResearchers(response.data.data);
       })
@@ -270,7 +270,7 @@ const SearchCollab = () => {
 
   useEffect(() => {
     axios
-      .get("http://127.0.0.1:5001/project/num-projects-per-person")
+      .get("http://127.0.0.1:5000/project/num-projects-per-person")
       .then((response) => {
         setProjects(response.data.data);
       })
