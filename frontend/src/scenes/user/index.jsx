@@ -1,5 +1,6 @@
 /*
  * Author: Aubin Mugisha & Copilot
+ * Date: December 1, 2025
  * Description: User profile page displaying user information, linked researcher profile, and projects.
  */
 

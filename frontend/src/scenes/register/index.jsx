@@ -1,5 +1,6 @@
 /*
  * Author: Aubin Mugisha & Copilot
+ * Date: December 1, 2025
  * Description: User registration page with email and password validation for creating new accounts.
  */
 

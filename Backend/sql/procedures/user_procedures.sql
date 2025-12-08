@@ -1,4 +1,7 @@
--- User CRUD procedures
+/*
+ * Author: Aubin Mugisha
+ * Description: Stored procedures for user authentication, email verification, and profile management
+ */
 
 -- Insert new user (signup) with verification code
 CREATE PROCEDURE InsertUser(

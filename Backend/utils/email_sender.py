@@ -1,5 +1,4 @@
 """
-Filename: email_sender.py
 Author: Aubin Mugisha & Copilot
 
 Email utility for sending verification codes to users during registration.

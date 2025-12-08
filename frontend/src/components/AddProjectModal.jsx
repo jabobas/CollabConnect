@@ -1,3 +1,8 @@
+/*
+ * Author: Aubin Mugisha
+ * Description: Modal component for adding new projects to user profiles
+ */
+
 import React, { useState } from 'react';
 import { Box, Button, TextField, Dialog, DialogTitle, DialogContent, DialogActions, Alert } from "@mui/material";
 import { useTheme } from "@mui/material";

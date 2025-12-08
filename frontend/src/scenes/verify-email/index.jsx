@@ -1,6 +1,7 @@
 /*
-Author: Aubin Mugisha
-Email verification page for entering 6-digit verification code.
+ * Author: Aubin Mugisha
+ * Date: December 1, 2025
+ * Description:Email verification page for entering 6-digit verification code.
 */
 
 import React, { useState, useEffect } from "react";

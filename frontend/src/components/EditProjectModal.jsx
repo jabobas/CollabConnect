@@ -1,3 +1,8 @@
+/*
+ * Author: Aubin Mugisha
+ * Description: Modal component for editing and deleting user projects
+ */
+
 import React, { useState, useEffect } from 'react';
 import { Box, Button, TextField, Dialog, DialogTitle, DialogContent, DialogActions, Alert, IconButton } from "@mui/material";
 import { useTheme } from "@mui/material";
