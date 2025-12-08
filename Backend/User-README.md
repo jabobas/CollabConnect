@@ -9,17 +9,23 @@ Simple authentication system for CollabConnect. Users create accounts, then link
 
 ## How It Works
 
-### 1. Registration & Login
+### 1. Registration & Email Verification
 - Sign up with email and password
+- Get a 6-digit verification code via email (check terminal during dev)
+- Enter code to verify email (expires in 15 minutes)
+- Can resend code if needed
+
+### 2. Login
 - Login returns a JWT token (lasts 24 hours)
+- Must verify email before first login
 - Token stored in browser to stay logged in
 
-### 2. Profile Setup
+### 3. Profile Setup
 After login, users have two options:
 - **Search & Claim** - Find your existing profile from scraped data
 - **Create New** - Fill out a form with your info
 
-### 3. Profile Info
+### 4. Profile Info
 Each profile has:
 - Name, email, phone, bio
 - 3 expertise areas (like "Machine Learning")
@@ -35,6 +41,7 @@ routes/
   person_routes.py  - Create new profile
 utils/
   jwt_utils.py      - Make and check JWT tokens
+  email_sender.py   - Send verification and welcome emails
 sql/
   tables/user.sql   - User table definition
   procedures/user_procedures.sql - Database operations
@@ -44,6 +51,7 @@ sql/
 ```
 scenes/
   register/         - Sign up page
+  verify-email/     - Email verification page (6-digit code input)
   login/            - Login page
   user/             - Profile page
   create-profile/   - New profile form
@@ -53,8 +61,10 @@ scenes/
 ## API Routes
 
 **Authentication:**
-- `POST /auth/register` - Create account
-- `POST /auth/login` - Login, get token
+- `POST /auth/register` - Create account, sends verification code
+- `POST /auth/verify` - Verify email with 6-digit code
+- `POST /auth/resend-code` - Resend verification code
+- `POST /auth/login` - Login, get token (requires verified email)
 - `GET /auth/me` - Get current user info
 - `POST /auth/refresh` - Get new token
 
@@ -64,7 +74,26 @@ scenes/
 - `POST /user/<id>/claim-person/<person_id>` - Link profile (needs token)
 
 **Profile Creation:**
-- `POST /person` - Create new profile
+## Email Verification
+
+### Development Mode
+Verification codes print to the terminal:
+```
+============================================================
+VERIFICATION CODE for user@example.com: 123456
+============================================================
+```
+
+### Production Setup
+Configure email in `config.ini` by adding the following:
+```
+[Email]
+smtp_server = smtp.gmail.com
+smtp_port = 587
+sender_email = noreplycollabconnect@gmail.com
+sender_password = mack kppv slqc osjk
+```
+Codes are sent via email when SMTP is configured.
 
 ## Key-Notes
 - Database reset removes all users

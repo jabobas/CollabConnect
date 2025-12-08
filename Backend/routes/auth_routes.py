@@ -64,11 +64,11 @@ def register():
         mysql.connection.commit()
         cursor.close()
 
-        # Send verification email (non-blocking for registration if it fails)
+        # Send verification email
         send_verification_email(email, verification_code)
         log_info(f"User registered successfully - user_id: {user_id}, email: {email}")
         
-        # Log verification code to console for development
+        # Always print code to terminal for development
         print(f"\n{'='*60}")
         print(f"VERIFICATION CODE for {email}: {verification_code}")
         print(f"{'='*60}\n")
@@ -305,6 +305,11 @@ def resend_verification_code():
 
         send_verification_email(email, verification_code)
         log_info(f"Verification code resent successfully for: {email}")
+        
+        # Always print code to terminal for development
+        print(f"\n{'='*60}")
+        print(f"NEW VERIFICATION CODE for {email}: {verification_code}")
+        print(f"{'='*60}\n")
 
         return (
             jsonify(
