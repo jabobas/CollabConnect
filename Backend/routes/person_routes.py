@@ -1,4 +1,4 @@
-from utils.logger import log_info, log_error
+from utils.logger import log_info, log_error, get_request_user
 from flask import Blueprint, jsonify, request
 
 # Blueprint for person-related endpoints

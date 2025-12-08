@@ -53,3 +53,13 @@ def log_checkpoint(checkpoint_id, context=None):
         logger.info(f"=== CHECKPOINT [{checkpoint_id}] === | Context: {context}")
     else:
         logger.info(f"=== CHECKPOINT [{checkpoint_id}] ===")
+
+def get_request_user():
+    """Get user ID from request context if authenticated, otherwise return 'anonymous'"""
+    from flask import request
+    try:
+        if hasattr(request, 'current_user') and request.current_user:
+            return f"User: {request.current_user.get('user_id', 'unknown')}"
+        return "anonymous"
+    except:
+        return "anonymous"

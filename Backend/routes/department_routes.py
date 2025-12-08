@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify, request
+from utils.logger import log_info, log_error, get_request_user
 
 # Create blueprint for department routes
 department_bp = Blueprint('department', __name__, url_prefix='/department')

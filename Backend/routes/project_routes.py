@@ -5,7 +5,7 @@ It defines endpoints for creating, updating, deleting, and retrieving projects.
 @date: November 20, 2025
 '''
 from flask import Blueprint, jsonify, request
-from utils.logger import log_info, log_error
+from utils.logger import log_info, log_error, get_request_user
 
 project_bp = Blueprint("project", __name__, url_prefix="/project")
 
@@ -14,7 +14,7 @@ project_bp = Blueprint("project", __name__, url_prefix="/project")
 def get_all_projects():
     from app import mysql
     try:
-        log_info("Fetching all projects")
+        log_info(f"[{get_request_user()}] Fetching all projects")
         cursor = mysql.connection.cursor()
         cursor.execute("START TRANSACTION")
         cursor.callproc("GetAllProjects")
@@ -244,7 +244,7 @@ def get_people_by_project(project_id: int):
             SELECT 
                 p.person_id,
                 p.person_name,
-                p.email,
+                p.person_email,
                 p.department_id,
                 d.department_name,
                 i.institution_id,

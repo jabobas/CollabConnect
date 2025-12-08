@@ -4,6 +4,7 @@
 
 from flask import Blueprint, request, jsonify
 from utils.jwt_utils import token_required
+from utils.logger import log_info, log_error, get_request_user
 
 user_bp = Blueprint('user', __name__)
 
@@ -61,6 +62,8 @@ def search_profile():
     name = request.args.get('name', '')
     email = request.args.get('email', '')
     
+    log_info(f"Searching for profile: name={name}, email={email}")
+    
     if not name and not email:
         return jsonify({'status': 'error', 'message': 'User ID and person ID required'}), 400
     
@@ -117,8 +120,12 @@ def claim_person(user_id, person_id):
     """Link user account to existing person profile - requires JWT authentication"""
     from app import mysql
     
+    auth_user_id = request.current_user['user_id']
+    log_info(f"[User: {auth_user_id}] Claiming profile: user_id={user_id}, person_id={person_id}")
+    
     # Security check: users can only claim profiles for their own account
-    if request.current_user['user_id'] != user_id:
+    if auth_user_id != user_id:
+        log_error(f"[User: {auth_user_id}] Unauthorized claim attempt: user_id={user_id}, person_id={person_id}")
         return jsonify({'status': 'error', 'message': 'Can only claim your own profile'}), 403
     
     cursor = None
@@ -210,7 +217,11 @@ def add_user_project(user_id):
     """Add a new project for the user"""
     from app import mysql
     
-    if request.current_user['user_id'] != user_id:
+    auth_user_id = request.current_user['user_id']
+    log_info(f"[User: {auth_user_id}] Adding project for user_id={user_id}")
+    
+    if auth_user_id != user_id:
+        log_error(f"[User: {auth_user_id}] Unauthorized project add attempt for user_id={user_id}")
         return jsonify({'status': 'error', 'message': 'Unauthorized'}), 403
     
     data = request.get_json()
@@ -269,6 +280,7 @@ def add_user_project(user_id):
         
     except Exception as e:
         mysql.connection.rollback()
+        log_error(f"Failed to add project for user_id={user_id}: {str(e)}")
         return jsonify({'status': 'error', 'message': str(e)}), 500
     finally:
         cursor.close()
@@ -282,7 +294,10 @@ def create_profile_with_affiliation():
     user_id = request.current_user['user_id']
     data = request.get_json()
     
+    log_info(f"[User: {user_id}] Creating profile with affiliation")
+    
     if not data.get('person_name') or not data.get('person_email'):
+        log_error("Profile creation failed: Missing name or email")
         return jsonify({'status': 'error', 'message': 'Name and email required'}), 400
     
     cursor = mysql.connection.cursor()
@@ -376,6 +391,7 @@ def create_profile_with_affiliation():
             pass
         mysql.connection.commit()
         
+        log_info(f"Profile created with affiliation: user_id={user_id}, person_id={person_id}")
         return jsonify({
             'status': 'success',
             'message': 'Profile created',
@@ -384,6 +400,7 @@ def create_profile_with_affiliation():
         
     except Exception as e:
         mysql.connection.rollback()
+        log_error(f"Failed to create profile with affiliation for user_id={user_id}: {str(e)}")
         return jsonify({'status': 'error', 'message': str(e)}), 500
     finally:
         cursor.close()

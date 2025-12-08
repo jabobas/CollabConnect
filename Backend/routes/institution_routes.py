@@ -8,7 +8,7 @@ This file contains the routes for managing institutions in the CollabConnect app
 """
 
 from flask import Blueprint, jsonify
-from utils.logger import log_info, log_error
+from utils.logger import log_info, log_error, get_request_user
 
 
 institution_bp = Blueprint('institution', __name__, url_prefix='/institution')
@@ -66,7 +66,7 @@ def get_all_institutions_departments_people():
     from app import mysql 
     cursor = None
     try:
-        log_info("Fetching all institutions, departments, and people")
+        log_info(f"[{get_request_user()}] Fetching all institutions, departments, and people")
         cursor = mysql.connection.cursor()
         cursor.execute("START TRANSACTION")
         cursor.callproc('GetAllInstitutionsDepartmentsAndPeople')

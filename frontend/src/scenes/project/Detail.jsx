@@ -126,39 +126,37 @@ export default function ProjectDetail() {
             <div style={{ color: colors.grey[100], fontSize: 18, fontWeight: 600, marginBottom: 8 }}>
               Overview
             </div>
-            {description && (
-              <div style={{ color: colors.grey[200], lineHeight: 1.6, marginBottom: 12 }}>{description}</div>
-            )}
+            <div style={{ color: description ? colors.grey[200] : colors.grey[400], lineHeight: 1.6, marginBottom: 12, fontStyle: description ? 'normal' : 'italic' }}>
+              {description || 'No description provided'}
+            </div>
             <div style={{ display: 'flex', gap: 18, flexWrap: 'wrap' }}>
-              {project.start_date && (
-                <div style={{ display: 'flex', gap: 8, alignItems: 'center', color: colors.grey[300] }}>
-                  <Calendar style={{ width: 16, height: 16 }} />
-                  <span>Start: {new Date(project.start_date).toLocaleDateString()}</span>
-                </div>
-              )}
-              {project.end_date && (
-                <div style={{ display: 'flex', gap: 8, alignItems: 'center', color: colors.grey[300] }}>
-                  <Calendar style={{ width: 16, height: 16 }} />
-                  <span>End: {new Date(project.end_date).toLocaleDateString()}</span>
-                </div>
-              )}
+              <div style={{ display: 'flex', gap: 8, alignItems: 'center', color: project.start_date ? colors.grey[300] : colors.grey[400] }}>
+                <Calendar style={{ width: 16, height: 16 }} />
+                <span>Start: {project.start_date ? new Date(project.start_date).toLocaleDateString() : 'Not specified'}</span>
+              </div>
+              <div style={{ display: 'flex', gap: 8, alignItems: 'center', color: project.end_date ? colors.grey[300] : colors.grey[400] }}>
+                <Calendar style={{ width: 16, height: 16 }} />
+                <span>End: {project.end_date ? new Date(project.end_date).toLocaleDateString() : 'Not specified'}</span>
+              </div>
             </div>
           </Box>
 
           {/* Tags */}
-          {tags.length > 0 && (
-            <Box
-              sx={{
-                backgroundColor: colors.primary[400],
-                border: `1px solid ${colors.primary[300]}`,
-                borderRadius: 12,
-                padding: '14px 18px',
-                mb: '20px',
-              }}
-            >
-              <div style={{ color: colors.grey[100], fontWeight: 600, marginBottom: 10, display: 'flex', alignItems: 'center', gap: 8 }}>
-                <Tag style={{ width: 16, height: 16 }} /> Tags
-              </div>
+          <Box
+            sx={{
+              backgroundColor: colors.primary[400],
+              border: `1px solid ${colors.primary[300]}`,
+              borderRadius: 12,
+              padding: '14px 18px',
+              mb: '20px',
+            }}
+          >
+            <div style={{ color: colors.grey[100], fontWeight: 600, marginBottom: 10, display: 'flex', alignItems: 'center', gap: 8 }}>
+              <Tag style={{ width: 16, height: 16 }} /> Tags
+            </div>
+            {tags.length === 0 ? (
+              <div style={{ color: colors.grey[400], fontStyle: 'italic' }}>No tags assigned</div>
+            ) : (
               <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                 {tags.map((t, i) => (
                   <span key={i} style={{ backgroundColor: colors.blueAccent[700], color: colors.grey[100], padding: '6px 10px', borderRadius: 16, fontSize: 12 }}>
@@ -166,8 +164,8 @@ export default function ProjectDetail() {
                   </span>
                 ))}
               </div>
-            </Box>
-          )}
+            )}
+          </Box>
 
           {/* People */}
           <Box

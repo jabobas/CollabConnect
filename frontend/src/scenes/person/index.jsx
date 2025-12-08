@@ -519,6 +519,7 @@ const Person = () => {
                     backgroundColor={colors.primary[500]}
                     borderRadius="8px"
                     border={`1px solid ${colors.primary[300]}`}
+                    onClick={() => navigate(`/project/${project.project_id}`)}
                     style={{
                       transition: "all 0.2s",
                       cursor: "pointer"
