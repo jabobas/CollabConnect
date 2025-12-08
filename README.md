@@ -81,3 +81,55 @@ Abbas:
 - Created routes for project, project_tag, and tag endpoints so you can use their procedures. The tag entity was removed from the database so the route for it is not necessary. 
 - I created a backend logger that logs when a user preforms any action related to the routes we have. 
 - Created a project search page and project page for the frontend.
+- Created installation and API document
+
+---
+
+## Logging System & ACID Compliance
+
+### Overview
+CollabConnect implements a comprehensive logging system that tracks all user actions, errors, and system events. The logger is critical for audit trails, debugging, and maintaining ACID compliance through transaction documentation.
+
+### Implementation
+
+**Location:** `Backend/utils/logger.py` → logs to `Backend/logs/app.log`
+
+**Core Functions:**
+- `log_info(message)` - Log successful operations
+- `log_error(message)` - Log errors with context
+- `get_request_user()` - Extract user ID from JWT token, format as `[User: ID]` or `[anonymous]`
+
+**Configuration:**
+- RotatingFileHandler: 10 MB max per file, keeps 10 backups
+- All logs include timestamp, user ID, operation type, and outcome
+- Applied to all 8 route files (auth, user, project, person, department, institution, tag, project_tag)
+
+### Example Log Format
+```
+2025-12-07 15:45:23 - CollabConnect - INFO - [User: 42] Fetching all projects (count=333)
+2025-12-07 15:45:24 - CollabConnect - ERROR - [User: 42] Unauthorized: Cannot delete project owned by User: 50
+```
+
+### ACID Compliance Through Logging
+
+| ACID Property | How Logging Ensures It |
+|---|---|
+| **Atomicity** | Logs all steps; missing completion log = transaction failed/rolled back |
+| **Consistency** | Logs constraint violations (e.g., duplicate profile claims, invalid operations) |
+| **Isolation** | User-prefixed logs track concurrent operations; database locks prevent conflicts |
+| **Durability** | RotatingFileHandler persists logs to disk immediately; survives server crashes |
+
+### Transaction Management
+
+- **User Context:** Every operation logged with authenticated user ID for accountability
+- **Error Context:** Failed operations logged with full details (user, operation, error message)
+- **Audit Trail:** Complete record of who did what, when, and the outcome
+- **Recovery:** On restart, logs show incomplete transactions that need rollback
+
+### Benefits
+
+1. **Accountability** - All actions traced to user
+2. **Debugging** - Complete operation history
+3. **Compliance** - Regulatory audit trail
+4. **Security** - Detect unauthorized attempts
+5. **Integrity** - Verify ACID properties hold across failures
