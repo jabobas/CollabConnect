@@ -1,3 +1,9 @@
+/*
+  author: Lucas Matheson
+  edited by: Lucas Matheson
+  date: November 20th, 2025
+  description: Main application component setting up theme, routing, and layout.
+*/
 import { ColorModeContext, useMode } from "./theme";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { Route, Routes } from "react-router-dom";
@@ -21,6 +27,7 @@ import Institution from "./scenes/Institution";
 import DataCollection from "./scenes/data-collection";
 import Faq from "./scenes/faq";
 import Settings from "./scenes/settings";
+import Connections from "./scenes/connections";
 function App() {
   const [theme, colorMode] = useMode();
   return (
@@ -33,7 +40,7 @@ function App() {
             <Topbar />
             <Routes>
               <Route path="/" element={<Dashboard />} />
-              {/* <Route path="/connections" element={ }/> */}
+              <Route path="/connections" element={<Connections />} />
               <Route path="/search" element={<SearchCollab />} />
               <Route path="/project/:id" element={<ProjectDetail />} />
               <Route path="/projects" element={<SearchProjects />} />

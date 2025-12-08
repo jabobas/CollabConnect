@@ -1,3 +1,9 @@
+/*
+  author: Lucas Matheson
+  edited by: Lucas Matheson
+  date: November 20th, 2025
+  description: Sidebar component for navigation within the CollabConnect application.
+*/
 import { useState, useEffect } from "react";
 import { ProSidebar, Menu, MenuItem } from "react-pro-sidebar";
 import { Box, IconButton, Typography, useTheme } from "@mui/material";
@@ -46,6 +52,7 @@ const Sidebar = () => {
     const pathToMenu = {
       "/search": "Search Collaberators",
       "/projects": "Search Projects",
+      "/connections": "Manage Connections",
       "/": "Dashboard",
     };
 

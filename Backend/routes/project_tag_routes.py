@@ -23,7 +23,10 @@ def add_tag_to_project():
             return jsonify({"status": "error", "message": f"Missing fields: {', '.join(missing)}"}), 400
         log_info("Transaction started for add tag to project")
         cursor = mysql.connection.cursor()
+        cursor.execute("START TRANSACTION")
         cursor.callproc("AddTagToProject", [data["project_id"], data["tag_name"]])
+        while cursor.nextset():
+            pass
         mysql.connection.commit()
         log_info("Transaction committed for add tag to project")
         cursor.close()
@@ -48,7 +51,10 @@ def remove_tag_from_project():
             return jsonify({"status": "error", "message": f"Missing fields: {', '.join(missing)}"}), 400
         log_info("Transaction started for remove tag from project")
         cursor = mysql.connection.cursor()
+        cursor.execute("START TRANSACTION")
         cursor.callproc("RemoveTagFromProject", [data["project_id"], data["tag_name"]])
+        while cursor.nextset():
+            pass
         mysql.connection.commit()
         log_info("Transaction committed for remove tag from project")
         cursor.close()
@@ -67,10 +73,15 @@ def get_project_tags():
         project_id = request.args.get("project_id")
         if not project_id:
             log_error("Missing query param 'project_id' in get_project_tags")
-            return jsonify({"status": "error", "message": "Query param 'project_id' is required"}), 400
+            return jsonify({"status": "error", "message": "Query params 'project_id' and 'tag_name' are required"}), 400
         cursor = mysql.connection.cursor()
-        cursor.callproc("GetProjectTags", [project_id])
+        cursor.execute("START TRANSACTION")
+        cursor.callproc("DeleteProjectTag", [project_id])
         results = cursor.fetchall()
+        # Consume remaining result sets from stored procedure
+        while cursor.nextset():
+            pass
+        mysql.connection.commit()
         cursor.close()
         return jsonify({"status": "success", "data": results, "count": len(results)}), 200
     except Exception as e:
@@ -87,8 +98,13 @@ def get_projects_by_tag():
             log_error("Missing query param 'tag_name' in get_projects_by_tag")
             return jsonify({"status": "error", "message": "Query param 'tag_name' is required"}), 400
         cursor = mysql.connection.cursor()
+        cursor.execute("START TRANSACTION")
         cursor.callproc("GetProjectsByTag", [tag_name])
         results = cursor.fetchall()
+        # Consume remaining result sets from stored procedure
+        while cursor.nextset():
+            pass
+        mysql.connection.commit()
         cursor.close()
         return jsonify({"status": "success", "data": results, "count": len(results)}), 200
     except Exception as e:

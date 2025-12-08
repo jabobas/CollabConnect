@@ -66,6 +66,20 @@ CREATE PROCEDURE UpdateUserLastLogin(
     IN p_user_id INT
 )
 BEGIN
+    DECLARE user_count INT;
+    
+    -- Lock the user row to prevent concurrent modifications
+    SELECT COUNT(*) INTO user_count
+    FROM User
+    WHERE user_id = p_user_id
+    FOR UPDATE;
+    
+    -- Validate user exists
+    IF user_count = 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'User not found';
+    END IF;
+    
     UPDATE User
     SET last_login = CURRENT_TIMESTAMP
     WHERE user_id = p_user_id;
@@ -78,11 +92,36 @@ CREATE PROCEDURE LinkUserToPerson(
 )
 BEGIN
     DECLARE person_claimed INT DEFAULT 0;
+    DECLARE user_count INT;
+    DECLARE person_count INT;
     
-    -- Check if person is already claimed
+    -- Lock the user row to prevent concurrent claims
+    SELECT COUNT(*) INTO user_count
+    FROM User
+    WHERE user_id = p_user_id
+    FOR UPDATE;
+    
+    IF user_count = 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'User not found';
+    END IF;
+    
+    -- Lock the person row to prevent concurrent claims
+    SELECT COUNT(*) INTO person_count
+    FROM Person
+    WHERE person_id = p_person_id
+    FOR UPDATE;
+    
+    IF person_count = 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Person not found';
+    END IF;
+    
+    -- Check if person is already claimed (with lock)
     SELECT COUNT(*) INTO person_claimed
     FROM User
-    WHERE person_id = p_person_id;
+    WHERE person_id = p_person_id
+    FOR UPDATE;
     
     IF person_claimed > 0 THEN
         SIGNAL SQLSTATE '45000'
@@ -103,6 +142,20 @@ CREATE PROCEDURE DeleteUser(
     IN p_user_id INT
 )
 BEGIN
+    DECLARE user_count INT;
+    
+    -- Lock the user row to prevent concurrent deletions
+    SELECT COUNT(*) INTO user_count
+    FROM User
+    WHERE user_id = p_user_id
+    FOR UPDATE;
+    
+    -- Validate user exists
+    IF user_count = 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'User not found';
+    END IF;
+    
     DELETE FROM User
     WHERE user_id = p_user_id;
     

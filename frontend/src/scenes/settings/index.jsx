@@ -1,4 +1,9 @@
-// Settings.jsx
+/*
+  author: Lucas Matheson
+  edited by: Lucas Matheson
+  date: November 20th, 2025
+  description: Scene for application settings including appearance, notifications, privacy, and account management.
+*/
 import { Box, Typography, Accordion, AccordionSummary, AccordionDetails, useTheme, Switch, FormControlLabel, Select, MenuItem, FormControl, InputLabel } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { tokens, getAvailableColorSchemes } from "../../theme";

@@ -373,6 +373,22 @@ def test_update_institution_address(db_cursor, sample_institution):
 def test_delete_institution(db_cursor, sample_institution):
     """Unit test for DeleteInstitution procedure."""
     
+    # First insert the institution to ensure it exists
+    call_procedure(
+        db_cursor,
+        "InsertIntoInstitution",
+        [
+            sample_institution["institution_name"],
+            sample_institution["institution_type"],
+            sample_institution["street"],
+            sample_institution["city"],
+            sample_institution["state"],
+            sample_institution["zipcode"],
+            sample_institution["institution_phone"],
+        ]
+    )
+    mysql.connection.commit()
+    
     # Delete the institution
     call_procedure(db_cursor, "DeleteInstitution", [sample_institution["institution_name"]])
     mysql.connection.commit()

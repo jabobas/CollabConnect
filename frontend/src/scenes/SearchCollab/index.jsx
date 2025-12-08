@@ -1,3 +1,9 @@
+/*
+  author: Lucas Matheson
+  edited by: Lucas Matheson
+  date: November 24th, 2025
+  description: Scene for searching and displaying collaborators
+*/
 import React, { memo, useCallback, useMemo, useState, useEffect, useRef } from "react";
 import { Box } from "@mui/material";
 import { Search, Users, BookOpen, MapPin, Mail } from "lucide-react";
@@ -7,8 +13,15 @@ import { useTheme } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-const ResearcherCard = memo(({ researcher, projects, colors, theme }) => {
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import { toggleFavorite, isFavorite } from "../../utils/favoritesManager";
+const ResearcherCard = memo(({ researcher, projects, colors, theme, onFavoriteToggle }) => {
   const navigate = useNavigate();
+  const [isFavorited, setIsFavorited] = useState(false);
+
+  useEffect(() => {
+    setIsFavorited(isFavorite(researcher.person_id));
+  }, [researcher.person_id]);
 
   const handleMouseEnter = useCallback(
     (e) => {
@@ -50,6 +63,15 @@ const ResearcherCard = memo(({ researcher, projects, colors, theme }) => {
     e.stopPropagation();
   }, []);
 
+  const handleFavoriteClick = useCallback((e) => {
+    e.stopPropagation();
+    const newStatus = toggleFavorite(researcher.person_id);
+    setIsFavorited(newStatus);
+    if (onFavoriteToggle) {
+      onFavoriteToggle();
+    }
+  }, [researcher.person_id, onFavoriteToggle]);
+
   const validExpertises = useMemo(
     () => researcher.expertises?.filter((exp) => exp && exp.trim() !== "") || [],
     [researcher.expertises]
@@ -83,8 +105,24 @@ const ResearcherCard = memo(({ researcher, projects, colors, theme }) => {
         >
           {researcher.person_name}
         </h3>
-        <div style={{cursor: 'pointer'}} onClick={Event.stopPropagation}>
-          <FavoriteBorderIcon/>
+        <div 
+          style={{
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            transition: 'transform 0.2s',
+            color: isFavorited ? colors.redAccent[500] : colors.grey[300],
+          }}
+          onClick={handleFavoriteClick}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'scale(1.2)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'scale(1)';
+          }}
+        >
+          {isFavorited ? <FavoriteIcon /> : <FavoriteBorderIcon />}
         </div>
       </div>
 
@@ -319,6 +357,11 @@ const SearchCollab = () => {
   const [selectedInstitution, setSelectedInstitution] = useState("all");
   const [researchers, setResearchers] = useState([]);
   const [numProjectsPerPerson, setProjects] = useState({});
+  const [favoritesUpdateTrigger, setFavoritesUpdateTrigger] = useState(0);
+
+  const handleFavoriteToggle = useCallback(() => {
+    setFavoritesUpdateTrigger(prev => prev + 1);
+  }, []);
 
   // Add style tag for hiding scrollbar
   useEffect(() => {
@@ -653,6 +696,7 @@ const SearchCollab = () => {
                     }
                     colors={colors}
                     theme={theme}
+                    onFavoriteToggle={handleFavoriteToggle}
                   />
                 ))}
               </div>

@@ -1,3 +1,9 @@
+/*
+  author: Lucas Matheson
+  edited by: Lucas Matheson
+  date: December 6th, 2025
+  description: Scene for displaying frequently asked questions.
+*/
 import { Box, Typography, Accordion, AccordionSummary, AccordionDetails, useTheme } from "@mui/material";
 import { tokens } from "../../theme";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";

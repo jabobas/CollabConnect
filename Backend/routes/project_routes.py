@@ -16,8 +16,13 @@ def get_all_projects():
     try:
         log_info("Fetching all projects")
         cursor = mysql.connection.cursor()
+        cursor.execute("START TRANSACTION")
         cursor.callproc("GetAllProjects")
         results = cursor.fetchall()
+        # Consume remaining result sets from stored procedure
+        while cursor.nextset():
+            pass
+        mysql.connection.commit()
         cursor.close()
         log_info(f"Fetched {len(results)} projects")
         return jsonify({
@@ -47,25 +52,23 @@ def create_project():
         cursor = mysql.connection.cursor()
         
         # Start transaction with proper isolation level for concurrency control
-        cursor.execute("SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED")
         cursor.execute("START TRANSACTION")
         
         log_info("Transaction started for project creation")
         
-        # Use row-level locking via SELECT FOR UPDATE instead of table locks
-        # This locks only the specific rows being checked/modified
-        cursor.execute("SELECT person_id FROM person WHERE person_id = %s FOR UPDATE", 
-                      (data["person_id"],))
-        
-        # Call the stored procedure (which should handle its own locking internally)
+        # Call stored procedure (handles locking and validation internally)
         cursor.callproc("InsertIntoProject", [
             data["title"],
             data["description"],
             data["person_id"],
+            data["tag_name"],
             data["start_date"],
-            data["end_date"],
-            data["tag_name"]
+            data["end_date"]
         ])
+        
+        # Consume stored procedure results
+        while cursor.nextset():
+            pass
         
         # Commit the transaction 
         mysql.connection.commit()
@@ -95,47 +98,99 @@ def create_project():
 @project_bp.route("/<int:project_id>", methods=["PUT"])
 def update_project(project_id: int):
     from app import mysql
+    cursor = None
     try:
         data = request.get_json(force=True) or {}
         log_info(f"Update project request: project_id={project_id}, data={data}")
-        log_info("Transaction started for project update")
+        
         cursor = mysql.connection.cursor()
+        
+        # Start transaction with proper isolation level for concurrency control
+        cursor.execute("START TRANSACTION")
+        
+        log_info("Transaction started for project update")
+        
+        # Call stored procedure (handles locking and validation internally)
         cursor.callproc("UpdateProjectDetails", [
             project_id,
             data.get("project_title"),
             data.get("project_description"),
+            data.get("tag_name"),
             data.get("start_date"),
-            data.get("end_date"),
-            data.get("tag_name")
+            data.get("end_date")
         ])
+        
+        # Consume stored procedure results
+        while cursor.nextset():
+            pass
+        
+        # Commit the transaction
         mysql.connection.commit()
         log_info("Transaction committed for project update")
-        cursor.close()
-        log_info(f"Project updated: id={project_id}, title={data.get('project_title')}, description={data.get('project_description')}, start_date={data.get('start_date')}, end_date={data.get('end_date')}, tag_name={data.get('tag_name')}")
+        
+        log_info(f"Project updated: id={project_id}, title={data.get('project_title')}, "
+                f"description={data.get('project_description')}, start_date={data.get('start_date')}, "
+                f"end_date={data.get('end_date')}, tag_name={data.get('tag_name')}")
         return jsonify({"status": "success", "message": "Project updated successfully"}), 200
+        
     except Exception as e:
-        mysql.connection.rollback()
+        # Rollback on error
+        if mysql.connection:
+            try:
+                mysql.connection.rollback()
+            except:
+                pass
+        
         log_error(f"Transaction rolled back for project update: {str(e)} | project_id={project_id}, data={data}")
         return jsonify({"status": "error", "message": str(e)}), 500
+        
+    finally:
+        if cursor:
+            cursor.close()
 
 
 @project_bp.route("/<int:project_id>", methods=["DELETE"])
 def delete_project(project_id: int):
     from app import mysql
+    cursor = None
     try:
         log_info(f"Delete project request: project_id={project_id}")
-        log_info("Transaction started for project deletion")
+        
         cursor = mysql.connection.cursor()
+        
+        # Start transaction with proper isolation level for concurrency control
+        cursor.execute("START TRANSACTION")
+        
+        log_info("Transaction started for project deletion")
+        
+        # Call stored procedure (handles locking, validation, and cascading deletes internally)
         cursor.callproc("DeleteProject", [project_id])
+        
+        # Consume stored procedure results
+        while cursor.nextset():
+            pass
+        
+        # Commit the transaction
         mysql.connection.commit()
         log_info("Transaction committed for project deletion")
-        cursor.close()
+        
         log_info(f"Project deleted: project_id={project_id}")
         return jsonify({"status": "success", "message": "Project deleted successfully"}), 200
+        
     except Exception as e:
-        mysql.connection.rollback()
+        # Rollback on error
+        if mysql.connection:
+            try:
+                mysql.connection.rollback()
+            except:
+                pass
+        
         log_error(f"Transaction rolled back for project deletion: {str(e)} | project_id={project_id}")
         return jsonify({"status": "error", "message": str(e)}), 500
+        
+    finally:
+        if cursor:
+            cursor.close()
 
 
 @project_bp.route("/by-person", methods=["GET"])
@@ -146,8 +201,13 @@ def get_projects_by_person():
         if not person_id:
             return jsonify({"status": "error", "message": "Query param 'person_id' is required"}), 400
         cursor = mysql.connection.cursor()
+        cursor.execute("START TRANSACTION")
         cursor.callproc("SelectProjectsByPersonID", [person_id])
         results = cursor.fetchall()
+        # Consume remaining result sets from stored procedure
+        while cursor.nextset():
+            pass
+        mysql.connection.commit()
         cursor.close()
         return jsonify({"status": "success", "data": results, "count": len(results)}), 200
     except Exception as e:
@@ -159,8 +219,13 @@ def get_project_by_id(project_id: int):
     from app import mysql
     try:
         cursor = mysql.connection.cursor()
+        cursor.execute("START TRANSACTION")
         cursor.callproc("SelectProjectByID", [project_id])
         result = cursor.fetchone()
+        # Consume remaining result sets from stored procedure
+        while cursor.nextset():
+            pass
+        mysql.connection.commit()
         cursor.close()
         return jsonify({"status": "success", "data": result}), 200
     except Exception as e:
@@ -169,11 +234,11 @@ def get_project_by_id(project_id: int):
 
 @project_bp.route("/<int:project_id>/people", methods=["GET"])
 def get_people_by_project(project_id: int):
-    """Return list of people associated with a project via WorkedOn."""
     from app import mysql
     try:
         log_info(f"Fetching people for project_id={project_id}")
         cursor = mysql.connection.cursor()
+        cursor.execute("START TRANSACTION")
         query = (
             """
             SELECT 
@@ -194,6 +259,7 @@ def get_people_by_project(project_id: int):
         )
         cursor.execute(query, [project_id])
         results = cursor.fetchall()
+        mysql.connection.commit()
         cursor.close()
         log_info(f"Fetched {len(results)} people for project_id={project_id}")
         return jsonify({"status": "success", "data": results, "count": len(results)}), 200
@@ -207,9 +273,14 @@ def get_num_projects_per_person():
     
     try:
         cursor = mysql.connection.cursor()
+        cursor.execute("START TRANSACTION")
         cursor.callproc('SelectNumProjectsPerPerson')
         
         results = cursor.fetchall()
+        # Consume remaining result sets from stored procedure
+        while cursor.nextset():
+            pass
+        mysql.connection.commit()
         cursor.close()
         out = {}
         for curr in results:

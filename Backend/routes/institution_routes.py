@@ -1,3 +1,12 @@
+"""
+Filename: institution_routes.py
+Author: Lucas Matheson
+Edited by: Lucas Matheson
+Date: November 27, 2025
+
+This file contains the routes for managing institutions in the CollabConnect application
+"""
+
 from flask import Blueprint, jsonify
 from utils.logger import log_info, log_error
 
@@ -8,14 +17,18 @@ institution_bp = Blueprint('institution', __name__, url_prefix='/institution')
 @institution_bp.route("/one/<int:id>", methods=['GET'])  
 def get_institution(id: int):
     from app import mysql 
-
+    cursor = None
     try:
         cursor = mysql.connection.cursor()
+        cursor.execute("START TRANSACTION")
         cursor.callproc('GetDepartmentsAndPeopleByInstitutionId', [id])
         
         results = cursor.fetchall()
+        # Consume remaining result sets from stored procedure
+        while cursor.nextset():
+            pass
         
-        cursor.close()
+        mysql.connection.commit()
 
         # to ensure effiecent frontend rendering, this loop will process the data into a better 
         # key : value structure, making department and person name be keys so in the frontend, 
@@ -38,27 +51,35 @@ def get_institution(id: int):
         })
         
     except Exception as e:
+        mysql.connection.rollback()
         return jsonify({
             "status": "error",
             "message": str(e)
         }), 500
+    finally:
+        if cursor:
+            cursor.close()
         
 @institution_bp.route("/all")
 def get_all_institutions_departments_people():
     
     from app import mysql 
-
+    cursor = None
     try:
         log_info("Fetching all institutions, departments, and people")
         cursor = mysql.connection.cursor()
+        cursor.execute("START TRANSACTION")
         cursor.callproc('GetAllInstitutionsDepartmentsAndPeople')
         
         # Fetch all results from the procedure
         results = cursor.fetchall()
         if results is None:
             results = []
+        # Consume remaining result sets from stored procedure
+        while cursor.nextset():
+            pass
+        mysql.connection.commit()
         log_info("Transaction committed for fetching institutions/departments/people")
-        cursor.close()
 
         for curr in results:
             curr['expertises'] = [
@@ -79,3 +100,6 @@ def get_all_institutions_departments_people():
             "status": "error",
             "message": str(e)
         }), 500
+    finally:
+        if cursor:
+            cursor.close()

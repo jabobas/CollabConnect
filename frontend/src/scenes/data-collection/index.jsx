@@ -1,3 +1,9 @@
+/*
+  author: Lucas Matheson
+  edited by: Lucas Matheson
+  date: December 6th, 2025
+  description: Scene for displaying data collection policy and data removal request form.
+*/
 import { Box, Typography, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField, useTheme } from "@mui/material";
 import { tokens } from "../../theme";
 import { useState } from "react";

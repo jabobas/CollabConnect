@@ -12,6 +12,21 @@ CREATE PROCEDURE InsertIntoProject(
     IN EndDate DATE
 )
 BEGIN
+    DECLARE person_count INT;
+    
+    -- Lock the person row to prevent race conditions and validate existence
+    SELECT COUNT(*) INTO person_count
+    FROM Person 
+    WHERE person_id = PersonID
+    FOR UPDATE;
+    
+    -- Validate person exists
+    IF person_count = 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Person not found';
+    END IF;
+    
+    -- Insert the project
     INSERT INTO Project (project_title, project_description, tag_name, person_id, start_date, end_date)
     VALUES (ProjectTitle, ProjectDescription, TagName, PersonID, StartDate, EndDate);
 
@@ -27,6 +42,21 @@ CREATE PROCEDURE UpdateProjectDetails(
     IN EndDate DATE
 )
 BEGIN
+    DECLARE project_count INT;
+    
+    -- Lock the project row to prevent concurrent modifications and validate existence
+    SELECT COUNT(*) INTO project_count
+    FROM Project
+    WHERE project_id = ProjectID
+    FOR UPDATE;
+    
+    -- Validate project exists
+    IF project_count = 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Project not found';
+    END IF;
+    
+    -- Update the project
     UPDATE Project
     SET project_title = ProjectTitle,
         project_description = ProjectDescription,
@@ -41,6 +71,20 @@ CREATE PROCEDURE UpdateProjectTitle(
     IN ProjectTitle VARCHAR(200)
 )
 BEGIN
+    DECLARE project_count INT;
+    
+    -- Lock the project row to prevent concurrent modifications
+    SELECT COUNT(*) INTO project_count
+    FROM Project
+    WHERE project_id = ProjectID
+    FOR UPDATE;
+    
+    -- Validate project exists
+    IF project_count = 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Project not found';
+    END IF;
+    
     UPDATE Project
     SET project_title = ProjectTitle
     WHERE project_id = ProjectID;
@@ -51,6 +95,20 @@ CREATE PROCEDURE UpdateProjectDescription(
     IN ProjectDescription TEXT
 )
 BEGIN
+    DECLARE project_count INT;
+    
+    -- Lock the project row to prevent concurrent modifications
+    SELECT COUNT(*) INTO project_count
+    FROM Project
+    WHERE project_id = ProjectID
+    FOR UPDATE;
+    
+    -- Validate project exists
+    IF project_count = 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Project not found';
+    END IF;
+    
     UPDATE Project
     SET project_description = ProjectDescription
     WHERE project_id = ProjectID;
@@ -62,6 +120,20 @@ CREATE PROCEDURE UpdateProjectDates(
     IN EndDate DATE
 )
 BEGIN
+    DECLARE project_count INT;
+    
+    -- Lock the project row to prevent concurrent modifications
+    SELECT COUNT(*) INTO project_count
+    FROM Project
+    WHERE project_id = ProjectID
+    FOR UPDATE;
+    
+    -- Validate project exists
+    IF project_count = 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Project not found';
+    END IF;
+    
     UPDATE Project
     SET start_date = StartDate,
         end_date = EndDate
@@ -72,6 +144,20 @@ CREATE PROCEDURE CompleteProject(
     IN ProjectID BIGINT UNSIGNED
 )
 BEGIN
+    DECLARE project_count INT;
+    
+    -- Lock the project row to prevent concurrent modifications
+    SELECT COUNT(*) INTO project_count
+    FROM Project
+    WHERE project_id = ProjectID AND end_date IS NULL
+    FOR UPDATE;
+    
+    -- Validate project exists and is not already completed
+    IF project_count = 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Project not found or already completed';
+    END IF;
+    
     UPDATE Project
     SET end_date = CURDATE()
     WHERE project_id = ProjectID AND end_date IS NULL;
@@ -79,7 +165,31 @@ END;
 
 CREATE PROCEDURE DeleteProject(IN ProjectID BIGINT UNSIGNED)
 BEGIN
+    DECLARE project_count INT;
+    
+    -- Lock the project row to prevent concurrent deletions and validate existence
+    SELECT COUNT(*) INTO project_count
+    FROM Project
+    WHERE project_id = ProjectID
+    FOR UPDATE;
+    
+    -- Validate project exists
+    IF project_count = 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Project not found';
+    END IF;
+    
+    -- Lock related WorkedOn rows to prevent race conditions
+    SELECT COUNT(*) FROM WorkedOn WHERE project_id = ProjectID FOR UPDATE;
+    
+    -- Lock related Project_Tag rows to prevent race conditions
+    SELECT COUNT(*) FROM Project_Tag WHERE project_id = ProjectID FOR UPDATE;
+    
+    -- Delete related records first (cascading delete)
     DELETE FROM Project_Tag WHERE project_id = ProjectID;
+    DELETE FROM WorkedOn WHERE project_id = ProjectID;
+    
+    -- Delete the project
     DELETE FROM Project WHERE project_id = ProjectID;
 END;
 

@@ -1,8 +1,9 @@
 /*
-Top navigation bar with search, theme toggle, notifications, settings, and
-user profile/login/logout buttons.
+  author: Lucas Matheson
+  edited by: Lucas Matheson
+  date: November 20th, 2025
+  description: Topbar component for navigation within the CollabConnect application.
 */
-
 import { Box, IconButton, useTheme, Button } from "@mui/material";
 import { useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -71,16 +72,14 @@ const Topbar = () => {
 
   return (
   <Box display="flex" justifyContent="space-between" p="1.25rem"> {/* p={2} -> p="1.25rem" */}
-      {/* SEARCH BAR */}
- <Box
+      {/* SEARCH BAR  */}
+      {/* Todo: this empty box needs to be removed, and sizing needs to be correct */}
+    <Box
       display="flex"
       backgroundColor={colors.primary[400]}
       borderRadius="0.1875rem" // 3px
     >
-      <InputBase sx={{ ml: "1.25rem", flex: 1 }} placeholder="Search" /> {/* ml: 2 -> ml: "1.25rem" */}
-      <IconButton type="button" sx={{ p: "0.625rem" }}> {/* p: 1 -> p: "0.625rem" */}
-        <SearchIcon />
-      </IconButton>
+
     </Box>
       {/* ICONS */}
     <Box display="flex" alignItems="center" gap="0.625rem"> {/* gap="10px" -> gap="0.625rem" */}

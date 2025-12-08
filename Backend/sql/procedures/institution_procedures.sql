@@ -28,6 +28,19 @@ CREATE PROCEDURE UpdateInstitutionDetails(
     IN InstitutionPhone VARCHAR(15)
 )
 BEGIN
+    DECLARE inst_count INT;
+    
+    -- Lock the institution row
+    SELECT COUNT(*) INTO inst_count
+    FROM Institution
+    WHERE institution_name = InstitutionName
+    FOR UPDATE;
+    
+    IF inst_count = 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Institution not found';
+    END IF;
+    
     UPDATE Institution
     SET institution_type = InstitutionType,
         street = Street,
@@ -43,6 +56,18 @@ CREATE PROCEDURE UpdateInstitutionPhone(
     IN NewPhone VARCHAR(15)
 )
 BEGIN
+    DECLARE inst_count INT;
+    
+    SELECT COUNT(*) INTO inst_count
+    FROM Institution
+    WHERE institution_name = InstitutionName
+    FOR UPDATE;
+    
+    IF inst_count = 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Institution not found';
+    END IF;
+    
     UPDATE Institution
     SET institution_phone = NewPhone
     WHERE institution_name = InstitutionName;
@@ -53,6 +78,18 @@ CREATE PROCEDURE UpdateInstitutionType(
     IN NewType VARCHAR(50)
 )
 BEGIN
+    DECLARE inst_count INT;
+    
+    SELECT COUNT(*) INTO inst_count
+    FROM Institution
+    WHERE institution_name = InstitutionName
+    FOR UPDATE;
+    
+    IF inst_count = 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Institution not found';
+    END IF;
+    
     UPDATE Institution
     SET institution_type = NewType
     WHERE institution_name = InstitutionName;
@@ -66,6 +103,18 @@ CREATE PROCEDURE UpdateInstitutionAddress(
     IN NewZipcode VARCHAR(10)
 )
 BEGIN
+    DECLARE inst_count INT;
+    
+    SELECT COUNT(*) INTO inst_count
+    FROM Institution
+    WHERE institution_name = InstitutionName
+    FOR UPDATE;
+    
+    IF inst_count = 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Institution not found';
+    END IF;
+    
     UPDATE Institution
     SET street = NewStreet,
         city = NewCity,
@@ -76,6 +125,23 @@ END;
 
 CREATE PROCEDURE DeleteInstitution(IN InstitutionName VARCHAR(100))
 BEGIN
+    DECLARE inst_count INT;
+    
+    SELECT COUNT(*) INTO inst_count
+    FROM Institution
+    WHERE institution_name = InstitutionName
+    FOR UPDATE;
+    
+    IF inst_count = 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Institution not found';
+    END IF;
+    
+    -- Lock related rows
+    SELECT COUNT(*) FROM Department WHERE institution_id IN 
+        (SELECT institution_id FROM Institution WHERE institution_name = InstitutionName)
+    FOR UPDATE;
+    
     DELETE FROM Institution WHERE institution_name = InstitutionName;
 END;
 
