@@ -2,6 +2,8 @@ from utils.logger import log_info, log_error, get_request_user
 from utils.jwt_utils import token_required
 from flask import Blueprint, jsonify, request
 
+# Author: Wyatt McCurdy — person CRUD and profile endpoints
+
 # Blueprint for person-related endpoints
 person_bp = Blueprint('person', __name__, url_prefix='/person')
 

@@ -1,4 +1,4 @@
--- wyatt mccurdy - with help from microsofts github copilot :{
+-- Author: Wyatt McCurdy — person stored procedures (insert/update/delete helpers)
 -- Nov 9, 2025
 -- basic stored procedures for the Person entity
 

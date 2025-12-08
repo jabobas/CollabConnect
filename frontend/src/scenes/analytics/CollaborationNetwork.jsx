@@ -1,3 +1,4 @@
+// Author: Wyatt McCurdy — frontend analytics network visualization
 import React, { useState, useEffect, useCallback } from 'react';
 import {
   Box,

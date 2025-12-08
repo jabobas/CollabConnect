@@ -3,6 +3,8 @@ import networkx as nx
 from collections import defaultdict
 from utils.logger import log_info, log_error
 
+# Author: Wyatt McCurdy — analytics network endpoints and metrics
+
 # Blueprint for analytics-related endpoints
 analytics_bp = Blueprint('analytics', __name__, url_prefix='/api/analytics')
 

@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
+# Author: Wyatt McCurdy — runs backend and frontend together for local development
 # CollabConnect runner: starts backend and frontend
 
 ROOT_DIR="$(cd "$(dirname "$0")" && pwd)"

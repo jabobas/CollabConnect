@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
+# Author: Wyatt McCurdy — sets up dependencies and initializes the DB using Backend/config.ini credentials
 # CollabConnect setup: installs deps and initializes DB using pre-provisioned MySQL user from Backend/config.ini
 
 ROOT_DIR="$(cd "$(dirname "$0")" && pwd)"
