@@ -6,6 +6,9 @@ It defines endpoints for creating, updating, deleting, and retrieving projects.
 '''
 from flask import Blueprint, jsonify, request
 from utils.logger import log_info, log_error, get_request_user
+from utils.jwt_utils import token_required
+from utils.authorization import verify_project_ownership
+from utils.validators import validate_project_data, sanitize_string
 
 project_bp = Blueprint("project", __name__, url_prefix="/project")
 
@@ -96,12 +99,24 @@ def create_project():
             cursor.close()
 
 @project_bp.route("/<int:project_id>", methods=["PUT"])
+@token_required
+@verify_project_ownership
 def update_project(project_id: int):
     from app import mysql
     cursor = None
     try:
         data = request.get_json(force=True) or {}
-        log_info(f"Update project request: project_id={project_id}, data={data}")
+        log_info(f"Update project request: project_id={project_id}, user={request.current_user['user_id']}, data={data}")
+        
+        # Validate input data
+        is_valid, errors = validate_project_data(data)
+        if not is_valid:
+            return jsonify({"status": "error", "message": "Validation failed", "errors": errors}), 400
+        
+        # Sanitize string inputs
+        project_title = sanitize_string(data.get("project_title"))
+        project_description = sanitize_string(data.get("project_description"))
+        tag_name = sanitize_string(data.get("tag_name"))
         
         cursor = mysql.connection.cursor()
         
@@ -113,9 +128,9 @@ def update_project(project_id: int):
         # Call stored procedure (handles locking and validation internally)
         cursor.callproc("UpdateProjectDetails", [
             project_id,
-            data.get("project_title"),
-            data.get("project_description"),
-            data.get("tag_name"),
+            project_title,
+            project_description,
+            tag_name,
             data.get("start_date"),
             data.get("end_date")
         ])
@@ -128,9 +143,9 @@ def update_project(project_id: int):
         mysql.connection.commit()
         log_info("Transaction committed for project update")
         
-        log_info(f"Project updated: id={project_id}, title={data.get('project_title')}, "
-                f"description={data.get('project_description')}, start_date={data.get('start_date')}, "
-                f"end_date={data.get('end_date')}, tag_name={data.get('tag_name')}")
+        log_info(f"Project updated: id={project_id}, title={project_title}, "
+                f"description={project_description}, start_date={data.get('start_date')}, "
+                f"end_date={data.get('end_date')}, tag_name={tag_name}")
         return jsonify({"status": "success", "message": "Project updated successfully"}), 200
         
     except Exception as e:
@@ -150,11 +165,13 @@ def update_project(project_id: int):
 
 
 @project_bp.route("/<int:project_id>", methods=["DELETE"])
+@token_required
+@verify_project_ownership
 def delete_project(project_id: int):
     from app import mysql
     cursor = None
     try:
-        log_info(f"Delete project request: project_id={project_id}")
+        log_info(f"Delete project request: project_id={project_id}, user={request.current_user['user_id']}")
         
         cursor = mysql.connection.cursor()
         

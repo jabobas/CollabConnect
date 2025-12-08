@@ -1,3 +1,8 @@
+/**
+ * Author: Aubin Mugisha
+ * EditProjectModal - Modal for editing and deleting projects with ownership verification
+ */
+
 import React, { useState, useEffect } from 'react';
 import { Box, Button, TextField, Dialog, DialogTitle, DialogContent, DialogActions, Alert, IconButton } from "@mui/material";
 import { useTheme } from "@mui/material";
@@ -24,13 +29,26 @@ const EditProjectModal = ({ open, onClose, project, userId, onProjectUpdated, on
 
   useEffect(() => {
     if (project) {
+      const formatDate = (dateStr) => {
+        if (!dateStr || dateStr === 'null') return '';
+        if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return dateStr;
+        
+        try {
+          const date = new Date(dateStr);
+          if (isNaN(date.getTime())) return '';
+          return date.toISOString().split('T')[0];
+        } catch {
+          return '';
+        }
+      };
+      
       setFormData({
         project_title: project.project_title || '',
         project_description: project.project_description || '',
         project_role: project.project_role || '',
         tag_name: project.tag_name || '',
-        start_date: project.start_date ? project.start_date.split('T')[0] : '',
-        end_date: project.end_date ? project.end_date.split('T')[0] : ''
+        start_date: formatDate(project.start_date),
+        end_date: formatDate(project.end_date)
       });
     }
   }, [project]);
@@ -53,12 +71,8 @@ const EditProjectModal = ({ open, onClose, project, userId, onProjectUpdated, on
       return;
     }
 
-    // Validate dates if both are provided
     if (formData.start_date && formData.end_date) {
-      const startDate = new Date(formData.start_date);
-      const endDate = new Date(formData.end_date);
-      
-      if (endDate < startDate) {
+      if (new Date(formData.end_date) < new Date(formData.start_date)) {
         setError('End date must be after start date');
         return;
       }
@@ -68,8 +82,6 @@ const EditProjectModal = ({ open, onClose, project, userId, onProjectUpdated, on
     
     try {
       const token = localStorage.getItem('access_token');
-      
-      // Prepare data - convert empty date strings to null for MySQL
       const projectData = {
         ...formData,
         start_date: formData.start_date || null,

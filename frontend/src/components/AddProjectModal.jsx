@@ -1,3 +1,8 @@
+/**
+ * Author: Aubin Mugisha
+ * AddProjectModal - Modal for adding new projects to user's profile
+ */
+
 import React, { useState } from 'react';
 import { Box, Button, TextField, Dialog, DialogTitle, DialogContent, DialogActions, Alert } from "@mui/material";
 import { useTheme } from "@mui/material";
@@ -33,12 +38,8 @@ const AddProjectModal = ({ open, onClose, userId, onProjectAdded }) => {
       return;
     }
 
-    // Validate dates if both are provided
     if (formData.start_date && formData.end_date) {
-      const startDate = new Date(formData.start_date);
-      const endDate = new Date(formData.end_date);
-      
-      if (endDate < startDate) {
+      if (new Date(formData.end_date) < new Date(formData.start_date)) {
         setError('End date must be after start date');
         return;
       }
@@ -48,8 +49,6 @@ const AddProjectModal = ({ open, onClose, userId, onProjectAdded }) => {
     
     try {
       const token = localStorage.getItem('access_token');
-      
-      // Prepare data - convert empty date strings to null for MySQL
       const projectData = {
         ...formData,
         start_date: formData.start_date || null,
