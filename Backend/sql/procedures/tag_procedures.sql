@@ -39,11 +39,45 @@ CREATE PROCEDURE UpdateTagName(
     IN NewTagName VARCHAR(50)
 )
 BEGIN
+    DECLARE tag_count INT;
+    
+    -- Lock the tag row to prevent concurrent modifications
+    SELECT COUNT(*) INTO tag_count
+    FROM Tag
+    WHERE tag_name = OldTagName
+    FOR UPDATE;
+    
+    -- Validate tag exists
+    IF tag_count = 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Tag not found';
+    END IF;
+    
+    -- Also lock Project_Tag rows that reference this tag
+    SELECT COUNT(*) FROM Project_Tag WHERE tag_name = OldTagName FOR UPDATE;
+    
     UPDATE Tag SET tag_name = NewTagName WHERE tag_name = OldTagName;
 END;
 
 CREATE PROCEDURE DeleteTag(IN TagName VARCHAR(50))
 BEGIN
+    DECLARE tag_count INT;
+    
+    -- Lock the tag row to prevent concurrent deletions
+    SELECT COUNT(*) INTO tag_count
+    FROM Tag
+    WHERE tag_name = TagName
+    FOR UPDATE;
+    
+    -- Validate tag exists
+    IF tag_count = 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Tag not found';
+    END IF;
+    
+    -- Lock related Project_Tag rows
+    SELECT COUNT(*) FROM Project_Tag WHERE tag_name = TagName FOR UPDATE;
+    
     DELETE FROM Project_Tag WHERE tag_name = TagName;
     DELETE FROM Tag WHERE tag_name = TagName;
 END;

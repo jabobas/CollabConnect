@@ -15,6 +15,21 @@ CREATE PROCEDURE InsertPerson(
     IN p_department_id BIGINT
 )
 BEGIN
+    DECLARE dept_count INT;
+    
+    -- Lock and validate department if provided
+    IF p_department_id IS NOT NULL THEN
+        SELECT COUNT(*) INTO dept_count
+        FROM Department
+        WHERE department_id = p_department_id
+        FOR UPDATE;
+        
+        IF dept_count = 0 THEN
+            SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Department not found';
+        END IF;
+    END IF;
+    
     INSERT INTO Person
         (person_name, person_email, person_phone, bio, expertise_1, expertise_2, expertise_3, main_field, department_id)
     VALUES
@@ -28,6 +43,25 @@ CREATE PROCEDURE DeletePerson(
     IN p_person_id BIGINT
 )
 BEGIN
+    DECLARE person_count INT;
+    
+    -- Lock the person row to prevent concurrent deletions
+    SELECT COUNT(*) INTO person_count
+    FROM Person
+    WHERE person_id = p_person_id
+    FOR UPDATE;
+    
+    -- Validate person exists
+    IF person_count = 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Person not found';
+    END IF;
+    
+    -- Lock related rows to prevent orphaned records
+    SELECT COUNT(*) FROM WorkedOn WHERE person_id = p_person_id FOR UPDATE;
+    SELECT COUNT(*) FROM WorksIn WHERE person_id = p_person_id FOR UPDATE;
+    
+    -- Delete the person and related records
     DELETE FROM Person
     WHERE person_id = p_person_id;
 END;
@@ -53,9 +87,18 @@ CREATE PROCEDURE UpdatePerson(
     IN p_department_id BIGINT
 )
 BEGIN
+    DECLARE person_count INT;
+    
+    -- Lock the person row to prevent concurrent modifications
+    SELECT COUNT(*) INTO person_count
+    FROM Person
+    WHERE person_id = p_person_id
+    FOR UPDATE;
+    
     -- Ensure the person exists
-    IF NOT EXISTS (SELECT 1 FROM Person WHERE person_id = p_person_id) THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Person with id not found.';
+    IF person_count = 0 THEN
+        SIGNAL SQLSTATE '45000' 
+        SET MESSAGE_TEXT = 'Person with id not found.';
     END IF;
 
     -- Update only provided fields; NULL parameters leave columns unchanged

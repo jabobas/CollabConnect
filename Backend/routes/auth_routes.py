@@ -29,6 +29,7 @@ def register():
         password_hash = generate_password_hash(password)
         
         cursor = mysql.connection.cursor()
+        cursor.execute("START TRANSACTION")
         cursor.callproc('InsertUser', [email, password_hash])
         result = cursor.fetchone()
         user_id = result['user_id'] if result else None
@@ -46,6 +47,7 @@ def register():
             'data': {'user_id': user_id}
         }), 201
     except Exception as e:
+        mysql.connection.rollback()
         # Handle duplicate email error
         if 'Duplicate entry' in str(e):
             log_error(f"Registration failed: Email already registered - {email}")
@@ -68,22 +70,22 @@ def login():
         log_error("Login failed: Missing email or password")
         return jsonify({'status': 'error', 'message': 'Email and password required'}), 400
     
-    # Find user by email
+    # Find user by email and update last login in single transaction
     cursor = mysql.connection.cursor()
+    cursor.execute("START TRANSACTION")
     cursor.callproc('SelectUserByEmail', [email])
     user = cursor.fetchone()
     
     while cursor.nextset():
         pass
-    cursor.close()
     
     # Verify user exists and password matches
     if not user or not check_password_hash(user['password_hash'], password):
-        log_error(f"Login failed: Invalid credentials for email={email}")
+        mysql.connection.rollback()
+        cursor.close()
         return jsonify({'status': 'error', 'message': 'Invalid credentials'}), 401
     
     # Update last login timestamp
-    cursor = mysql.connection.cursor()
     cursor.callproc('UpdateUserLastLogin', [user['user_id']])
     while cursor.nextset():
         pass

@@ -9,6 +9,30 @@ CREATE PROCEDURE InsertWorksIn(
     IN p_department_id BIGINT UNSIGNED
 )
 BEGIN
+    DECLARE person_count INT;
+    DECLARE dept_count INT;
+    
+    -- Validate person and department exist
+    SELECT COUNT(*) INTO person_count
+    FROM Person
+    WHERE person_id = p_person_id
+    FOR UPDATE;
+    
+    IF person_count = 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Person not found';
+    END IF;
+    
+    SELECT COUNT(*) INTO dept_count
+    FROM Department
+    WHERE department_id = p_department_id
+    FOR UPDATE;
+    
+    IF dept_count = 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Department not found';
+    END IF;
+    
     INSERT IGNORE INTO WorksIn (person_id, department_id)
     VALUES (p_person_id, p_department_id);
 END;
@@ -18,6 +42,18 @@ CREATE PROCEDURE DeleteWorksIn(
     IN p_worksin_id BIGINT UNSIGNED
 )
 BEGIN
+    DECLARE worksin_count INT;
+    
+    SELECT COUNT(*) INTO worksin_count
+    FROM WorksIn
+    WHERE worksin_id = p_worksin_id
+    FOR UPDATE;
+    
+    IF worksin_count = 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'WorksIn relationship not found';
+    END IF;
+    
     DELETE FROM WorksIn WHERE worksin_id = p_worksin_id;
 END;
 
@@ -27,6 +63,18 @@ CREATE PROCEDURE DeleteWorksInByIds(
     IN p_department_id BIGINT UNSIGNED
 )
 BEGIN
+    DECLARE worksin_count INT;
+    
+    SELECT COUNT(*) INTO worksin_count
+    FROM WorksIn
+    WHERE person_id = p_person_id AND department_id = p_department_id
+    FOR UPDATE;
+    
+    IF worksin_count = 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'WorksIn relationship not found';
+    END IF;
+    
     DELETE FROM WorksIn
     WHERE person_id = p_person_id AND department_id = p_department_id;
 END;

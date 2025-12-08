@@ -12,10 +12,14 @@ _network_cache = {
 }
 
 
+
+
+
 def _build_collaboration_network(mysql, include_isolated=False):
     """Build collaboration network from database WorkedOn relationships."""
     try:
         cursor = mysql.connection.cursor()
+        cursor.execute("START TRANSACTION")
         
         # Fetch all researchers with their info
         cursor.execute("""
@@ -83,6 +87,7 @@ def _build_collaboration_network(mysql, include_isolated=False):
             if row['person_id'] in people:
                 people[row['person_id']]['total_projects'] = row['project_count']
         
+        mysql.connection.commit()
         cursor.close()
         
         # Filter isolated nodes if needed

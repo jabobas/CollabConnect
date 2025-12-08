@@ -1,4 +1,4 @@
-*venv2
+*venv
 *.ini
 databases
 *.venv

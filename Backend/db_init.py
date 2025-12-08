@@ -22,15 +22,6 @@ but the readability is improved. The AI split up the methods and named them with
 along with generating comments in each that seem complex. Previous versions of the db_init file
 without the AI cleaning can be viewed in the GitHub
 
-todo:
-- Fix Cursor handling
-- Commits are to frequent, have better Transaction control
-- All json is read under an assumption, no interfaces or objects. Have better object handling
-- Data checks on certain columns is sparse, needs either better data cleaning
-    - json - seperate script to normalize everything - insert into db
-- Explore splitting this file up into multiple files under a db folder, possibly would be cleaner
-- Explore adding back the dlimeter, currently splitting on ';' and CREATE _______, which can lead to errors
-
 To run - python db_init.py
 """
 
@@ -155,7 +146,6 @@ def create_procedures():
         "./sql/procedures/project_procedures.sql",
         "./sql/procedures/belongsto_crud.sql",
         "./sql/procedures/project_tag_procedures.sql",
-        "./sql/procedures/tag_procedures.sql",
         "./sql/procedures/workedon_crud.sql",
         "./sql/procedures/worksin_crud.sql",
         "./sql/procedures/user_procedures.sql",
@@ -370,6 +360,7 @@ def run_tests() -> bool:
 
     result = pytest.main(["tests"])  # 'tests' is the folder containing your test files
     return result == 0  # pytest returns 0 if all tests pass
+
 def _process_departments(cursor, departments, institution_id, inserted_projects,
                          global_inserted_emails, department_institution_map, department_earliest_dates):
     """Process all departments for an institution."""

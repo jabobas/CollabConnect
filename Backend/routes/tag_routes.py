@@ -42,7 +42,10 @@ def create_tag():
             return jsonify({"status": "error", "message": "Field 'name' is required"}), 400
         log_info("Transaction started for tag creation")
         cursor = mysql.connection.cursor()
+        cursor.execute("START TRANSACTION")
         cursor.callproc("InsertIntoTag", [name])
+        while cursor.nextset():
+            pass
         mysql.connection.commit()
         log_info("Transaction committed for tag creation")
         cursor.close()
@@ -61,7 +64,10 @@ def delete_tag(tag_id: int):
         log_info(f"Delete tag request: tag_id={tag_id}")
         log_info("Transaction started for tag deletion")
         cursor = mysql.connection.cursor()
+        cursor.execute("START TRANSACTION")
         cursor.callproc("DeleteTag", [tag_id])
+        while cursor.nextset():
+            pass
         mysql.connection.commit()
         log_info("Transaction committed for tag deletion")
         cursor.close()
@@ -86,7 +92,10 @@ def rename_tag():
             return jsonify({"status": "error", "message": "Fields 'old_name' and 'new_name' are required"}), 400
         log_info("Transaction started for tag rename")
         cursor = mysql.connection.cursor()
+        cursor.execute("START TRANSACTION")
         cursor.callproc("UpdateTagName", [old_name, new_name])
+        while cursor.nextset():
+            pass
         mysql.connection.commit()
         log_info("Transaction committed for tag rename")
         cursor.close()
@@ -107,8 +116,13 @@ def get_tag_usage():
             log_error("Missing query param 'tag_name' in get_tag_usage")
             return jsonify({"status": "error", "message": "Query param 'tag_name' is required"}), 400
         cursor = mysql.connection.cursor()
+        cursor.execute("START TRANSACTION")
         cursor.callproc("GetTagUsageCount", [tag_name])
         result = cursor.fetchone() or {}
+        # Consume remaining result sets from stored procedure
+        while cursor.nextset():
+            pass
+        mysql.connection.commit()
         cursor.close()
         log_info(f"Tag usage checked: tag_name={tag_name}, usage_count={result.get('usage_count', 0)}")
         return jsonify({

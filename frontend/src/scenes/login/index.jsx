@@ -33,11 +33,16 @@ const Login = () => {
       const response = await axios.post('/auth/login', { email, password });
       
       if (response.data.status === 'success') {
-        const { user_id, access_token } = response.data.data;
+        const { user_id, person_id, access_token } = response.data.data;
         
         // Store JWT token for authentication (expires in 24 hours)
         localStorage.setItem('access_token', access_token);
         localStorage.setItem('user_id', user_id);
+        
+        // Store person_id if user has claimed a profile
+        if (person_id) {
+          localStorage.setItem('person_id', person_id);
+        }
         
         axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
         

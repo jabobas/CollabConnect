@@ -1,39 +1,38 @@
 /*
-Filename: index.jsx
-Author: Lucas Matheson
-Edited by: Lucas Matheson
-Date: November 20, 2025
-
-The goal of this page is to allow a user to search for researchers based on 
-a name, expertise, or institution. 
-
+  author: Lucas Matheson
+  edited by: Lucas Matheson
+  date: November 24th, 2025
+  description: Scene for searching and displaying collaborators
 */
-
-import React, { memo, useCallback, useMemo, useState, useEffect } from 'react';
+import React, { memo, useCallback, useMemo, useState, useEffect, useRef } from "react";
 import { Box } from "@mui/material";
-import {
-  Search,
-  Users,
-  BookOpen,
-  MapPin,
-  Mail,
-} from "lucide-react";
+import { Search, Users, BookOpen, MapPin, Mail } from "lucide-react";
 import { tokens } from "../../theme";
 import Header from "../../components/Header";
 import { useTheme } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-
-const ResearcherCard = memo(({ researcher, projects, colors, theme }) => {
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import { toggleFavorite, isFavorite } from "../../utils/favoritesManager";
+const ResearcherCard = memo(({ researcher, projects, colors, theme, onFavoriteToggle }) => {
   const navigate = useNavigate();
+  const [isFavorited, setIsFavorited] = useState(false);
 
-  const handleMouseEnter = useCallback((e) => {
-    e.currentTarget.style.transform = "translateY(-4px)";
-    e.currentTarget.style.boxShadow =
-      theme.palette.mode === "dark"
-        ? "0 8px 24px rgba(0,0,0,0.4)"
-        : "0 8px 24px rgba(0,0,0,0.1)";
-  }, [theme.palette.mode]);
+  useEffect(() => {
+    setIsFavorited(isFavorite(researcher.person_id));
+  }, [researcher.person_id]);
+
+  const handleMouseEnter = useCallback(
+    (e) => {
+      e.currentTarget.style.transform = "translateY(-4px)";
+      e.currentTarget.style.boxShadow =
+        theme.palette.mode === "dark"
+          ? "0 8px 24px rgba(0,0,0,0.4)"
+          : "0 8px 24px rgba(0,0,0,0.1)";
+    },
+    [theme.palette.mode]
+  );
 
   const handleMouseLeave = useCallback((e) => {
     e.currentTarget.style.transform = "translateY(0)";
@@ -44,22 +43,37 @@ const ResearcherCard = memo(({ researcher, projects, colors, theme }) => {
     navigate(`/person/${researcher.person_id}`);
   }, [navigate, researcher.person_id]);
 
-  const handleInstitutionClick = useCallback((e) => {
-    e.stopPropagation();
-    navigate(`/institution/${researcher.institution_id}`);
-  }, [navigate, researcher.institution_id]);
+  const handleInstitutionClick = useCallback(
+    (e) => {
+      e.stopPropagation();
+      navigate(`/institution/${researcher.institution_id}`);
+    },
+    [navigate, researcher.institution_id]
+  );
 
-  const handleDepartmentClick = useCallback((e) => {
-    e.stopPropagation();
-    navigate(`/department/${researcher.department_id}`);
-  }, [navigate, researcher.department_id]);
+  const handleDepartmentClick = useCallback(
+    (e) => {
+      e.stopPropagation();
+      navigate(`/department/${researcher.department_id}`);
+    },
+    [navigate, researcher.department_id]
+  );
 
   const handleEmailClick = useCallback((e) => {
     e.stopPropagation();
   }, []);
 
+  const handleFavoriteClick = useCallback((e) => {
+    e.stopPropagation();
+    const newStatus = toggleFavorite(researcher.person_id);
+    setIsFavorited(newStatus);
+    if (onFavoriteToggle) {
+      onFavoriteToggle();
+    }
+  }, [researcher.person_id, onFavoriteToggle]);
+
   const validExpertises = useMemo(
-    () => researcher.expertises.filter((exp) => exp),
+    () => researcher.expertises?.filter((exp) => exp && exp.trim() !== "") || [],
     [researcher.expertises]
   );
 
@@ -68,19 +82,19 @@ const ResearcherCard = memo(({ researcher, projects, colors, theme }) => {
       style={{
         backgroundColor: colors.primary[400],
         borderRadius: "12px",
-        border: `1px solid ${colors.primary[300]}`,
         padding: "24px",
         transition: "transform 0.2s, box-shadow 0.2s",
         cursor: "pointer",
         display: "flex",
         flexDirection: "column",
         minHeight: "260px",
+        boxShadow: " rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;",
       }}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onClick={handleCardClick}
     >
-      <div style={{ marginBottom: "16px" }}>
+      <div style={{ marginBottom: "16px", display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
         <h3
           style={{
             color: colors.grey[100],
@@ -91,6 +105,25 @@ const ResearcherCard = memo(({ researcher, projects, colors, theme }) => {
         >
           {researcher.person_name}
         </h3>
+        <div 
+          style={{
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            transition: 'transform 0.2s',
+            color: isFavorited ? colors.redAccent[500] : colors.grey[300],
+          }}
+          onClick={handleFavoriteClick}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'scale(1.2)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'scale(1)';
+          }}
+        >
+          {isFavorited ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+        </div>
       </div>
 
       <div style={{ marginBottom: "16px" }}>
@@ -132,7 +165,7 @@ const ResearcherCard = memo(({ researcher, projects, colors, theme }) => {
             alignItems: "center",
             gap: "8px",
             cursor: "pointer",
-            padding: "4px 8px",
+            padding: "2px 8px",
             marginLeft: "-8px",
             borderRadius: "4px",
             transition: "background-color 0.2s",
@@ -157,17 +190,16 @@ const ResearcherCard = memo(({ researcher, projects, colors, theme }) => {
         </div>
       </div>
 
-      <div style={{ marginBottom: "16px" }}>
+      <div style={{ marginBottom: "15px" }}>
         <p
           style={{
             color: colors.grey[300],
-            fontSize: "11px",
-            fontWeight: "600",
+            fontSize: "13px",
+            fontWeight: "500",
             marginBottom: "8px",
-            textTransform: "uppercase",
           }}
         >
-          Research Areas
+          Research Areas:
         </p>
         <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
           {validExpertises.length > 0 ? (
@@ -177,10 +209,10 @@ const ResearcherCard = memo(({ researcher, projects, colors, theme }) => {
                 style={{
                   padding: "4px 12px",
                   backgroundColor: colors.blueAccent[800],
-                  color: colors.blueAccent[200],
+                  color: colors.primary[100],
                   borderRadius: "16px",
                   fontSize: "12px",
-                  fontWeight: "500",
+                  fontWeight: "600",
                 }}
               >
                 {exp}
@@ -230,11 +262,10 @@ const ResearcherCard = memo(({ researcher, projects, colors, theme }) => {
             padding: "10px 16px",
             backgroundColor: colors.greenAccent[600],
             color: colors.grey[900],
-            border: "none",
             borderRadius: "8px",
             textDecoration: "none",
             fontSize: "13px",
-            fontWeight: "600",
+            fontWeight: "700",
             cursor: "pointer",
           }}
         >
@@ -246,20 +277,109 @@ const ResearcherCard = memo(({ researcher, projects, colors, theme }) => {
   );
 });
 
+// Custom hook for virtualization with throttling
+const useVirtualization = (items, containerRef) => {
+  const [visibleRange, setVisibleRange] = useState({ start: 0, end: 30 });
+  const [containerWidth, setContainerWidth] = useState(1000);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    let rafId = null;
+    let timeoutId = null;
+
+    const handleScroll = () => {
+      // Cancel any pending animation frame
+      if (rafId) {
+        cancelAnimationFrame(rafId);
+      }
+
+      // Use requestAnimationFrame to throttle scroll calculations
+      rafId = requestAnimationFrame(() => {
+        const scrollTop = container.scrollTop;
+        const containerHeight = container.clientHeight;
+        const itemHeight = 308; // Card height (260) + gap (24) + padding (24)
+        const itemsPerRow = Math.max(1, Math.floor(containerWidth / 344)); // 320 + 24 gap
+        
+        const startRow = Math.max(0, Math.floor(scrollTop / itemHeight) - 1);
+        const endRow = Math.ceil((scrollTop + containerHeight) / itemHeight) + 1;
+        
+        const start = startRow * itemsPerRow;
+        const end = Math.min(items.length, endRow * itemsPerRow);
+        
+        setVisibleRange({ start, end });
+      });
+    };
+
+    const handleResize = () => {
+      // Debounce resize calculations
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+      
+      timeoutId = setTimeout(() => {
+        setContainerWidth(container.clientWidth);
+        handleScroll();
+      }, 150);
+    };
+
+    // Initial setup
+    setContainerWidth(container.clientWidth);
+    handleScroll();
+
+    container.addEventListener('scroll', handleScroll, { passive: true });
+    const resizeObserver = new ResizeObserver(handleResize);
+    resizeObserver.observe(container);
+
+    return () => {
+      if (rafId) {
+        cancelAnimationFrame(rafId);
+      }
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+      container.removeEventListener('scroll', handleScroll);
+      resizeObserver.disconnect();
+    };
+  }, [items.length, containerWidth]);
+
+  return { visibleRange, containerWidth };
+};
 
 const SearchCollab = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const containerRef = useRef(null);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedExpertise, setSelectedExpertise] = useState("all");
   const [selectedInstitution, setSelectedInstitution] = useState("all");
   const [researchers, setResearchers] = useState([]);
   const [numProjectsPerPerson, setProjects] = useState({});
+  const [favoritesUpdateTrigger, setFavoritesUpdateTrigger] = useState(0);
+
+  const handleFavoriteToggle = useCallback(() => {
+    setFavoritesUpdateTrigger(prev => prev + 1);
+  }, []);
+
+  // Add style tag for hiding scrollbar
+  useEffect(() => {
+    const style = document.createElement('style');
+    style.textContent = `
+      .hide-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+    `;
+    document.head.appendChild(style);
+    return () => {
+      document.head.removeChild(style);
+    };
+  }, []);
 
   useEffect(() => {
     axios
-      .get("http://127.0.0.1:5000/institution/all")
+      .get("http://127.0.0.1:5001/institution/all")
       .then((response) => {
         setResearchers(response.data.data);
       })
@@ -270,7 +390,7 @@ const SearchCollab = () => {
 
   useEffect(() => {
     axios
-      .get("http://127.0.0.1:5000/project/num-projects-per-person")
+      .get("http://127.0.0.1:5001/project/num-projects-per-person")
       .then((response) => {
         setProjects(response.data.data);
       })
@@ -278,34 +398,46 @@ const SearchCollab = () => {
         console.log(err.message);
       });
   }, []);
-  console.log(numProjectsPerPerson)
+
   const allExpertises = useMemo(
-    () => [
-      ...new Set((researchers || []).flatMap((r) => r.expertises || [])),
-    ].sort(),
+    () =>
+      [
+        ...new Set(
+          (researchers || [])
+            .flatMap((r) => r.expertises || [])
+            .filter((exp) => exp && exp.trim() !== "")
+        ),
+      ].sort(),
     [researchers]
   );
 
   const allInstitutions = useMemo(
-    () => [
-      ...new Set((researchers || []).map((r) => r.institution_name || "")),
-    ].sort(),
+    () =>
+      [
+        ...new Set(
+          (researchers || [])
+            .map((r) => r.institution_name || "")
+            .filter((inst) => inst && inst.trim() !== "")
+        ),
+      ].sort(),
     [researchers]
   );
 
   const filteredResearchers = useMemo(() => {
+    const searchLower = searchTerm.toLowerCase();
+    
     return researchers.filter((researcher) => {
+      if (!researcher.person_name || researcher.person_name.trim() === "") {
+        return false;
+      }
+
       const expertises = researcher.expertises || [];
 
       const matchesSearch =
         searchTerm === "" ||
-        researcher.person_name
-          ?.toLowerCase()
-          .includes(searchTerm.toLowerCase()) ||
-        expertises.some((exp) =>
-          exp?.toLowerCase().includes(searchTerm.toLowerCase())
-        ) ||
-        researcher.title?.toLowerCase().includes(searchTerm.toLowerCase());
+        researcher.person_name?.toLowerCase().includes(searchLower) ||
+        expertises.some((exp) => exp?.toLowerCase().includes(searchLower)) ||
+        researcher.title?.toLowerCase().includes(searchLower);
 
       const matchesExpertise =
         selectedExpertise === "all" || expertises.includes(selectedExpertise);
@@ -318,15 +450,34 @@ const SearchCollab = () => {
     });
   }, [researchers, searchTerm, selectedExpertise, selectedInstitution]);
 
+  const { visibleRange, containerWidth } = useVirtualization(filteredResearchers, containerRef);
+  
+  const visibleResearchers = useMemo(() => {
+    return filteredResearchers.slice(visibleRange.start, visibleRange.end);
+  }, [filteredResearchers, visibleRange.start, visibleRange.end]);
+
+  const { totalHeight, itemsPerRow, offsetTop } = useMemo(() => {
+    const itemsPerRow = Math.max(1, Math.floor(containerWidth / 344));
+    const numRows = Math.ceil(filteredResearchers.length / itemsPerRow);
+    const totalHeight = numRows * 308;
+    const startRow = Math.floor(visibleRange.start / itemsPerRow);
+    const offsetTop = startRow * 308;
+    
+    return { totalHeight, itemsPerRow, offsetTop };
+  }, [filteredResearchers.length, containerWidth, visibleRange.start]);
+
   return (
     <div
       style={{
         display: "flex",
         flexDirection: "column",
         backgroundColor: colors.primary[500],
+        height: "92.2vh",
+        overflowY: "hidden",
+        width: "100%",
       }}
     >
-      <Box m="20px 20px 0px 20px">
+      <Box m="20px 20px 0px 20px" sx={{ flexShrink: 0 }}>
         <Header
           title="Search Collaborators"
           subtitle="Search for Potential Collaborators"
@@ -334,15 +485,22 @@ const SearchCollab = () => {
       </Box>
 
       <div
-        style={{ flex: 1, padding: "24px 24px 0px 24px", overflowY: "auto" }}
+        style={{ 
+          flex: 1, 
+          padding: "0px 24px", 
+          overflow: "hidden", 
+          display: "flex", 
+          flexDirection: "column",
+          minHeight: 0,
+        }}
       >
         <div
           style={{
             backgroundColor: colors.primary[400],
             borderRadius: "12px",
-            border: `1px solid ${colors.primary[300]}`,
             padding: "24px",
             marginBottom: "24px",
+            flexShrink: 0,
           }}
         >
           <div
@@ -456,8 +614,8 @@ const SearchCollab = () => {
                   }}
                 >
                   <option value="all">All Institutions</option>
-                  {allInstitutions.map((inst) => (
-                    <option key={inst} value={inst}>
+                  {allInstitutions.map((inst, idx) => (
+                    <option key={inst || `inst-${idx}`} value={inst}>
                       {inst}
                     </option>
                   ))}
@@ -498,6 +656,7 @@ const SearchCollab = () => {
             marginBottom: "16px",
             color: colors.grey[300],
             fontSize: "14px",
+            flexShrink: 0,
           }}
         >
           <Users style={{ width: "16px", height: "16px" }} />
@@ -505,56 +664,74 @@ const SearchCollab = () => {
         </div>
 
         <div
+          ref={containerRef}
           style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
-            gap: "24px",
-            maxHeight: "53.1vh",
+            flex: 1,
             overflowY: "auto",
-            paddingTop: "5px",
+            overflowX: "hidden",
+            position: "relative",
+            scrollbarWidth: "none", 
+            msOverflowStyle: "none", 
           }}
         >
-          {filteredResearchers.map((researcher) => (
-            <ResearcherCard
-              key={researcher.person_id}
-              researcher={researcher}
-              projects={numProjectsPerPerson[researcher.person_id]?.num_projects ?? 0}
-              colors={colors}
-              theme={theme}
-            />
-          ))}
-        </div>
-
-        {filteredResearchers.length === 0 && (
-          <div
-            style={{
-              textAlign: "center",
-              padding: "48px",
-              color: colors.grey[300],
-            }}
-          >
-            <Users
+          {filteredResearchers.length > 0 ? (
+            <div style={{ height: `${totalHeight}px`, position: "relative" }}>
+              <div
+                style={{
+                  position: "absolute",
+                  top: `${offsetTop}px`,
+                  width: "100%",
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
+                  gap: "24px",
+                  paddingTop: "5px",
+                }}
+              >
+                {visibleResearchers.map((researcher) => (
+                  <ResearcherCard
+                    key={researcher.person_id}
+                    researcher={researcher}
+                    projects={
+                      numProjectsPerPerson[researcher.person_id]?.num_projects ?? 0
+                    }
+                    colors={colors}
+                    theme={theme}
+                    onFavoriteToggle={handleFavoriteToggle}
+                  />
+                ))}
+              </div>
+            </div>
+          ) : (
+            <div
               style={{
-                width: "64px",
-                height: "64px",
-                margin: "0 auto 16px",
-                opacity: 0.3,
-              }}
-            />
-            <h3
-              style={{
-                fontSize: "18px",
-                fontWeight: "600",
-                margin: "0 0 8px 0",
+                textAlign: "center",
+                padding: "48px",
+                color: colors.grey[300],
               }}
             >
-              No researchers found
-            </h3>
-            <p style={{ fontSize: "14px", margin: 0 }}>
-              Try adjusting your search criteria or filters
-            </p>
-          </div>
-        )}
+              <Users
+                style={{
+                  width: "64px",
+                  height: "64px",
+                  margin: "0 auto 16px",
+                  opacity: 0.3,
+                }}
+              />
+              <h3
+                style={{
+                  fontSize: "18px",
+                  fontWeight: "600",
+                  margin: "0 0 8px 0",
+                }}
+              >
+                No researchers found
+              </h3>
+              <p style={{ fontSize: "14px", margin: 0 }}>
+                Try adjusting your search criteria or filters
+              </p>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

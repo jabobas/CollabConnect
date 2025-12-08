@@ -1,3 +1,9 @@
+/*
+  author: Lucas Matheson
+  edited by: Lucas Matheson
+  date: November 20th, 2025
+  description: Main application component setting up theme, routing, and layout.
+*/
 import { ColorModeContext, useMode } from "./theme";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { Route, Routes } from "react-router-dom";
@@ -17,38 +23,37 @@ import Register from "./scenes/register";
 import User from "./scenes/user";
 import CreateProfile from "./scenes/create-profile";
 import ClaimProfile from "./scenes/claim-profile";
-// import Institution from "./scenes/Institution";
-
+import Institution from "./scenes/Institution";
+import DataCollection from "./scenes/data-collection";
+import Faq from "./scenes/faq";
+import Settings from "./scenes/settings";
+import Connections from "./scenes/connections";
 function App() {
   const [theme, colorMode] = useMode();
   return (
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <div className="app">
+        <div className="app" style={{ display: "flex", minHeight: "100vh" }}>
           <Sidebar/>
-          <main className="content">
+          <main className="content" style={{ flex: 1 }}>
             <Topbar />
             <Routes>
               <Route path="/" element={<Dashboard />} />
-              {/* <Route path="/connections" element={ }/> */}
+              <Route path="/connections" element={<Connections />} />
               <Route path="/search" element={<SearchCollab />} />
               <Route path="/project/:id" element={<ProjectDetail />} />
               <Route path="/projects" element={<SearchProjects />} />
               <Route path="/analytics" element={<Analytics />} />
 
               <Route path="/person/:id" element={<Person />} />
-              {/* <Route path="/institution/:id" element={<Institution />} /> */}
-              <Route path="/department/:id" element={<Department />} />
-              
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/user/:id" element={<User />} />
-              <Route path="/create-profile" element={<CreateProfile />} />
-              <Route path="/people" element={<ClaimProfile />} />
+              <Route path="/institution/:id" element={<Institution />} />
+              {/* <Route path="/department/:id" element={<Department />} /> */}
 
-              {/* <Route path="/data-collection" element={< />} /> */}
-              {/* <Route path="/faq" element={< />} /> */}
+              <Route path="/data-collection" element={<DataCollection />} />
+              <Route path="/faq" element={<Faq/>} />
+              <Route path="/settings" element={<Settings/>} />
+
               {/* <Route path="/data-request element={< />} /> */}
             </Routes>
           </main>
@@ -57,5 +62,4 @@ function App() {
     </ColorModeContext.Provider>
   );
 }
-
 export default App;

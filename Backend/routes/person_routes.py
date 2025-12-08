@@ -26,8 +26,10 @@ def create_person():
     if not person_name or not person_email:
         return jsonify({'status': 'error', 'message': 'Name and email required'}), 400
     
+    cursor = None
     try:
         cursor = mysql.connection.cursor()
+        cursor.execute("START TRANSACTION")
         cursor.callproc('InsertPerson', [
             person_name, person_email, person_phone, bio,
             expertise_1, expertise_2, expertise_3, main_field, department_id
@@ -39,7 +41,6 @@ def create_person():
             pass
         
         mysql.connection.commit()
-        cursor.close()
         
         return jsonify({
             'status': 'success',
@@ -47,21 +48,30 @@ def create_person():
             'data': {'person_id': person_id}
         }), 201
     except Exception as e:
+        mysql.connection.rollback()
         return jsonify({'status': 'error', 'message': str(e)}), 500
+    finally:
+        if cursor:
+            cursor.close()
 
 
 @person_bp.route('/all', methods=['GET'])
 def get_all_people():
     """Return all people using the GetAllPeople stored procedure."""
     from app import mysql
+    cursor = None
     try:
-        log_info(f"[{get_request_user()}] Fetching all people")
-        log_info("Transaction started for fetching people")
+        log_info("Fetching all people")
         cursor = mysql.connection.cursor()
+        cursor.execute("START TRANSACTION")
+        log_info("Transaction started for fetching people")
         cursor.callproc('GetAllPeople')
         results = cursor.fetchall()
+        # Consume remaining result sets from stored procedure
+        while cursor.nextset():
+            pass
+        mysql.connection.commit()
         log_info("Transaction committed for fetching people")
-        cursor.close()
 
         # Normalize expertise fields into a list for each person, excluding nulls
         for row in results:
@@ -77,20 +87,28 @@ def get_all_people():
         mysql.connection.rollback()
         log_error(f"Transaction rolled back for fetching people: {str(e)}")
         return jsonify({'status': 'error', 'message': str(e)}), 500
+    finally:
+        if cursor:
+            cursor.close()
 
 
 @person_bp.route('/by-name/<string:person_name>', methods=['GET'])
 def get_person_by_name(person_name: str):
     """Return a single person record by name using SelectPersonByName."""
     from app import mysql
+    cursor = None
     try:
         log_info(f"Fetching person by name: {person_name}")
-        log_info("Transaction started for fetching person by name")
         cursor = mysql.connection.cursor()
+        cursor.execute("START TRANSACTION")
+        log_info("Transaction started for fetching person by name")
         cursor.callproc('SelectPersonByName', [person_name])
         result = cursor.fetchone()
+        # Consume remaining result sets from stored procedure
+        while cursor.nextset():
+            pass
+        mysql.connection.commit()
         log_info("Transaction committed for fetching person by name")
-        cursor.close()
         if not result:
             log_info(f"Person not found: {person_name}")
             return jsonify({'status': 'not_found', 'message': 'Person not found'}), 404
@@ -101,20 +119,28 @@ def get_person_by_name(person_name: str):
         mysql.connection.rollback()
         log_error(f"Transaction rolled back for fetching person by name: {str(e)}")
         return jsonify({'status': 'error', 'message': str(e)}), 500
+    finally:
+        if cursor:
+            cursor.close()
 
 
 @person_bp.route('/<int:person_id>', methods=['GET'])
 def get_person_full(person_id: int):
     """Return full person context including department and institution using SelectPersonFullContextByID."""
     from app import mysql
+    cursor = None
     try:
         log_info(f"Fetching full person context: person_id={person_id}")
-        log_info("Transaction started for fetching full person context")
         cursor = mysql.connection.cursor()
+        cursor.execute("START TRANSACTION")
+        log_info("Transaction started for fetching full person context")
         cursor.callproc('SelectPersonFullContextByID', [person_id])
         person = cursor.fetchone()
+        # Consume remaining result sets from stored procedure
+        while cursor.nextset():
+            pass
+        mysql.connection.commit()
         log_info("Transaction committed for fetching full person context")
-        cursor.close()
 
         if not person:
             log_info(f"Person not found: person_id={person_id}")
@@ -141,20 +167,27 @@ def get_person_full(person_id: int):
         mysql.connection.rollback()
         log_error(f"Transaction rolled back for fetching full person context: {str(e)}")
         return jsonify({'status': 'error', 'message': str(e)}), 500
+    finally:
+        if cursor:
+            cursor.close()
 
 
 @person_bp.route('/<int:person_id>/projects', methods=['GET'])
 def get_person_projects(person_id: int):
     """Return list of projects for a person using SelectProjectsByPersonID."""
     from app import mysql
+    cursor = None
     try:
         log_info(f"Fetching projects for person_id={person_id}")
-        log_info("Transaction started for fetching projects for person")
         cursor = mysql.connection.cursor()
+        cursor.execute("START TRANSACTION")
+        log_info("Transaction started for fetching projects for person")
         cursor.callproc('SelectProjectsByPersonID', [person_id])
         projects = cursor.fetchall()
+        while cursor.nextset():
+            pass
+        mysql.connection.commit()
         log_info("Transaction committed for fetching projects for person")
-        cursor.close()
         log_info(f"Fetched {len(projects)} projects for person_id={person_id}")
         return jsonify({
             'status': 'success',
@@ -165,3 +198,6 @@ def get_person_projects(person_id: int):
         mysql.connection.rollback()
         log_error(f"Transaction rolled back for fetching projects for person: {str(e)}")
         return jsonify({'status': 'error', 'message': str(e)}), 500
+    finally:
+        if cursor:
+            cursor.close()

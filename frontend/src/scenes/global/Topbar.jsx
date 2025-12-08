@@ -1,8 +1,9 @@
 /*
-Top navigation bar with search, theme toggle, notifications, settings, and
-user profile/login/logout buttons.
+  author: Lucas Matheson
+  edited by: Lucas Matheson
+  date: November 20th, 2025
+  description: Topbar component for navigation within the CollabConnect application.
 */
-
 import { Box, IconButton, useTheme, Button } from "@mui/material";
 import { useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -56,6 +57,7 @@ const Topbar = () => {
     // Clear all authentication data
     localStorage.removeItem('access_token');
     localStorage.removeItem('user_id');
+    localStorage.removeItem('person_id');
     delete axios.defaults.headers.common['Authorization'];
     setIsLoggedIn(false);
     setUserId(null);
@@ -69,34 +71,32 @@ const Topbar = () => {
   };
 
   return (
-    <Box display="flex" justifyContent="space-between" p={2}>
-      {/* SEARCH BAR */}
-      <Box
-        display="flex"
-        backgroundColor={colors.primary[400]}
-        borderRadius="3px"
-      >
-        <InputBase sx={{ ml: 2, flex: 1 }} placeholder="Search" />
-        <IconButton type="button" sx={{ p: 1 }}>
-          <SearchIcon />
-        </IconButton>
-      </Box>
+  <Box display="flex" justifyContent="space-between" p="1.25rem"> {/* p={2} -> p="1.25rem" */}
+      {/* SEARCH BAR  */}
+      {/* Todo: this empty box needs to be removed, and sizing needs to be correct */}
+    <Box
+      display="flex"
+      backgroundColor={colors.primary[400]}
+      borderRadius="0.1875rem" // 3px
+    >
 
+    </Box>
       {/* ICONS */}
-      <Box display="flex" alignItems="center" gap="10px">
-        <IconButton onClick={colorMode.toggleColorMode}>
-          {theme.palette.mode === "dark" ? (
-            <DarkModeOutlinedIcon />
-          ) : (
-            <LightModeOutlinedIcon />
-          )}
-        </IconButton>
+    <Box display="flex" alignItems="center" gap="0.625rem"> {/* gap="10px" -> gap="0.625rem" */}
+      <IconButton onClick={colorMode.toggleColorMode}>
+        {theme.palette.mode === "dark" ? (
+          <DarkModeOutlinedIcon />
+        ) : (
+          <LightModeOutlinedIcon />
+        )}
+      </IconButton>
         <IconButton>
           <NotificationsOutlinedIcon />
         </IconButton>
-        <IconButton>
-          <SettingsOutlinedIcon />
-        </IconButton>
+<IconButton onClick={() => navigate('/settings')}>
+  <SettingsOutlinedIcon />
+</IconButton>
+
 
         {isLoggedIn ? (
           <>

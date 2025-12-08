@@ -1,3 +1,7 @@
+-- General-purpose SQL functions for CollabConnect application
+-- Author: Lucas Matheson
+-- Date: December 8th, 2025
+
 CREATE FUNCTION person_current_departments(p_person_id BIGINT UNSIGNED)
 RETURNS TEXT DETERMINISTIC
 BEGIN

@@ -1,3 +1,9 @@
+/*
+  author: Lucas Matheson
+  edited by: Lucas Matheson
+  date: November 20th, 2025
+  description: Sidebar component for navigation within the CollabConnect application.
+*/
 import { useState, useEffect } from "react";
 import { ProSidebar, Menu, MenuItem } from "react-pro-sidebar";
 import { Box, IconButton, Typography, useTheme } from "@mui/material";
@@ -42,27 +48,61 @@ const Sidebar = () => {
   const [selected, setSelected] = useState();
 
   // Add in your page details here 
-    useEffect(() => {
+  useEffect(() => {
     const pathToMenu = {
       "/search": "Search Collaberators",
       "/projects": "Search Projects",
+      "/connections": "Manage Connections",
       "/": "Dashboard",
     };
 
-    setSelected(pathToMenu[location.pathname] || "Dashboard");
+    setSelected(pathToMenu[location.pathname]);
   }, [location.pathname]);
 
   return (
     <Box
       sx={{
+        width: isCollapsed ? "5rem" : "clamp(16.875rem, 14vw, 25rem)",
+        minHeight: "100vh",
+        position: "sticky",
+        top: 0,
+        height: "100vh",
+        overflowY: "auto",
+        transition: "width 0.3s",
+        "& .pro-sidebar": {
+          height: "100%",
+          width: "100% !important",
+        },
         "& .pro-sidebar-inner": {
           background: `${colors.primary[400]} !important`,
+          height: "100%",
+          width: "100% !important",
         },
         "& .pro-icon-wrapper": {
           backgroundColor: "transparent !important",
+          display: "flex !important",
+          alignItems: "center !important",
+          justifyContent: "center !important",
+          marginRight: "0 !important",
+        },
+        "& .pro-sidebar.collapsed .pro-icon-wrapper": {
+          margin: "0 auto !important",
+        },
+        "& .pro-sidebar.collapsed .pro-inner-item": {
+          justifyContent: "center !important",
+          padding: "0.3125rem 0 !important",
         },
         "& .pro-inner-item": {
-          padding: "5px 20px 5px 20px !important",
+          padding: "0.3125rem 1.25rem 0.3125rem 1.25rem !important",
+          display: "flex !important",
+          alignItems: "center !important",
+        },
+        "& .pro-item-content": {
+          display: "flex !important",
+          alignItems: "center !important",
+        },
+        "& .pro-sidebar.collapsed .pro-item-content": {
+          display: "none !important",
         },
         "& .pro-inner-item:hover": {
           color: "#868dfb !important",
@@ -79,7 +119,7 @@ const Sidebar = () => {
             onClick={() => setIsCollapsed(!isCollapsed)}
             icon={isCollapsed ? <MenuOutlinedIcon /> : undefined}
             style={{
-              margin: "10px 0 20px 0",
+              margin: "0.625rem 0 1.25rem 0",
               color: colors.grey[100],
             }}
           >
@@ -88,25 +128,19 @@ const Sidebar = () => {
                 display="flex"
                 justifyContent="space-between"
                 alignItems="center"
-                gap="10px"
+                gap="0.625rem"
               >
-                {/* <img
-                  alt="CollabConnect logo"
-                  src={logo}
-                  style={{ maxHeight: "55px", maxWidth: "170px" }}
-                /> */}
-
                 <div
                   style={{
                     display: "flex",
                     alignItems: "center",
-                    gap: "12px",
+                    gap: "0.75rem",
                   }}
                 >
                   <Users
                     style={{
-                      width: "32px",
-                      height: "32px",
+                      width: "2rem",
+                      height: "2rem",
                       color: colors.blueAccent[500],
                     }}
                   />
@@ -114,7 +148,7 @@ const Sidebar = () => {
                     <h2
                       style={{
                         color: colors.grey[100],
-                        fontSize: "20px",
+                        fontSize: "1.25rem",
                         fontWeight: "bold",
                         margin: 0,
                       }}
@@ -124,7 +158,7 @@ const Sidebar = () => {
                     <p
                       style={{
                         color: colors.grey[300],
-                        fontSize: "12px",
+                        fontSize: "0.75rem",
                         margin: 0,
                       }}
                     >
@@ -138,41 +172,16 @@ const Sidebar = () => {
               </Box>
             )}
           </MenuItem>
-          {/* If wee want a profile pic and name for a user, this will add it to the sidebar  */}
-          {/*           
-           {!isCollapsed && (
-            <Box mb="25px">
-              <Box display="flex" justifyContent="center" alignItems="center">
-                <img
-                  alt="profile-user"
-                  width="100px"
-                  height="100px"
-                  src={`../../assets/user.png`}
-                  style={{ cursor: "pointer", borderRadius: "50%" }}
-                />
-              </Box>
-              <Box textAlign="center">
-                <Typography
-                  variant="h2"
-                  color={colors.grey[100]}
-                  fontWeight="bold"
-                  sx={{ m: "10px 0 0 0" }}
-                >
-                  Lucas. M
-                </Typography>
-                <Typography variant="h5" color={colors.greenAccent[500]}>
-                  COS Student
-                </Typography>
-              </Box>
-            </Box>
-          )} */}
 
           {/* DEFINE YOUR ROUTE PUSHES HERE  */}
           <Box paddingLeft={isCollapsed ? undefined : "10%"}>
             <Typography
               variant="h6"
               color={colors.grey[300]}
-              sx={{ m: "15px 0 5px 20px" }}
+              sx={{ 
+                m: "0.9375rem 0 0.3125rem 1.25rem",
+                display: isCollapsed ? "none" : "block"
+              }}
             >
               Home
             </Typography>
@@ -183,12 +192,14 @@ const Sidebar = () => {
               selected={selected}
               setSelected={setSelected}
             />
-            {/* ToDo: This align needs to be fixed, the margin works when expanded but when the sidebar
-                Is collapsed it appears off center */}
+
             <Typography
               variant="h6"
               color={colors.grey[300]}
-              sx={{ m: "15px 0 5px 20px" }}
+              sx={{ 
+                m: "0.9375rem 0 0.3125rem 1.25rem",
+                display: isCollapsed ? "none" : "block"
+              }}
             >
               Connect
             </Typography>
@@ -218,7 +229,10 @@ const Sidebar = () => {
             <Typography
               variant="h6"
               color={colors.grey[300]}
-              sx={{ m: "15px 0 5px 20px" }}
+              sx={{ 
+                m: "0.9375rem 0 0.3125rem 1.25rem",
+                display: isCollapsed ? "none" : "block"
+              }}
             >
               Analytics
             </Typography>
@@ -253,13 +267,7 @@ const Sidebar = () => {
               selected={selected}
               setSelected={setSelected}
             />
-            <Item
-              title="Data Request"
-              to="/data-request"
-              icon={<PersonOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
+           
           </Box>
         </Menu>
       </ProSidebar>
