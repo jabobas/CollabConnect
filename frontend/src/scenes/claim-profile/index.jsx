@@ -3,13 +3,13 @@
  * Description: Profile claiming page allowing users to link their account to existing researcher profiles.
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   Box, TextField, Button, useTheme, CircularProgress, 
-  Alert, Chip, Autocomplete, Card, CardContent, Avatar, Divider
+  Alert, Chip, Autocomplete, Card, CardContent, Avatar, Divider, Typography
 } from "@mui/material";
-import { Search, User, Mail, Phone, CheckCircle, XCircle, Briefcase, MapPin, Sparkles } from "lucide-react";
+import { Search, User, Mail, Phone, CheckCircle, XCircle, Briefcase, Sparkles } from "lucide-react";
 import axios from "axios";
 import Header from "../../components/Header";
 import { tokens } from "../../theme";
@@ -24,6 +24,7 @@ const ClaimProfile = () => {
   const [filteredPeople, setFilteredPeople] = useState([]);
   const [selectedProfile, setSelectedProfile] = useState(null);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState(false);
   const [claimingId, setClaimingId] = useState(null);
   const [loadingPeople, setLoadingPeople] = useState(true);
 
@@ -67,6 +68,8 @@ const ClaimProfile = () => {
     }
 
     setClaimingId(personId);
+    setError('');
+    setSuccess(false);
 
     try {
       const response = await axios.post(
@@ -81,10 +84,24 @@ const ClaimProfile = () => {
         localStorage.setItem('access_token', access_token);
         axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
       }
-      navigate(`/person/${person_id}`);
+      
+      // Reset claiming state and show success
+      setClaimingId(null);
+      setSuccess(true);
+      
+      // Scroll to top to show success message
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      
+      // Navigate after showing success message
+      setTimeout(() => {
+        navigate(`/person/${person_id}`);
+      }, 3500);
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to claim profile');
       setClaimingId(null);
+      setSuccess(false);
+      // Scroll to top to show error message
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
@@ -96,79 +113,104 @@ const ClaimProfile = () => {
       .toUpperCase()
       .slice(0, 2);
 
+    const expertiseList = useMemo(
+      () => (profile.expertises || []).filter(Boolean),
+      [profile.expertises]
+    );
+
     return (
       <Card
         sx={{
           backgroundColor: colors.primary[400],
-          borderRadius: "16px",
-          border: `2px solid ${profile.is_claimed ? colors.redAccent[700] : colors.greenAccent[700]}`,
-          transition: 'all 0.3s ease',
-          '&:hover': {
-            transform: 'translateY(-4px)',
-            boxShadow: `0 8px 24px ${colors.primary[900]}80`
-          }
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+          borderRadius: "12px",
+          border: `1px solid ${profile.is_claimed ? colors.redAccent[700] : colors.primary[300]}`,
+          transition: "all 0.3s",
+          opacity: profile.is_claimed ? 0.8 : 1,
+          "&:hover": {
+            transform: "translateY(-4px)",
+            boxShadow: profile.is_claimed 
+              ? `0 12px 24px -10px ${colors.redAccent[700]}`
+              : `0 12px 24px -10px ${colors.greenAccent[700]}`,
+            borderColor: profile.is_claimed ? colors.redAccent[500] : colors.greenAccent[500],
+          },
         }}
       >
-        <CardContent sx={{ p: 3 }}>
-          <Box display="flex" gap={3} mb={2}>
+        <CardContent sx={{ p: 2.5, flex: 1, display: "flex", flexDirection: "column" }}>
+          <Box display="flex" alignItems="flex-start" gap={2} mb={2}>
             <Avatar
               sx={{
-                width: 70,
-                height: 70,
-                backgroundColor: colors.blueAccent[600],
-                fontSize: '24px',
-                fontWeight: 600,
-                border: `3px solid ${colors.blueAccent[700]}`
+                bgcolor: profile.is_claimed ? colors.redAccent[600] : colors.greenAccent[600],
+                width: 56,
+                height: 56,
+                fontSize: "1.5rem",
+                fontWeight: 700,
+                boxShadow: profile.is_claimed 
+                  ? `0 4px 12px ${colors.redAccent[700]}50`
+                  : `0 4px 12px ${colors.greenAccent[700]}50`,
               }}
             >
               {initials}
             </Avatar>
-            
-            <Box flex={1}>
-              <Box display="flex" justifyContent="space-between" alignItems="start" mb={1}>
-                <h3 style={{ 
-                  color: colors.grey[100], 
-                  fontSize: '22px', 
-                  fontWeight: '700',
-                  margin: 0
-                }}>
+
+            <Box flex={1} minWidth={0}>
+              <Box display="flex" justifyContent="space-between" alignItems="start" mb={0.5}>
+                <Typography
+                  variant="h6"
+                  fontWeight="600"
+                  color={colors.grey[100]}
+                  sx={{
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                    flex: 1,
+                    mr: 1
+                  }}
+                >
                   {profile.person_name}
-                </h3>
+                </Typography>
                 
                 {profile.is_claimed ? (
                   <Chip
-                    icon={<XCircle size={16} />}
+                    icon={<XCircle size={14} />}
                     label="Claimed"
                     size="small"
                     sx={{ 
+                      height: 24,
                       backgroundColor: colors.redAccent[700],
                       color: colors.grey[100],
-                      fontWeight: 600
+                      fontWeight: 600,
+                      fontSize: "0.7rem"
                     }}
                   />
                 ) : (
                   <Chip
-                    icon={<Sparkles size={16} />}
+                    icon={<Sparkles size={14} />}
                     label="Available"
                     size="small"
                     sx={{ 
+                      height: 24,
                       backgroundColor: colors.greenAccent[700],
                       color: colors.grey[100],
-                      fontWeight: 600
+                      fontWeight: 600,
+                      fontSize: "0.7rem"
                     }}
                   />
                 )}
               </Box>
-              
-              {profile.main_field && (
+
+              {profile.main_field && profile.main_field !== "main_field" && (
                 <Chip
-                  icon={<Briefcase size={14} />}
                   label={profile.main_field}
                   size="small"
-                  sx={{ 
-                    backgroundColor: colors.blueAccent[800],
-                    color: colors.blueAccent[200],
-                    mb: 1
+                  sx={{
+                    height: 24,
+                    backgroundColor: colors.blueAccent[700],
+                    color: colors.grey[100],
+                    fontWeight: 500,
+                    fontSize: "0.75rem",
                   }}
                 />
               )}
@@ -177,88 +219,120 @@ const ClaimProfile = () => {
 
           {profile.bio && (
             <Box mb={2}>
-              <p style={{ 
-                color: colors.grey[300], 
-                fontSize: '14px',
-                lineHeight: '1.6',
-                margin: 0,
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                display: '-webkit-box',
-                WebkitLineClamp: 3,
-                WebkitBoxOrient: 'vertical'
-              }}>
+              <Typography
+                variant="body2"
+                color={colors.grey[300]}
+                sx={{
+                  fontSize: "0.85rem",
+                  lineHeight: 1.5,
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  display: "-webkit-box",
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: "vertical",
+                }}
+              >
                 {profile.bio}
-              </p>
+              </Typography>
             </Box>
           )}
 
-          <Divider sx={{ borderColor: colors.primary[300], my: 2 }} />
+          <Divider sx={{ my: 1.5, borderColor: colors.primary[300] }} />
 
-          <Box display="flex" flexDirection="column" gap={1.5} mb={2}>
+          {expertiseList.length > 0 && (
+            <Box mb={2}>
+              <Typography
+                variant="caption"
+                color={colors.primary[100]}
+                fontWeight={700}
+                display="block"
+                fontSize="12px"
+                mb={1}
+              >
+                Expertise:
+              </Typography>
+              <Box display="flex" flexWrap="wrap" gap={0.5}>
+                {expertiseList.slice(0, 3).map((exp, idx) => (
+                  <Chip
+                    key={idx}
+                    label={exp}
+                    size="small"
+                    sx={{
+                      height: 22,
+                      backgroundColor: colors.greenAccent[800],
+                      color: colors.grey[100],
+                      fontSize: "0.7rem",
+                    }}
+                  />
+                ))}
+              </Box>
+            </Box>
+          )}
+
+          <Box display="flex" flexDirection="column" gap={1} mb={2}>
             {profile.person_email && (
-              <Box display="flex" alignItems="center" gap={1.5}>
-                <Mail size={18} color={colors.blueAccent[400]} />
-                <span style={{ color: colors.grey[200], fontSize: '14px' }}>{profile.person_email}</span>
+              <Box display="flex" alignItems="center" gap={1}>
+                <Mail size={16} color={colors.greenAccent[400]} />
+                <Typography
+                  variant="caption"
+                  color={colors.grey[200]}
+                  sx={{
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                    fontWeight: "bold",
+                  }}
+                  fontSize={10}
+                >
+                  {profile.person_email}
+                </Typography>
               </Box>
             )}
-
+            
             {profile.person_phone && (
-              <Box display="flex" alignItems="center" gap={1.5}>
-                <Phone size={18} color={colors.greenAccent[400]} />
-                <span style={{ color: colors.grey[200], fontSize: '14px' }}>{profile.person_phone}</span>
+              <Box display="flex" alignItems="center" gap={1}>
+                <Phone size={16} color={colors.greenAccent[400]} />
+                <Typography variant="caption" fontSize={10} color={colors.grey[200]} fontWeight="bold">
+                  {profile.person_phone}
+                </Typography>
               </Box>
             )}
 
             {profile.department_name && (
-              <Box display="flex" alignItems="center" gap={1.5}>
-                <MapPin size={18} color={colors.redAccent[400]} />
-                <span style={{ color: colors.grey[200], fontSize: '14px' }}>{profile.department_name}</span>
+              <Box display="flex" alignItems="center" gap={1}>
+                <Briefcase size={16} color={colors.blueAccent[400]} />
+                <Typography variant="caption" fontSize={10} color={colors.grey[200]} fontWeight="bold">
+                  {profile.department_name}
+                </Typography>
               </Box>
             )}
           </Box>
-
-          {profile.expertises && profile.expertises.length > 0 && (
-            <Box display="flex" flexWrap="wrap" gap={1} mb={2}>
-              {profile.expertises.slice(0, 3).map((exp, idx) => (
-                <Chip
-                  key={idx}
-                  label={exp}
-                  size="small"
-                  sx={{ 
-                    backgroundColor: colors.primary[600],
-                    color: colors.grey[100],
-                    fontSize: '12px',
-                    fontWeight: 500
-                  }}
-                />
-              ))}
-            </Box>
-          )}
 
           <Button
             variant="contained"
             fullWidth
             disabled={profile.is_claimed || claimingId === profile.person_id}
             onClick={() => handleClaim(profile.person_id)}
-            startIcon={claimingId === profile.person_id ? <CircularProgress size={18} /> : <CheckCircle size={18} />}
+            startIcon={claimingId === profile.person_id ? <CircularProgress size={16} /> : profile.is_claimed ? <XCircle size={16} /> : <CheckCircle size={16} />}
             sx={{
               backgroundColor: profile.is_claimed ? colors.grey[700] : colors.greenAccent[600],
               color: colors.grey[100],
-              py: 1.5,
-              fontSize: '15px',
+              py: 1.2,
+              fontSize: "14px",
               fontWeight: 600,
-              borderRadius: '8px',
-              '&:hover': { 
+              borderRadius: "8px",
+              mt: "auto",
+              "&:hover": { 
                 backgroundColor: profile.is_claimed ? colors.grey[700] : colors.greenAccent[700]
               },
-              '&:disabled': {
+              "&:disabled": {
                 backgroundColor: colors.grey[700],
-                color: colors.grey[400]
+                color: colors.grey[400],
+                cursor: "not-allowed"
               }
             }}
           >
-            {claimingId === profile.person_id ? 'Claiming...' : profile.is_claimed ? 'Already Claimed' : 'Claim This Profile'}
+            {claimingId === profile.person_id ? "Claiming..." : profile.is_claimed ? "Already Claimed" : "Claim This Profile"}
           </Button>
         </CardContent>
       </Card>
@@ -271,6 +345,20 @@ const ClaimProfile = () => {
         title="Search & Claim Profile" 
         subtitle="Find your existing profile from our database and claim it"
       />
+
+      <Alert 
+        severity="info" 
+        sx={{ 
+          mb: 3,
+          backgroundColor: colors.blueAccent[800],
+          color: colors.grey[100],
+          border: `1px solid ${colors.blueAccent[700]}`,
+          borderRadius: '12px',
+          '& .MuiAlert-icon': { color: colors.blueAccent[400] }
+        }}
+      >
+        Profiles marked as "Already Claimed" are linked to other user accounts and cannot be claimed again.
+      </Alert>
 
       <Card 
         sx={{
@@ -286,12 +374,48 @@ const ClaimProfile = () => {
             severity="error" 
             sx={{ 
               mb: 3,
-              borderRadius: '8px',
+              borderRadius: '12px',
               backgroundColor: colors.redAccent[800],
               color: colors.grey[100]
             }}
           >
             {error}
+          </Alert>
+        )}
+
+        {success && (
+          <Alert 
+            icon={<CheckCircle size={24} />}
+            severity="success" 
+            sx={{ 
+              mb: 3,
+              borderRadius: '12px',
+              backgroundColor: colors.greenAccent[800],
+              color: colors.grey[100],
+              fontSize: '16px',
+              fontWeight: 600,
+              animation: 'slideDown 0.5s ease-out',
+              '@keyframes slideDown': {
+                from: {
+                  opacity: 0,
+                  transform: 'translateY(-20px)'
+                },
+                to: {
+                  opacity: 1,
+                  transform: 'translateY(0)'
+                }
+              }
+            }}
+          >
+            <Box display="flex" flexDirection="column" gap={1}>
+              <Box display="flex" alignItems="center" gap={1}>
+                <Sparkles size={20} color={colors.greenAccent[400]} />
+                <span>Profile Successfully Claimed!</span>
+              </Box>
+              <span style={{ fontSize: '14px', fontWeight: 400, color: colors.grey[200] }}>
+                Redirecting you to your profile page...
+              </span>
+            </Box>
           </Alert>
         )}
 
@@ -375,12 +499,14 @@ const ClaimProfile = () => {
                 </Box>
                 {option.is_claimed && (
                   <Chip
-                    label="Claimed"
+                    label="Already Claimed"
                     size="small"
                     sx={{
                       ml: 'auto',
                       backgroundColor: colors.redAccent[700],
-                      color: colors.grey[100]
+                      color: colors.grey[100],
+                      fontSize: '11px',
+                      fontWeight: 600
                     }}
                   />
                 )}

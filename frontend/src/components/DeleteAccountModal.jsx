@@ -1,3 +1,8 @@
+/*
+ * Author: Aubin Mugisha
+ * Description: Modal component for deleting user accounts with confirmation and password verification.
+ */
+
 import React, { useState } from 'react';
 import {
   Dialog,
@@ -145,16 +150,22 @@ const DeleteAccountModal = ({ open, onClose, personId, personName, onAccountDele
             }}
           >
             <Typography variant="body1" fontWeight={600} mb={1}>
-              Warning: This action cannot be undone!
+              Important: Understand what will happen
             </Typography>
-            <Typography variant="body2">
-              Deleting your account will permanently remove:
+            <Typography variant="body2" mb={1}>
+              Deleting your account will:
+            </Typography>
+            <ul style={{ marginTop: '8px', marginBottom: '12px', paddingLeft: '20px' }}>
+              <li>Remove your login credentials and authentication</li>
+              <li>Unclaim your profile</li>
+            </ul>
+            <Typography variant="body2" fontWeight={600} color={colors.greenAccent[400]}>
+              Your profile data will be preserved:
             </Typography>
             <ul style={{ marginTop: '8px', marginBottom: 0, paddingLeft: '20px' }}>
-              <li>Your profile information</li>
-              <li>All your projects and collaborations</li>
-              <li>Your connection history</li>
-              <li>All associated data</li>
+              <li>Profile information remains in the research directory</li>
+              <li>Projects and collaborations stay visible to others</li>
+              <li>You can reclaim this profile by creating a new account</li>
             </ul>
           </Alert>
 

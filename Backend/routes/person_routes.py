@@ -66,11 +66,25 @@ def get_all_people():
         cursor = mysql.connection.cursor()
         cursor.execute("START TRANSACTION")
         log_info("Transaction started for fetching people")
-        cursor.callproc('GetAllPeople')
+        
+        # Modified query to include claim status
+        query = """
+            SELECT 
+                p.*,
+                d.department_name,
+                d.institution_id,
+                i.institution_name,
+                i.city,
+                i.state,
+                CASE WHEN u.person_id IS NOT NULL THEN TRUE ELSE FALSE END AS is_claimed
+            FROM Person p
+            LEFT JOIN Department d ON p.department_id = d.department_id
+            LEFT JOIN Institution i ON d.institution_id = i.institution_id
+            LEFT JOIN User u ON p.person_id = u.person_id
+        """
+        cursor.execute(query)
         results = cursor.fetchall()
-        # Consume remaining result sets from stored procedure
-        while cursor.nextset():
-            pass
+        
         mysql.connection.commit()
         log_info("Transaction committed for fetching people")
 
@@ -78,6 +92,9 @@ def get_all_people():
         for row in results:
             if 'expertise_1' in row:
                 row['expertises'] = [e for e in [row.get('expertise_1'), row.get('expertise_2'), row.get('expertise_3')] if e]
+            # Convert is_claimed to boolean
+            row['is_claimed'] = bool(row.get('is_claimed'))
+            
         log_info(f"Fetched {len(results)} people")
         return jsonify({
             'status': 'success',
@@ -219,14 +236,14 @@ def update_person(person_id: int):
 @person_bp.route('/<int:person_id>', methods=['DELETE'])
 @token_required
 def delete_person(person_id: int):
-    """Delete a person account using DeletePerson stored procedure."""
+    """Unclaim and delete user account, preserving Person data for future claims."""
     from app import mysql
     
     user_id = request.current_user['user_id']
     
     cursor = None
     try:
-        log_info(f"Deleting person account: person_id={person_id}, user_id={user_id}")
+        log_info(f"Unclaiming person profile and deleting user account: person_id={person_id}, user_id={user_id}")
         cursor = mysql.connection.cursor()
         
         # Verify the person_id matches the logged-in user's person_id
@@ -240,24 +257,28 @@ def delete_person(person_id: int):
         
         # Start transaction
         cursor.execute("START TRANSACTION")
-        log_info("Transaction started for deleting person")
+        log_info("Transaction started for unclaiming profile and deleting user")
         
-        # First delete the associated user account
+        # Unclaim the profile by setting person_id to NULL in User table
+        # This preserves the Person data for future claims
+        cursor.execute("""
+            UPDATE User 
+            SET person_id = NULL 
+            WHERE user_id = %s
+        """, (user_id,))
+        
+        # Delete the user account (keeps Person data intact)
         cursor.callproc('DeleteUser', [user_id])
         while cursor.nextset():
             pass
         
-        # Then delete the person record (this will cascade to related records)
-        cursor.callproc('DeletePerson', [person_id])
-        while cursor.nextset():
-            pass
-        
         mysql.connection.commit()
-        log_info(f"Person account deleted successfully: person_id={person_id}")
+        log_info(f"User account deleted and profile unclaimed successfully: person_id={person_id}, user_id={user_id}")
+        log_info(f"Person profile {person_id} is now available for claiming by other users")
         
         return jsonify({
             'status': 'success',
-            'message': 'Account deleted successfully'
+            'message': 'Account deleted successfully. Your profile data has been preserved and is now available for others to claim.'
         }), 200
         
     except Exception as e:
