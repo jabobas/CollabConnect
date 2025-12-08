@@ -493,7 +493,7 @@ const Connections = () => {
   if (loading) {
     return (
       <Box m="20px">
-        <Header title="CONNECTIONS" subtitle="Manage your network and discover collaborators" />
+        <Header title="Connections" subtitle="Manage your network and discover collaborators" />
         <Box display="flex" justifyContent="center" alignItems="center" minHeight="60vh">
           <CircularProgress sx={{ color: colors.greenAccent[500] }} />
         </Box>
@@ -503,7 +503,7 @@ const Connections = () => {
 
   return (
     <Box m="20px">
-      <Header title="CONNECTIONS" subtitle="Manage your network and discover collaborators" />
+      <Header title="Connections" subtitle="Manage your network and discover collaborators" />
 
       {error && (
         <Box

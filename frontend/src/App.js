@@ -14,7 +14,6 @@ import Sidebar from "./scenes/global/Sidebar";
 import SearchCollab from "./scenes/SearchCollab";
 import SearchProjects from "./scenes/project";
 import ProjectDetail from "./scenes/project/Detail";
-// import Person from "./scenes/Person";
 import Person from "./scenes/person";
 import Department from "./scenes/department";
 import Analytics from "./scenes/analytics";
@@ -48,13 +47,12 @@ function App() {
 
               <Route path="/person/:id" element={<Person />} />
               <Route path="/institution/:id" element={<Institution />} />
-              {/* <Route path="/department/:id" element={<Department />} /> */}
+              <Route path="/department/:id" element={<Department />} />
 
               <Route path="/data-collection" element={<DataCollection />} />
               <Route path="/faq" element={<Faq/>} />
               <Route path="/settings" element={<Settings/>} />
 
-              {/* <Route path="/data-request element={< />} /> */}
             </Routes>
           </main>
         </div>

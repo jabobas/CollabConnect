@@ -154,7 +154,6 @@ const ActionCard = ({ title, description, icon: Icon, color, onClick, badge }) =
         position: "relative",
         overflow: "visible",
         "&:hover": {
-          backgroundColor: theme.palette.mode === "dark" ? colors.primary[300] : colors.primary[500],
           transform: "translateY(-4px)",
           boxShadow: `0 8px 24px -4px ${color}30`,
           "& .arrow-icon": {

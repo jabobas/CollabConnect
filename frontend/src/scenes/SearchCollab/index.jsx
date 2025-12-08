@@ -472,7 +472,7 @@ const SearchCollab = () => {
         display: "flex",
         flexDirection: "column",
         backgroundColor: colors.primary[500],
-        height: "92.2vh",
+        height: "91.95vh",
         overflowY: "hidden",
         width: "100%",
       }}
