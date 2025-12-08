@@ -62,6 +62,11 @@ def register():
 
         # Send verification email (non-blocking for registration if it fails)
         send_verification_email(email, verification_code)
+        
+        # Log verification code to console for development
+        print(f"\n{'='*60}")
+        print(f"VERIFICATION CODE for {email}: {verification_code}")
+        print(f"{'='*60}\n")
 
         return (
             jsonify(

@@ -170,7 +170,7 @@ const SearchProjects = () => {
     const fetchProjects = async () => {
       try {
         setIsLoading(true);
-        const response = await axios.get("http://localhost:5001/project/all");
+        const response = await axios.get("/project/all");
         const list = response.data?.data || [];
         setProjects(list);
         setFilteredProjects(list);
