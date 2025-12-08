@@ -1,3 +1,8 @@
+/*
+  author: Lucas Matheson
+  date: December 8th, 2025
+  description: Header component displaying page title and subtitle.
+*/
 import { Typography, Box, useTheme } from "@mui/material";
 import { tokens } from "../theme";
 

@@ -1,5 +1,5 @@
 /*
-  author: GitHub Copilot
+  author: Lucas Matheson
   date: December 7th, 2025
   description: Connections page displaying favorited researchers and recommended collaborators
 */

@@ -1,3 +1,11 @@
+"""
+Author: Lucas Matheson
+Date: November 15th, 2025
+
+Description: This script provides utility functions for cleaning and normalizing
+USM data, including citation checking, unicode cleaning, phone number formatting,
+name cleaning, and project emptiness checking.
+"""
 import json
 from pathlib import Path
 import re

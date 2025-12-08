@@ -1,3 +1,11 @@
+"""
+Author: Lucas Matheson
+Date: December 8th, 2025
+
+Description: This script processes a JSON file to fix double-encoded UTF-8 strings
+and removes all non-alphanumeric characters (keeping only A-Z, a-z, 0-9, and spaces),
+while preserving email addresses and phone numbers.
+"""
 import json
 import re
 

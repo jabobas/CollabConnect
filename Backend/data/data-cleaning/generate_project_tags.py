@@ -1,3 +1,10 @@
+"""
+Author: Lucas Matheson
+Date: November 15th, 2025
+Description: This script generates concise expertise tags for projects
+based on their titles and descriptions using an AI language model.
+"""
+
 import json
 from openai import OpenAI
 
