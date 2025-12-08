@@ -77,6 +77,53 @@ Aubin:
 - Query Optimization on 1 query
 
 # Team contributions Phase 3
+
+Lucas:
+- Created routes for project, institution, and department. This included many joins to link data accross all the tables
+- Created functions to gather counts on researcher projects
+- Created UI for Dashboard, Connections, FAQ, Settings, Data Collection, and Institution
+- Added local storage system for favoriting researchers, including recommendation system to partially match strings from favorite researchers to get recommendations
+- Added concurrency control and locking to the backend by locking rows that were being actively altered and adding transactions to all routes
+- Unit tests to ensure correct concurrency control and locking
+- Created a baseline react and flask app
+
+## How Concurrency Control Works in CollabConnect
+
+To protect against any race conditions, I added concurrency control and locking to our backend. The setup to do so was very straight forward. 
+Here is an example of how concurrency control was added
+```
+ 
+    IF p_department_id IS NOT NULL THEN
+        SELECT COUNT(*) INTO dept_count
+        FROM Department
+        WHERE department_id = p_department_id
+        FOR UPDATE; -- this will lock the row with p_department_id
+
+        -- This is just for error handling, ensuring the dept_id exists. If you don't, procedures can return 200, even when nothing happened
+        IF dept_count = 0 THEN
+            SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Department not found';
+        END IF;
+    END IF;
+```
+
+The key here is `FOR UPDATE`. This line will lock the row associated with `p_department_id` so if any other transaction tries to access the same row, 
+it will be forced to wait until the current transaction is complete. This prevents any race conditions in the case when multiple people try to alter the
+same row. This same pattern in the procedures is found for every one that alters the data in some way. 
+
+In the flask backend, there are two subtle changes. `cursor.execute("START TRANSACTION")` is used at the beginning of every route. Each route also contains a rollback 
+and a commit. The one that gets fired depends on the outcome of the called procedure/sql query. These commits and rollbacks are doing like so
+
+```
+mysql.connection.commit() # if the sql had no errors
+
+mysql.connection.rollback() # if there was a error with the sql
+```
+
+Commit and rollback will automatically free up any locks placed during a transaction. This summarizes the concurrency control in CollabConnect, any further questions
+can be directed to lucas.matheson@maine.edu
+
+
 Abbas: 
 - Created routes for project, project_tag, and tag endpoints so you can use their procedures. The tag entity was removed from the database so the route for it is not necessary. 
 - I created a backend logger that logs when a user preforms any action related to the routes we have. 
