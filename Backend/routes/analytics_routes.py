@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request
 import networkx as nx
 from collections import defaultdict
+from utils.logger import log_info, log_error
 
 # Blueprint for analytics-related endpoints
 analytics_bp = Blueprint('analytics', __name__, url_prefix='/api/analytics')
@@ -18,6 +19,7 @@ _network_cache = {
 def _build_collaboration_network(mysql, include_isolated=False):
     """Build collaboration network from database WorkedOn relationships."""
     try:
+        log_info(f"Building collaboration network - include_isolated: {include_isolated}")
         cursor = mysql.connection.cursor()
         cursor.execute("START TRANSACTION")
         
@@ -139,6 +141,7 @@ def _build_collaboration_network(mysql, include_isolated=False):
             'network_density': round(network_density, 4)
         }
         
+        log_info(f"Network statistics - researchers: {total_researchers}, collaborations: {total_connections}, density: {statistics['network_density']}")
         return {
             'nodes': nodes_list,
             'edges': edges,
@@ -146,6 +149,7 @@ def _build_collaboration_network(mysql, include_isolated=False):
         }
     
     except Exception as e:
+        log_error(f"Error building collaboration network: {str(e)}")
         raise Exception(f"Error building collaboration network: {str(e)}")
 
 
@@ -158,6 +162,7 @@ def get_network():
         
         # Check cache
         if not force_rebuild and _network_cache['data'] is not None and _network_cache['include_isolated'] == include_isolated:
+            log_info(f"Returning cached collaboration network - include_isolated: {include_isolated}")
             return jsonify({
                 'success': True,
                 'data': _network_cache['data']
@@ -165,12 +170,14 @@ def get_network():
         
         # Build fresh network
         from app import mysql
+        log_info("Building fresh collaboration network from database")
         network_data = _build_collaboration_network(mysql, include_isolated)
         
         # Cache the result
         _network_cache['data'] = network_data
         _network_cache['include_isolated'] = include_isolated
         
+        log_info(f"Collaboration network built successfully - nodes: {len(network_data['nodes'])}, edges: {len(network_data['edges'])}")
         return jsonify({
             'success': True,
             'data': network_data
@@ -178,7 +185,7 @@ def get_network():
     
     except Exception as e:
         import traceback
-        print(f"Analytics error: {str(e)}")
+        log_error(f"Analytics error: {str(e)}")
         traceback.print_exc()
         return jsonify({
             'success': False,

@@ -26,18 +26,21 @@ def generate_verification_code() -> str:
 def register():
     """Register new user account with email and password, send verification code."""
     from app import mysql
+    from utils.logger import log_info, log_error
 
     data = request.get_json() or {}
     email = data.get("email")
     password = data.get("password")
 
     if not email or not password:
+        log_error("Register attempt missing email or password")
         return (
             jsonify({"status": "error", "message": "Email and password required"}),
             400,
         )
 
     if not validate_email(email):
+        log_error(f"Register attempt with invalid email format: {email}")
         return jsonify({"status": "error", "message": "Invalid email format"}), 400
 
     is_valid, msg = validate_password(password)
@@ -45,6 +48,7 @@ def register():
         return jsonify({"status": "error", "message": msg}), 400
 
     try:
+        log_info(f"Registration attempt for email: {email}")
         password_hash = generate_password_hash(password)
         verification_code = generate_verification_code()
 
@@ -62,6 +66,7 @@ def register():
 
         # Send verification email
         send_verification_email(email, verification_code)
+        log_info(f"User registered successfully - user_id: {user_id}, email: {email}")
         
         # Always print code to terminal for development
         print(f"\n{'='*60}")
@@ -81,10 +86,12 @@ def register():
     except Exception as e:
         mysql.connection.rollback()
         if "Duplicate entry" in str(e):
+            log_error(f"Registration failed - email already registered: {email}")
             return (
                 jsonify({"status": "error", "message": "Email already registered"}),
                 409,
             )
+        log_error(f"Registration error for {email}: {str(e)}")
         return jsonify({"status": "error", "message": str(e)}), 500
 
 
@@ -92,17 +99,20 @@ def register():
 def login():
     """Authenticate user and return JWT token (requires verified email)."""
     from app import mysql
+    from utils.logger import log_info, log_error
 
     data = request.get_json() or {}
     email = data.get("email")
     password = data.get("password")
 
     if not email or not password:
+        log_error("Login attempt missing email or password")
         return (
             jsonify({"status": "error", "message": "Email and password required"}),
             400,
         )
 
+    log_info(f"Login attempt for email: {email}")
     cursor = mysql.connection.cursor()
     cursor.execute("START TRANSACTION")
     cursor.callproc("SelectUserByEmail", [email])
@@ -114,12 +124,14 @@ def login():
     if not user or not check_password_hash(user["password_hash"], password):
         mysql.connection.rollback()
         cursor.close()
+        log_error(f"Login failed - invalid credentials for email: {email}")
         return jsonify({"status": "error", "message": "Invalid credentials"}), 401
 
     # Check if email is verified
     if not user.get("is_verified"):
         mysql.connection.rollback()
         cursor.close()
+        log_error(f"Login failed - unverified email: {email}")
         return (
             jsonify(
                 {
@@ -141,6 +153,7 @@ def login():
     access_token = generate_access_token(
         user["user_id"], user["email"], user.get("person_id")
     )
+    log_info(f"User logged in successfully - user_id: {user['user_id']}, email: {email}")
 
     return (
         jsonify(
@@ -203,12 +216,14 @@ def get_current_user():
 def verify_email():
     """Verify user email with verification code."""
     from app import mysql
+    from utils.logger import log_info, log_error
 
     data = request.get_json() or {}
     email = data.get("email")
     code = data.get("code")
 
     if not email or not code:
+        log_error("Email verification attempt missing email or code")
         return (
             jsonify(
                 {"status": "error", "message": "Email and verification code required"}
@@ -217,6 +232,7 @@ def verify_email():
         )
 
     try:
+        log_info(f"Email verification attempt for: {email}")
         cursor = mysql.connection.cursor()
         cursor.execute("START TRANSACTION")
         cursor.callproc("VerifyUserEmail", [email, code])
@@ -228,6 +244,7 @@ def verify_email():
         cursor.close()
 
         send_welcome_email(email)
+        log_info(f"Email verified successfully for: {email}")
         return (
             jsonify(
                 {
@@ -241,6 +258,7 @@ def verify_email():
         mysql.connection.rollback()
         error_msg = str(e)
         if "Invalid or expired" in error_msg:
+            log_error(f"Email verification failed - invalid/expired code for: {email}")
             return (
                 jsonify(
                     {
@@ -250,6 +268,7 @@ def verify_email():
                 ),
                 400,
             )
+        log_error(f"Email verification error for {email}: {error_msg}")
         return jsonify({"status": "error", "message": error_msg}), 500
 
 
@@ -257,17 +276,21 @@ def verify_email():
 def resend_verification_code():
     """Resend verification code to user email."""
     from app import mysql
+    from utils.logger import log_info, log_error
 
     data = request.get_json() or {}
     email = data.get("email")
 
     if not email:
+        log_error("Resend verification code attempt missing email")
         return jsonify({"status": "error", "message": "Email required"}), 400
 
     if not validate_email(email):
+        log_error(f"Resend verification code attempt with invalid email: {email}")
         return jsonify({"status": "error", "message": "Invalid email format"}), 400
 
     try:
+        log_info(f"Resending verification code for: {email}")
         verification_code = generate_verification_code()
 
         cursor = mysql.connection.cursor()
@@ -281,6 +304,7 @@ def resend_verification_code():
         cursor.close()
 
         send_verification_email(email, verification_code)
+        log_info(f"Verification code resent successfully for: {email}")
         
         # Always print code to terminal for development
         print(f"\n{'='*60}")
@@ -300,6 +324,7 @@ def resend_verification_code():
         mysql.connection.rollback()
         error_msg = str(e)
         if "not found or already verified" in error_msg:
+            log_error(f"Resend verification code failed - user not found or already verified: {email}")
             return (
                 jsonify(
                     {
@@ -309,6 +334,7 @@ def resend_verification_code():
                 ),
                 400,
             )
+        log_error(f"Resend verification code error for {email}: {error_msg}")
         return jsonify({"status": "error", "message": error_msg}), 500
 
 

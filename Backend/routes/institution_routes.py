@@ -19,6 +19,7 @@ def get_institution(id: int):
     from app import mysql 
     cursor = None
     try:
+        log_info(f"Fetching institution with id: {id}")
         cursor = mysql.connection.cursor()
         cursor.execute("START TRANSACTION")
         cursor.callproc('GetDepartmentsAndPeopleByInstitutionId', [id])
@@ -29,6 +30,10 @@ def get_institution(id: int):
             pass
         
         mysql.connection.commit()
+        
+        if not results:
+            log_error(f"Institution not found with id: {id}")
+            return jsonify({"status": "error", "message": "Institution not found"}), 404
 
         # to ensure effiecent frontend rendering, this loop will process the data into a better 
         # key : value structure, making department and person name be keys so in the frontend, 
@@ -36,14 +41,13 @@ def get_institution(id: int):
         # Note there are no person duplicates, so no need to check each person to see if they already exist
         out = {'institution_name': results[0]['institution_name']}
         for curr in results:
-            print(curr)
             # if departmant name isn't already a key, a new key value
             if curr['department_name'] not in out:
                 out[curr['department_name']] = {}
             # department already exists
             out[curr['department_name']][curr['person_name']] = curr
 
-
+        log_info(f"Institution fetched successfully - id: {id}, name: {out.get('institution_name')}")
         return jsonify({
             "status": "success",
             "data": out,
@@ -52,6 +56,7 @@ def get_institution(id: int):
         
     except Exception as e:
         mysql.connection.rollback()
+        log_error(f"Error fetching institution {id}: {str(e)}")
         return jsonify({
             "status": "error",
             "message": str(e)
@@ -66,6 +71,7 @@ def get_all_institutions():
     from app import mysql
     cursor = None
     try:
+        log_info("Fetching all institutions")
         cursor = mysql.connection.cursor()
         cursor.execute("START TRANSACTION")
         cursor.execute('''
@@ -75,9 +81,11 @@ def get_all_institutions():
         ''')
         results = cursor.fetchall()
         mysql.connection.commit()
+        log_info(f"Fetched {len(results)} institutions")
         return jsonify({'status': 'success', 'data': results, 'count': len(results)})
     except Exception as e:
         mysql.connection.rollback()
+        log_error(f"Error fetching all institutions: {str(e)}")
         return jsonify({'status': 'error', 'message': str(e)}), 500
     finally:
         if cursor:

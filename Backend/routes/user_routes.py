@@ -8,6 +8,7 @@ from flask import Blueprint, request, jsonify
 from utils.jwt_utils import token_required
 from utils.authorization import verify_user_access
 from utils.validators import validate_project_data, validate_email, sanitize_string
+from utils.logger import log_info, log_error
 
 user_bp = Blueprint('user', __name__)
 
@@ -17,6 +18,7 @@ def get_user(user_id):
     from app import mysql
     cursor = None
     try:
+        log_info(f"Fetching user profile for user_id: {user_id}")
         cursor = mysql.connection.cursor()
         cursor.execute("START TRANSACTION")
         cursor.callproc('SelectUserById', [user_id])
@@ -27,6 +29,7 @@ def get_user(user_id):
         mysql.connection.commit()
         
         if not user:
+            log_error(f"User not found for user_id: {user_id}")
             return jsonify({'status': 'error', 'message': 'User not found'}), 404
         
         return jsonify({
@@ -66,10 +69,12 @@ def search_profile():
     email = request.args.get('email', '')
     
     if not name and not email:
+        log_error("Profile search attempted without name or email")
         return jsonify({'status': 'error', 'message': 'Name or email required'}), 400
     
     cursor = None
     try:
+        log_info(f"Searching profiles with name: {name}, email: {email}")
         cursor = mysql.connection.cursor()
         cursor.execute("START TRANSACTION")
         query = """
@@ -124,7 +129,10 @@ def claim_person(user_id, person_id):
     auth_user_id = request.current_user['user_id']
     
     if auth_user_id != user_id:
+        log_error(f"Unauthorized claim attempt - user_id: {auth_user_id} tried to claim for user_id: {user_id}")
         return jsonify({'status': 'error', 'message': 'Can only claim your own profile'}), 403
+    
+    log_info(f"User {user_id} claiming person profile {person_id}")
     
     cursor = None
     try:
@@ -162,6 +170,7 @@ def get_user_projects(user_id):
     from app import mysql
     cursor = None
     try:
+        log_info(f"Fetching projects for user_id: {user_id}")
         cursor = mysql.connection.cursor()
         cursor.execute("START TRANSACTION")
         cursor.callproc('SelectUserById', [user_id])
@@ -172,6 +181,7 @@ def get_user_projects(user_id):
         
         if not user or not user.get('person_id'):
             mysql.connection.commit()
+            log_error(f"No person profile found for user_id: {user_id}")
             return jsonify({'status': 'error', 'message': 'No person profile'}), 404
         
         query = """
@@ -223,15 +233,20 @@ def add_user_project(user_id):
     auth_user_id = request.current_user['user_id']
     
     if auth_user_id != user_id:
+        log_error(f"Unauthorized project creation attempt - user_id: {auth_user_id} tried for user_id: {user_id}")
         return jsonify({'status': 'error', 'message': 'Unauthorized'}), 403
     
     data = request.get_json()
     
     if not data.get('project_title'):
+        log_error(f"Project creation failed - missing title for user_id: {user_id}")
         return jsonify({'status': 'error', 'message': 'Project title required'}), 400
+    
+    log_info(f"Creating project for user_id: {user_id}, title: {data.get('project_title')}")
     
     is_valid, errors = validate_project_data(data)
     if not is_valid:
+        log_error(f"Project validation failed for user_id: {user_id}: {errors}")
         return jsonify({"status": "error", "message": "Validation failed", "errors": errors}), 400
     
     data['project_title'] = sanitize_string(data.get('project_title'))
@@ -304,10 +319,14 @@ def create_profile_with_affiliation():
     data = request.get_json()
     
     if not data.get('person_name') or not data.get('person_email'):
+        log_error(f"Profile creation failed - missing name or email for user_id: {user_id}")
         return jsonify({'status': 'error', 'message': 'Name and email required'}), 400
     
     if not validate_email(data.get('person_email')):
+        log_error(f"Profile creation failed - invalid email for user_id: {user_id}")
         return jsonify({'status': 'error', 'message': 'Invalid email format'}), 400
+    
+    log_info(f"Creating profile with affiliation for user_id: {user_id}, name: {data.get('person_name')}, institution: {data.get('institution_name')}")
     
     data['person_name'] = sanitize_string(data.get('person_name'))
     data['person_email'] = sanitize_string(data.get('person_email'))

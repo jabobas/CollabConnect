@@ -11,6 +11,7 @@ def get_department_by_id(department_id):
     from app import mysql
     cursor = None
     try:
+        log_info(f"Fetching department with id: {department_id}")
         cursor = mysql.connection.cursor()
         cursor.execute("START TRANSACTION")
         cursor.execute('''
@@ -23,11 +24,14 @@ def get_department_by_id(department_id):
         mysql.connection.commit()
         
         if not result:
+            log_error(f"Department not found with id: {department_id}")
             return jsonify({'status': 'not_found', 'message': 'Department not found'}), 404
             
+        log_info(f"Department fetched successfully: {result.get('department_name')}")
         return jsonify({'status': 'success', 'data': result})
     except Exception as e:
         mysql.connection.rollback()
+        log_error(f"Error fetching department by id {department_id}: {str(e)}")
         return jsonify({'status': 'error', 'message': str(e)}), 500
     finally:
         if cursor:
@@ -39,6 +43,7 @@ def get_department_people(department_id):
     from app import mysql
     cursor = None
     try:
+        log_info(f"Fetching people in department: {department_id}")
         cursor = mysql.connection.cursor()
         cursor.execute("START TRANSACTION")
         cursor.execute('''
@@ -55,9 +60,11 @@ def get_department_people(department_id):
         for person in people:
             person['expertises'] = [e for e in [person.get('expertise_1'), person.get('expertise_2'), person.get('expertise_3')] if e]
         
+        log_info(f"Fetched {len(people)} people from department: {department_id}")
         return jsonify({'status': 'success', 'data': people, 'count': len(people)})
     except Exception as e:
         mysql.connection.rollback()
+        log_error(f"Error fetching people in department {department_id}: {str(e)}")
         return jsonify({'status': 'error', 'message': str(e)}), 500
     finally:
         if cursor:
@@ -124,6 +131,7 @@ def create_department():
     data = request.get_json()
     cursor = None
     try:
+        log_info(f"Creating department: {data.get('department_name')}")
         cursor = mysql.connection.cursor()
         cursor.execute("START TRANSACTION")
         # Insert new department with provided data
@@ -142,6 +150,7 @@ def create_department():
         
         mysql.connection.commit()
         
+        log_info(f"Department created successfully - id: {department_id}, name: {data.get('department_name')}")
         return jsonify({
             'status': 'success',
             'message': 'Department created successfully',
@@ -149,6 +158,7 @@ def create_department():
         }), 201
     except Exception as e:
         mysql.connection.rollback()
+        log_error(f"Error creating department '{data.get('department_name')}': {str(e)}")
         return jsonify({'status': 'error', 'message': str(e)}), 500
     finally:
         if cursor:
@@ -163,6 +173,7 @@ def update_department(department_id):
     data = request.get_json()
     cursor = None
     try:
+        log_info(f"Updating department: {department_id}")
         cursor = mysql.connection.cursor()
         cursor.execute("START TRANSACTION")
         # Update all department fields at once
@@ -176,12 +187,14 @@ def update_department(department_id):
             pass
         mysql.connection.commit()
         
+        log_info(f"Department updated successfully - id: {department_id}")
         return jsonify({
             'status': 'success',
             'message': 'Department updated successfully'
         })
     except Exception as e:
         mysql.connection.rollback()
+        log_error(f"Error updating department {department_id}: {str(e)}")
         return jsonify({'status': 'error', 'message': str(e)}), 500
     finally:
         if cursor:
@@ -195,6 +208,7 @@ def delete_department(department_id):
     from app import mysql
     cursor = None
     try:
+        log_info(f"Deleting department: {department_id}")
         cursor = mysql.connection.cursor()
         cursor.execute("START TRANSACTION")
         cursor.callproc('DeleteDepartment', [department_id])
@@ -202,12 +216,14 @@ def delete_department(department_id):
             pass
         mysql.connection.commit()
         
+        log_info(f"Department deleted successfully - id: {department_id}")
         return jsonify({
             'status': 'success',
             'message': 'Department deleted successfully'
         })
     except Exception as e:
         mysql.connection.rollback()
+        log_error(f"Error deleting department {department_id}: {str(e)}")
         return jsonify({'status': 'error', 'message': str(e)}), 500
     finally:
         if cursor:
