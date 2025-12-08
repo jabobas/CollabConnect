@@ -202,6 +202,7 @@ If database already exists, it will skip schema creation and only verify tables 
 
 2. **Create an Account** or **Login**
    - Register with email and password
+   - You can find the verification code for an email in the terminal
    - Login to access personalized features
 
 3. **Search for Collaborators**
@@ -800,7 +801,7 @@ GET /tag/all
 
 ---
 
-#### Get Projects by Tag
+#### Get Tags by Project
 ```
 GET /project_tag/by-project?project_id=1
 ```
@@ -812,11 +813,62 @@ GET /project_tag/by-project?project_id=1
   "data": [
     {
       "tag_id": 1,
-      "tag_name": "AI",
-      "project_id": 1
+      "tag_name": "AI"
+    },
+    {
+      "tag_id": 2,
+      "tag_name": "Machine Learning"
     }
   ],
-  "count": 3
+  "count": 2
+}
+```
+
+**Errors:**
+- `400` - Missing query parameter `project_id`
+- `404` - Project not found
+
+---
+
+#### Add Tag to Project (Protected)
+```
+POST /project_tag/
+Authorization: Bearer <jwt_token>
+Content-Type: application/json
+
+{
+  "project_id": 1,
+  "tag_name": "AI"
+}
+```
+
+**Response (201):**
+```json
+{
+  "status": "success",
+  "message": "Tag added to project successfully"
+}
+```
+
+---
+
+#### Remove Tag from Project (Protected)
+```
+DELETE /project_tag/
+Authorization: Bearer <jwt_token>
+Content-Type: application/json
+
+{
+  "project_id": 1,
+  "tag_name": "AI"
+}
+```
+
+**Response (200):**
+```json
+{
+  "status": "success",
+  "message": "Tag removed from project successfully"
 }
 ```
 
@@ -1007,7 +1059,6 @@ pip install -r Backend/requirements.txt
 
 ## Support & Documentation
 
-- **Project Overview:** See [PROJECT_OVERVIEW.md](PROJECT_OVERVIEW.md)
 - **GitHub Repository:** https://github.com/jabobas/CollabConnect
 - **Team:** Abbas Jabor, Lucas Matheson, Wyatt McCurdy, Aubin Mugisha
 - **University:** University of Maine (COS457)
