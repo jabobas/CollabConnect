@@ -82,7 +82,6 @@ Abbas:
 - I created a backend logger that logs when a user preforms any action related to the routes we have. 
 - Created a project search page and project page for the frontend.
 - Created installation and API document
-
 ---
 
 ## Logging System & ACID Compliance
@@ -133,3 +132,11 @@ CollabConnect implements a comprehensive logging system that tracks all user act
 3. **Compliance** - Regulatory audit trail
 4. **Security** - Detect unauthorized attempts
 5. **Integrity** - Verify ACID properties hold across failures
+
+Wyatt McCurdy (Advanced Feature):
+- Built the analytics collaboration network (backend + frontend) with community detection, metrics, and caching.
+- Backend endpoint `/api/analytics/network` (NetworkX) returns nodes, edges, and statistics (degree, density, collaborators, projects).
+- Frontend ReactFlow view at `/analytics` with selectable nodes, edge highlighting, isolated-toggle, refresh, and stats chips.
+- Visualizes a network of potential collaborators connected through shared projects, so you can see who has worked together and explore collaboration clusters at a glance.
+
+
