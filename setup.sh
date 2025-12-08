@@ -6,7 +6,7 @@ set -e
 
 ROOT_DIR="$(cd "$(dirname "$0")" && pwd)"
 VENV_DIR="$ROOT_DIR/databases"
-BACKEND_DIR="$ROOT_DIR/backend"
+ BACKEND_DIR="$ROOT_DIR/Backend"
 FRONTEND_DIR="$ROOT_DIR/frontend"
 
 # Detect Python command (works cross-platform including Git Bash on Windows)
