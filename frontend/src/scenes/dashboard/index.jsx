@@ -17,25 +17,19 @@ import {
   Chip,
   Divider,
   LinearProgress,
-  IconButton,
-  Tooltip,
   Paper,
 } from "@mui/material";
 import {
   Users,
   FolderOpen,
   Building2,
-  TrendingUp,
   Heart,
   MapPin,
   Briefcase,
   Search,
   Network,
   ArrowUpRight,
-  Activity,
-  Award,
   BookOpen,
-  Mail,
   GitBranch,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -225,7 +219,6 @@ const ActionCard = ({ title, description, icon: Icon, color, onClick, badge }) =
 };
 
 const FavoriteResearcherCard = ({ researcher, colors, onRemove }) => {
-  const theme = useTheme();
   const navigate = useNavigate();
 
   const handleRemoveFavorite = (e) => {
@@ -416,8 +409,6 @@ const Dashboard = () => {
     totalDepartments: 0,
   });
   const [loading, setLoading] = useState(true);
-  const [recentPeople, setRecentPeople] = useState([]);
-  const [recentProjects, setRecentProjects] = useState([]);
   const [favoriteResearchers, setFavoriteResearchers] = useState([]);
   const [institutionStats, setInstitutionStats] = useState([]);
   const [userName, setUserName] = useState("");
@@ -523,12 +514,6 @@ const Dashboard = () => {
           ).size,
           totalDepartments: uniqueDepartments,
         });
-
-        // Get recent researchers (last 5)
-        setRecentPeople(peopleData.slice(-5).reverse());
-
-        // Get recent projects (last 3)
-        setRecentProjects(projectsData.slice(-3).reverse());
 
         // Get user info if logged in
         const userEmail = localStorage.getItem("email");

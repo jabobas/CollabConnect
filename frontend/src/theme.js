@@ -4,7 +4,7 @@
   date: November 20th, 2025
   description: Theme configuration and color schemes for the CollabConnect application.
 */
-import { createContext, useState, useMemo, useEffect } from "react";
+import { createContext, useState, useMemo } from "react";
 import { createTheme } from "@mui/material/styles";
 
 // Get the selected color scheme from localStorage

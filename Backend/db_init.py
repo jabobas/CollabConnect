@@ -712,8 +712,6 @@ def create_functions():
     # Note, some of these files contain procedures too, but we are only after the funcitons
     # So, when we split on create function below, procedures are not grabbed
     function_file_paths = [
-        "./sql/functions/project_analytics_functions.sql",
-        "./sql/functions/collaboration_network_functions.sql",
         "./sql/functions/general_functions.sql",
     ]
     

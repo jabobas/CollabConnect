@@ -342,7 +342,7 @@ const useVirtualization = (items, containerRef) => {
       container.removeEventListener('scroll', handleScroll);
       resizeObserver.disconnect();
     };
-  }, [items.length, containerWidth]);
+  }, [items.length, containerWidth, containerRef]);
 
   return { visibleRange, containerWidth };
 };
@@ -357,10 +357,9 @@ const SearchCollab = () => {
   const [selectedInstitution, setSelectedInstitution] = useState("all");
   const [researchers, setResearchers] = useState([]);
   const [numProjectsPerPerson, setProjects] = useState({});
-  const [favoritesUpdateTrigger, setFavoritesUpdateTrigger] = useState(0);
 
   const handleFavoriteToggle = useCallback(() => {
-    setFavoritesUpdateTrigger(prev => prev + 1);
+    // Trigger re-render when favorites change
   }, []);
 
   // Add style tag for hiding scrollbar
@@ -456,7 +455,7 @@ const SearchCollab = () => {
     return filteredResearchers.slice(visibleRange.start, visibleRange.end);
   }, [filteredResearchers, visibleRange.start, visibleRange.end]);
 
-  const { totalHeight, itemsPerRow, offsetTop } = useMemo(() => {
+  const { totalHeight, offsetTop } = useMemo(() => {
     const itemsPerRow = Math.max(1, Math.floor(containerWidth / 344));
     const numRows = Math.ceil(filteredResearchers.length / itemsPerRow);
     const totalHeight = numRows * 308;

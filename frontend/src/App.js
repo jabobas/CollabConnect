@@ -20,8 +20,6 @@ import Analytics from "./scenes/analytics";
 import Login from "./scenes/login";
 import Register from "./scenes/register";
 import User from "./scenes/user";
-import CreateProfile from "./scenes/create-profile";
-import ClaimProfile from "./scenes/claim-profile";
 import Institution from "./scenes/Institution";
 import DataCollection from "./scenes/data-collection";
 import Faq from "./scenes/faq";
@@ -48,6 +46,10 @@ function App() {
               <Route path="/person/:id" element={<Person />} />
               <Route path="/institution/:id" element={<Institution />} />
               <Route path="/department/:id" element={<Department />} />
+
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/user/:id" element={<User />} />
 
               <Route path="/data-collection" element={<DataCollection />} />
               <Route path="/faq" element={<Faq/>} />

@@ -123,7 +123,7 @@ const CollaborationNetwork = () => {
             style: {
               background: color,
               color: '#fff',
-              border: selectedNode?.id === node.id ? '3px solid #000' : '1px solid #222',
+              border: '1px solid #222',
               borderRadius: '8px',
               fontSize: '11px',
               padding: '10px',
@@ -193,12 +193,12 @@ const CollaborationNetwork = () => {
         };
       })
     );
-  }, [allEdges]);
+  }, [allEdges, setEdges]);
 
   const onPaneClick = useCallback(() => {
     setSelectedNode(null);
     setEdges(allEdges);
-  }, [allEdges]);
+  }, [allEdges, setEdges]);
 
   const onConnect = useCallback(
     (params) => setEdges((eds) => addEdge(params, eds)),

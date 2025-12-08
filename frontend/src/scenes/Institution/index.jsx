@@ -27,23 +27,12 @@ import {
   IconButton,
   Collapse,
   Stack,
-  Button,
-  Tab,
-  Tabs,
-  TextField,
-  InputAdornment,
-  AvatarGroup,
-  Breadcrumbs,
-  Link,
 } from "@mui/material";
 import EmailIcon from "@mui/icons-material/Email";
 import PhoneIcon from "@mui/icons-material/Phone";
-import SearchIcon from "@mui/icons-material/Search";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
 import BusinessIcon from "@mui/icons-material/Business";
 import PeopleIcon from "@mui/icons-material/People";
 import SchoolIcon from "@mui/icons-material/School";
-import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useTheme } from "@mui/material";
 import { useParams, useNavigate } from "react-router-dom";
@@ -223,13 +212,14 @@ const LazyGrid = memo(({ items, colors, batchSize = 12 }) => {
       { threshold: 0.1 }
     );
 
-    if (observerTarget.current) {
-      observer.observe(observerTarget.current);
+    const currentTarget = observerTarget.current;
+    if (currentTarget) {
+      observer.observe(currentTarget);
     }
 
     return () => {
-      if (observerTarget.current) {
-        observer.unobserve(observerTarget.current);
+      if (currentTarget) {
+        observer.unobserve(currentTarget);
       }
     };
   }, [visibleCount, items.length, batchSize]);
@@ -353,12 +343,11 @@ DepartmentSection.displayName = "DepartmentSection";
 const Institution = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  const navigate = useNavigate();
   const { id } = useParams();
   const [institutionData, setInstitution] = useState(null);
   const [institutionName, setInstitutionName] = useState("");
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm] = useState("");
   useEffect(() => {
     axios
       .get(`http://127.0.0.1:5001/institution/one/${id}`)
