@@ -75,3 +75,9 @@ Aubin:
 - CreateFunction/Stored Procedure WorkedOn, BelongsTo (Nov 10)
 - Scrape site https://reporter.nih.gov/ (Nov 10)
 - Query Optimization on 1 query
+
+# Team contributions Phase 3
+Abbas: 
+- Created routes for project, project_tag, and tag endpoints so you can use their procedures. The tag entity was removed from the database so the route for it is not necessary. 
+- I created a backend logger that logs when a user preforms any action related to the routes we have. 
+- Created a project search page and project page for the frontend.
