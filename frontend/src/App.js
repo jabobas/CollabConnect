@@ -6,9 +6,18 @@ import Dashboard from "./scenes/dashboard";
 import Sidebar from "./scenes/global/Sidebar";
 
 import SearchCollab from "./scenes/SearchCollab";
+import SearchProjects from "./scenes/project";
+import ProjectDetail from "./scenes/project/Detail";
+// import Person from "./scenes/Person";
 import Person from "./scenes/person";
+import Department from "./scenes/department";
+import Analytics from "./scenes/analytics";
+import Login from "./scenes/login";
+import Register from "./scenes/register";
+import User from "./scenes/user";
+import CreateProfile from "./scenes/create-profile";
+import ClaimProfile from "./scenes/claim-profile";
 // import Institution from "./scenes/Institution";
-// import Department from "./scenes/Department";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -24,10 +33,19 @@ function App() {
               <Route path="/" element={<Dashboard />} />
               {/* <Route path="/connections" element={ }/> */}
               <Route path="/search" element={<SearchCollab />} />
+              <Route path="/project/:id" element={<ProjectDetail />} />
+              <Route path="/projects" element={<SearchProjects />} />
+              <Route path="/analytics" element={<Analytics />} />
 
               <Route path="/person/:id" element={<Person />} />
               {/* <Route path="/institution/:id" element={<Institution />} /> */}
-              {/* <Route path="/department/:id" element={<Department />} /> */}
+              <Route path="/department/:id" element={<Department />} />
+              
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/user/:id" element={<User />} />
+              <Route path="/create-profile" element={<CreateProfile />} />
+              <Route path="/people" element={<ClaimProfile />} />
 
               {/* <Route path="/data-collection" element={< />} /> */}
               {/* <Route path="/faq" element={< />} /> */}
