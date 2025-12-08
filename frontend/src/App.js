@@ -19,12 +19,15 @@ import Department from "./scenes/department";
 import Analytics from "./scenes/analytics";
 import Login from "./scenes/login";
 import Register from "./scenes/register";
+import VerifyEmail from "./scenes/verify-email";
 import User from "./scenes/user";
 import Institution from "./scenes/Institution";
 import DataCollection from "./scenes/data-collection";
 import Faq from "./scenes/faq";
 import Settings from "./scenes/settings";
 import Connections from "./scenes/connections";
+import ClaimProfile from "./scenes/claim-profile";
+import CreateProfile from "./scenes/create-profile";
 function App() {
   const [theme, colorMode] = useMode();
   return (
@@ -49,7 +52,11 @@ function App() {
 
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
+              <Route path="/verify-email" element={<VerifyEmail />} />
               <Route path="/user/:id" element={<User />} />
+
+              <Route path="/claim-profile" element={<ClaimProfile />} />
+              <Route path="/create-profile" element={<CreateProfile />} />
 
               <Route path="/data-collection" element={<DataCollection />} />
               <Route path="/faq" element={<Faq/>} />

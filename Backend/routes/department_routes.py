@@ -64,6 +64,30 @@ def get_department_people(department_id):
             cursor.close()
 
 
+@department_bp.route('/all', methods=['GET'])
+def get_all_departments():
+    """Get all departments for autocomplete"""
+    from app import mysql
+    cursor = None
+    try:
+        cursor = mysql.connection.cursor()
+        cursor.execute("START TRANSACTION")
+        cursor.execute('''
+            SELECT department_id, department_name, institution_id
+            FROM Department
+            ORDER BY department_name
+        ''')
+        results = cursor.fetchall()
+        mysql.connection.commit()
+        return jsonify({'status': 'success', 'data': results, 'count': len(results)})
+    except Exception as e:
+        mysql.connection.rollback()
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+    finally:
+        if cursor:
+            cursor.close()
+
+
 @department_bp.route('/by-name/<string:department_name>', methods=['GET'])
 def get_department_by_name(department_name):
     from app import mysql

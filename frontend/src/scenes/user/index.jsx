@@ -1,11 +1,7 @@
 /*
-Author: Aubin Mugisha
-Date: December 1, 2025
-
-User profile page displaying user information and their projects.
-Shows "Complete Your Profile" section for new users without linked person profile,
-with options to search/claim existing profile or create new one.
-*/
+ * Author: Aubin Mugisha & Copilot
+ * Description: User profile page displaying user information, linked researcher profile, and projects.
+ */
 
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -34,24 +30,19 @@ const User = () => {
         setLoading(true);
         const userRes = await axios.get(`/user/${id}`);
         
-        if (userRes.data.status === 'success') {
-          const userData = userRes.data.data;
-          setUser(userData);
-          
-          // If user has claimed a person profile, redirect to person page instead
-          if (userData.person_id) {
-            navigate(`/person/${userData.person_id}`, { replace: true });
-            return;
-          }
-          
-          // Try to fetch projects, but don't fail if user has no person_id yet
-          try {
-            const projectsRes = await axios.get(`/user/${id}/projects`);
-            if (projectsRes.data.status === 'success') setProjects(projectsRes.data.data);
-          } catch (projErr) {
-            // 404 is expected for new users without person profile
-            setProjects([]);
-          }
+        const userData = userRes.data.data;
+        setUser(userData);
+        
+        if (userData.person_id) {
+          navigate(`/person/${userData.person_id}`, { replace: true });
+          return;
+        }
+        
+        try {
+          const projectsRes = await axios.get(`/user/${id}/projects`);
+          if (projectsRes.data.status === 'success') setProjects(projectsRes.data.data);
+        } catch (projErr) {
+          setProjects([]);
         }
         
         setLoading(false);
@@ -64,16 +55,13 @@ const User = () => {
     fetchData();
   }, [id, navigate]);
 
-  const handleProjectAdded = () => {
-    const fetchProjects = async () => {
-      try {
-        const projectsRes = await axios.get(`/user/${id}/projects`);
-        if (projectsRes.data.status === 'success') setProjects(projectsRes.data.data);
-      } catch (err) {
-        setProjects([]);
-      }
-    };
-    fetchProjects();
+  const handleProjectAdded = async () => {
+    try {
+      const projectsRes = await axios.get(`/user/${id}/projects`);
+      if (projectsRes.data.status === 'success') setProjects(projectsRes.data.data);
+    } catch (err) {
+      setProjects([]);
+    }
   };
 
   if (loading) return <Box m="20px" display="flex" justifyContent="center" alignItems="center" height="80vh"><CircularProgress /></Box>;
@@ -103,7 +91,7 @@ const User = () => {
             fontSize: '16px',
             '&:hover': { backgroundColor: colors.blueAccent[800] },
           }}
-          onClick={() => navigate('/people')}
+          onClick={() => navigate('/claim-profile')}
         >
           Search & Claim Profile
         </Button>

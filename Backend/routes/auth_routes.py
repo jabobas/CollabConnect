@@ -1,166 +1,318 @@
-# -- Authentication routes for user registration, login, email verification,
-# -- password reset, and token refresh. Uses JWT for secure authentication.
+"""
+Filename: auth_routes.py
+Author: Aubin Mugisha
+
+Authentication routes handling user registration, login, email verification,
+and JWT token management.
+"""
 
 from flask import Blueprint, request, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 from utils.jwt_utils import generate_access_token, token_required
-from utils.logger import log_info, log_error
 from utils.validators import validate_email, validate_password
+from utils.email_sender import send_verification_email, send_welcome_email
+import random
+import string
 
-auth_bp = Blueprint('auth', __name__)
+auth_bp = Blueprint("auth", __name__)
 
-@auth_bp.route('/auth/register', methods=['POST'])
+
+def generate_verification_code() -> str:
+    """Generate a random 6-digit verification code."""
+    return "".join(random.choices(string.digits, k=6))
+
+
+@auth_bp.route("/auth/register", methods=["POST"])
 def register():
-    """Register new user account with email and password"""
+    """Register new user account with email and password, send verification code."""
     from app import mysql
-    
-    data = request.get_json()
-    email = data.get('email')
-    password = data.get('password')
-    
-    log_info(f"Registration attempt for email: {email}")
-    
+
+    data = request.get_json() or {}
+    email = data.get("email")
+    password = data.get("password")
+
     if not email or not password:
-        log_error("Registration failed: Missing email or password")
-        return jsonify({'status': 'error', 'message': 'Email and password required'}), 400
-    
-    # Validate email format
+        return (
+            jsonify({"status": "error", "message": "Email and password required"}),
+            400,
+        )
+
     if not validate_email(email):
-        return jsonify({'status': 'error', 'message': 'Invalid email format'}), 400
-    
-    # Validate password strength
+        return jsonify({"status": "error", "message": "Invalid email format"}), 400
+
     is_valid, msg = validate_password(password)
     if not is_valid:
-        return jsonify({'status': 'error', 'message': msg}), 400
-    
+        return jsonify({"status": "error", "message": msg}), 400
+
     try:
-        # Hash password for security - never store plain text passwords
         password_hash = generate_password_hash(password)
-        
+        verification_code = generate_verification_code()
+
         cursor = mysql.connection.cursor()
         cursor.execute("START TRANSACTION")
-        cursor.callproc('InsertUser', [email, password_hash])
+        cursor.callproc("InsertUser", [email, password_hash, verification_code])
         result = cursor.fetchone()
-        user_id = result['user_id'] if result else None
-        
+        user_id = result["user_id"] if result else None
+
         while cursor.nextset():
             pass
-        
+
         mysql.connection.commit()
         cursor.close()
-        
-        log_info(f"User registered successfully: user_id={user_id}, email={email}")
-        return jsonify({
-            'status': 'success',
-            'message': 'Registration successful',
-            'data': {'user_id': user_id}
-        }), 201
+
+        # Send verification email (non-blocking for registration if it fails)
+        send_verification_email(email, verification_code)
+
+        return (
+            jsonify(
+                {
+                    "status": "success",
+                    "message": "Registration successful. Please check your email for verification code.",
+                    "data": {"user_id": user_id, "email": email},
+                }
+            ),
+            201,
+        )
     except Exception as e:
         mysql.connection.rollback()
-        # Handle duplicate email error
-        if 'Duplicate entry' in str(e):
-            log_error(f"Registration failed: Email already registered - {email}")
-            return jsonify({'status': 'error', 'message': 'Email already registered'}), 409
-        log_error(f"Registration failed: {str(e)}")
-        return jsonify({'status': 'error', 'message': str(e)}), 500
+        if "Duplicate entry" in str(e):
+            return (
+                jsonify({"status": "error", "message": "Email already registered"}),
+                409,
+            )
+        return jsonify({"status": "error", "message": str(e)}), 500
 
-@auth_bp.route('/auth/login', methods=['POST'])
+
+@auth_bp.route("/auth/login", methods=["POST"])
 def login():
-    """Authenticate user and return JWT token"""
+    """Authenticate user and return JWT token (requires verified email)."""
     from app import mysql
-    
-    data = request.get_json()
-    email = data.get('email')
-    password = data.get('password')
-    
-    log_info(f"Login attempt for email: {email}")
-    
+
+    data = request.get_json() or {}
+    email = data.get("email")
+    password = data.get("password")
+
     if not email or not password:
-        log_error("Login failed: Missing email or password")
-        return jsonify({'status': 'error', 'message': 'Email and password required'}), 400
-    
-    # Find user by email and update last login in single transaction
+        return (
+            jsonify({"status": "error", "message": "Email and password required"}),
+            400,
+        )
+
     cursor = mysql.connection.cursor()
     cursor.execute("START TRANSACTION")
-    cursor.callproc('SelectUserByEmail', [email])
+    cursor.callproc("SelectUserByEmail", [email])
     user = cursor.fetchone()
-    
+
     while cursor.nextset():
         pass
-    
-    # Verify user exists and password matches
-    if not user or not check_password_hash(user['password_hash'], password):
+
+    if not user or not check_password_hash(user["password_hash"], password):
         mysql.connection.rollback()
         cursor.close()
-        return jsonify({'status': 'error', 'message': 'Invalid credentials'}), 401
-    
-    # Update last login timestamp
-    cursor.callproc('UpdateUserLastLogin', [user['user_id']])
+        return jsonify({"status": "error", "message": "Invalid credentials"}), 401
+
+    # Check if email is verified
+    if not user.get("is_verified"):
+        mysql.connection.rollback()
+        cursor.close()
+        return (
+            jsonify(
+                {
+                    "status": "error",
+                    "message": "Please verify your email before logging in",
+                    "code": "EMAIL_NOT_VERIFIED",
+                    "email": email,
+                }
+            ),
+            403,
+        )
+
+    cursor.callproc("UpdateUserLastLogin", [user["user_id"]])
     while cursor.nextset():
         pass
     mysql.connection.commit()
     cursor.close()
-    
-    # Generate JWT token for authentication - this is what the frontend will use
-    access_token = generate_access_token(user['user_id'], user['email'])
-    
-    log_info(f"Login successful: user_id={user['user_id']}, email={email}")
-    return jsonify({
-        'status': 'success',
-        'data': {
-            'user_id': user['user_id'],
-            'person_id': user['person_id'],
-            'email': user['email'],
-            'access_token': access_token
-        }
-    }), 200
 
-@auth_bp.route('/auth/me', methods=['GET'])
+    access_token = generate_access_token(
+        user["user_id"], user["email"], user.get("person_id")
+    )
+
+    return (
+        jsonify(
+            {
+                "status": "success",
+                "data": {
+                    "user_id": user["user_id"],
+                    "person_id": user.get("person_id"),
+                    "email": user["email"],
+                    "access_token": access_token,
+                },
+            }
+        ),
+        200,
+    )
+
+
+@auth_bp.route("/auth/me", methods=["GET"])
 @token_required
 def get_current_user():
+    """Return the currently authenticated user."""
     from app import mysql
-    
-    user_id = request.current_user['user_id']
-    log_info(f"[User: {user_id}] Fetching current user profile")
-    
+
+    user_id = request.current_user["user_id"]
     cursor = mysql.connection.cursor()
-    cursor.callproc('SelectUserById', [user_id])
+    cursor.callproc("SelectUserById", [user_id])
     user = cursor.fetchone()
-    
+
     while cursor.nextset():
         pass
     cursor.close()
-    
-    if not user:
-        log_error(f"User not found: user_id={user_id}")
-        return jsonify({'status': 'error', 'message': 'User not found'}), 404
-    
-    log_info(f"Current user fetched: user_id={user_id}")
-    return jsonify({
-        'status': 'success',
-        'data': {
-            'user_id': user['user_id'],
-            'person_id': user['person_id'],
-            'email': user['email'],
-            'created_at': str(user['created_at']),
-            'last_login': str(user['last_login']) if user['last_login'] else None,
-            'person_name': user.get('person_name'),
-            'person_email': user.get('person_email'),
-            'person_phone': user.get('person_phone'),
-            'bio': user.get('bio')
-        }
-    }), 200
 
-@auth_bp.route('/auth/refresh', methods=['POST'])
+    if not user:
+        return jsonify({"status": "error", "message": "User not found"}), 404
+
+    return (
+        jsonify(
+            {
+                "status": "success",
+                "data": {
+                    "user_id": user["user_id"],
+                    "person_id": user.get("person_id"),
+                    "email": user["email"],
+                    "created_at": str(user["created_at"]),
+                    "last_login": str(user["last_login"])
+                    if user["last_login"]
+                    else None,
+                    "person_name": user.get("person_name"),
+                    "person_email": user.get("person_email"),
+                    "person_phone": user.get("person_phone"),
+                    "bio": user.get("bio"),
+                },
+            }
+        ),
+        200,
+    )
+
+
+@auth_bp.route("/auth/verify", methods=["POST"])
+def verify_email():
+    """Verify user email with verification code."""
+    from app import mysql
+
+    data = request.get_json() or {}
+    email = data.get("email")
+    code = data.get("code")
+
+    if not email or not code:
+        return (
+            jsonify(
+                {"status": "error", "message": "Email and verification code required"}
+            ),
+            400,
+        )
+
+    try:
+        cursor = mysql.connection.cursor()
+        cursor.execute("START TRANSACTION")
+        cursor.callproc("VerifyUserEmail", [email, code])
+
+        while cursor.nextset():
+            pass
+
+        mysql.connection.commit()
+        cursor.close()
+
+        send_welcome_email(email)
+        return (
+            jsonify(
+                {
+                    "status": "success",
+                    "message": "Email verified successfully! You can now log in.",
+                }
+            ),
+            200,
+        )
+    except Exception as e:
+        mysql.connection.rollback()
+        error_msg = str(e)
+        if "Invalid or expired" in error_msg:
+            return (
+                jsonify(
+                    {
+                        "status": "error",
+                        "message": "Invalid or expired verification code",
+                    }
+                ),
+                400,
+            )
+        return jsonify({"status": "error", "message": error_msg}), 500
+
+
+@auth_bp.route("/auth/resend-code", methods=["POST"])
+def resend_verification_code():
+    """Resend verification code to user email."""
+    from app import mysql
+
+    data = request.get_json() or {}
+    email = data.get("email")
+
+    if not email:
+        return jsonify({"status": "error", "message": "Email required"}), 400
+
+    if not validate_email(email):
+        return jsonify({"status": "error", "message": "Invalid email format"}), 400
+
+    try:
+        verification_code = generate_verification_code()
+
+        cursor = mysql.connection.cursor()
+        cursor.execute("START TRANSACTION")
+        cursor.callproc("UpdateVerificationCode", [email, verification_code])
+
+        while cursor.nextset():
+            pass
+
+        mysql.connection.commit()
+        cursor.close()
+
+        send_verification_email(email, verification_code)
+
+        return (
+            jsonify(
+                {
+                    "status": "success",
+                    "message": "Verification code sent to your email",
+                }
+            ),
+            200,
+        )
+    except Exception as e:
+        mysql.connection.rollback()
+        error_msg = str(e)
+        if "not found or already verified" in error_msg:
+            return (
+                jsonify(
+                    {
+                        "status": "error",
+                        "message": "User not found or already verified",
+                    }
+                ),
+                400,
+            )
+        return jsonify({"status": "error", "message": error_msg}), 500
+
+
+@auth_bp.route("/auth/refresh", methods=["POST"])
 @token_required
 def refresh_token():
-    user_id = request.current_user['user_id']
-    email = request.current_user['email']
-    
-    log_info(f"[User: {user_id}] Refreshing authentication token")
-    new_token = generate_access_token(user_id, email)
-    
-    return jsonify({
-        'status': 'success',
-        'data': {'access_token': new_token}
-    }), 200
+    """Refresh JWT access token."""
+    user_id = request.current_user["user_id"]
+    email = request.current_user["email"]
+    person_id = request.current_user.get("person_id")
+
+    new_token = generate_access_token(user_id, email, person_id)
+
+    return (
+        jsonify({"status": "success", "data": {"access_token": new_token}}),
+        200,
+    )

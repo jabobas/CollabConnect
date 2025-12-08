@@ -1,8 +1,3 @@
-/**
- * Author: Aubin Mugisha
- * AddProjectModal - Modal for adding new projects to user's profile
- */
-
 import React, { useState } from 'react';
 import { Box, Button, TextField, Dialog, DialogTitle, DialogContent, DialogActions, Alert } from "@mui/material";
 import { useTheme } from "@mui/material";
@@ -38,41 +33,31 @@ const AddProjectModal = ({ open, onClose, userId, onProjectAdded }) => {
       return;
     }
 
-    if (formData.start_date && formData.end_date) {
-      if (new Date(formData.end_date) < new Date(formData.start_date)) {
-        setError('End date must be after start date');
-        return;
-      }
+    if (formData.start_date && formData.end_date && new Date(formData.end_date) < new Date(formData.start_date)) {
+      setError('End date must be after start date');
+      return;
     }
 
     setLoading(true);
     
     try {
       const token = localStorage.getItem('access_token');
-      const projectData = {
-        ...formData,
-        start_date: formData.start_date || null,
-        end_date: formData.end_date || null
-      };
-      
-      const response = await axios.post(
+      await axios.post(
         `/user/${userId}/projects`,
-        projectData,
+        { ...formData, start_date: formData.start_date || null, end_date: formData.end_date || null },
         { headers: { 'Authorization': `Bearer ${token}` } }
       );
       
-      if (response.data.status === 'success') {
-        setFormData({
-          project_title: '',
-          project_description: '',
-          project_role: '',
-          tag_name: '',
-          start_date: '',
-          end_date: ''
-        });
-        onProjectAdded();
-        onClose();
-      }
+      setFormData({
+        project_title: '',
+        project_description: '',
+        project_role: '',
+        tag_name: '',
+        start_date: '',
+        end_date: ''
+      });
+      onProjectAdded();
+      onClose();
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to add project');
     } finally {

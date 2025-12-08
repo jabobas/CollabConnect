@@ -7,7 +7,6 @@ databases
 *__pycache__/
 *logs
 
-
 # macOS system files
 .DS_Store
 

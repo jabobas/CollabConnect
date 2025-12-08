@@ -1,4 +1,5 @@
 from utils.logger import log_info, log_error, get_request_user
+from utils.jwt_utils import token_required
 from flask import Blueprint, jsonify, request
 
 # Blueprint for person-related endpoints
@@ -65,11 +66,25 @@ def get_all_people():
         cursor = mysql.connection.cursor()
         cursor.execute("START TRANSACTION")
         log_info("Transaction started for fetching people")
-        cursor.callproc('GetAllPeople')
+        
+        # Modified query to include claim status
+        query = """
+            SELECT 
+                p.*,
+                d.department_name,
+                d.institution_id,
+                i.institution_name,
+                i.city,
+                i.state,
+                CASE WHEN u.person_id IS NOT NULL THEN TRUE ELSE FALSE END AS is_claimed
+            FROM Person p
+            LEFT JOIN Department d ON p.department_id = d.department_id
+            LEFT JOIN Institution i ON d.institution_id = i.institution_id
+            LEFT JOIN User u ON p.person_id = u.person_id
+        """
+        cursor.execute(query)
         results = cursor.fetchall()
-        # Consume remaining result sets from stored procedure
-        while cursor.nextset():
-            pass
+        
         mysql.connection.commit()
         log_info("Transaction committed for fetching people")
 
@@ -77,6 +92,9 @@ def get_all_people():
         for row in results:
             if 'expertise_1' in row:
                 row['expertises'] = [e for e in [row.get('expertise_1'), row.get('expertise_2'), row.get('expertise_3')] if e]
+            # Convert is_claimed to boolean
+            row['is_claimed'] = bool(row.get('is_claimed'))
+            
         log_info(f"Fetched {len(results)} people")
         return jsonify({
             'status': 'success',
@@ -118,6 +136,154 @@ def get_person_by_name(person_name: str):
     except Exception as e:
         mysql.connection.rollback()
         log_error(f"Transaction rolled back for fetching person by name: {str(e)}")
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+    finally:
+        if cursor:
+            cursor.close()
+
+
+@person_bp.route('/<int:person_id>', methods=['PUT'])
+@token_required
+def update_person(person_id: int):
+    """Update a person profile using UpdatePerson stored procedure."""
+    from app import mysql
+    
+    data = request.get_json()
+    user_id = request.current_user['user_id']
+    
+    cursor = None
+    try:
+        log_info(f"Updating person profile: person_id={person_id}, user_id={user_id}")
+        cursor = mysql.connection.cursor()
+        
+        # Start transaction
+        cursor.execute("START TRANSACTION")
+        log_info("Transaction started for updating person")
+        
+        # Handle institution - find or create
+        institution_id = None
+        institution_name = data.get('institution_name')
+        if institution_name:
+            cursor.callproc('SelectInstitutionByName', [institution_name])
+            inst_result = cursor.fetchone()
+            while cursor.nextset():
+                pass
+            
+            if inst_result:
+                institution_id = inst_result['institution_id']
+            else:
+                # Create new institution - InsertIntoInstitution(name, type, street, city, state, zipcode, phone)
+                cursor.callproc('InsertIntoInstitution', [institution_name, None, None, None, None, None, None])
+                result = cursor.fetchone()
+                institution_id = result['new_id'] if result else None
+                while cursor.nextset():
+                    pass
+        
+        # Handle department - find or create
+        department_id = None
+        department_name = data.get('department_name')
+        if department_name and institution_id:
+            cursor.callproc('SelectDepartmentByName', [department_name])
+            dept_result = cursor.fetchone()
+            while cursor.nextset():
+                pass
+            
+            if dept_result:
+                department_id = dept_result['department_id']
+            else:
+                # Create new department - InsertIntoDepartment(phone, email, name, institution_id)
+                cursor.callproc('InsertIntoDepartment', [None, None, department_name, institution_id])
+                result = cursor.fetchone()
+                department_id = result['new_id'] if result else None
+                while cursor.nextset():
+                    pass
+        
+        # Call UpdatePerson stored procedure
+        cursor.callproc('UpdatePerson', [
+            person_id,
+            data.get('person_name'),
+            data.get('person_email'),
+            data.get('person_phone'),
+            data.get('bio'),
+            data.get('expertise_1'),
+            data.get('expertise_2'),
+            data.get('expertise_3'),
+            data.get('expertise_1'),  # main_field = expertise_1
+            department_id
+        ])
+        
+        # Consume remaining result sets
+        while cursor.nextset():
+            pass
+        
+        mysql.connection.commit()
+        log_info(f"Person profile updated successfully: person_id={person_id}")
+        
+        return jsonify({
+            'status': 'success',
+            'message': 'Profile updated successfully'
+        }), 200
+        
+    except Exception as e:
+        mysql.connection.rollback()
+        log_error(f"Transaction rolled back for updating person: {str(e)}")
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+    finally:
+        if cursor:
+            cursor.close()
+
+
+@person_bp.route('/<int:person_id>', methods=['DELETE'])
+@token_required
+def delete_person(person_id: int):
+    """Unclaim and delete user account, preserving Person data for future claims."""
+    from app import mysql
+    
+    user_id = request.current_user['user_id']
+    
+    cursor = None
+    try:
+        log_info(f"Unclaiming person profile and deleting user account: person_id={person_id}, user_id={user_id}")
+        cursor = mysql.connection.cursor()
+        
+        # Verify the person_id matches the logged-in user's person_id
+        stored_person_id = request.current_user.get('person_id')
+        if stored_person_id != person_id:
+            log_error(f"Unauthorized delete attempt: user {user_id} tried to delete person {person_id}")
+            return jsonify({
+                'status': 'error',
+                'message': 'Unauthorized: You can only delete your own account'
+            }), 403
+        
+        # Start transaction
+        cursor.execute("START TRANSACTION")
+        log_info("Transaction started for unclaiming profile and deleting user")
+        
+        # Unclaim the profile by setting person_id to NULL in User table
+        # This preserves the Person data for future claims
+        cursor.execute("""
+            UPDATE User 
+            SET person_id = NULL 
+            WHERE user_id = %s
+        """, (user_id,))
+        
+        # Delete the user account (keeps Person data intact)
+        cursor.callproc('DeleteUser', [user_id])
+        while cursor.nextset():
+            pass
+        
+        mysql.connection.commit()
+        log_info(f"User account deleted and profile unclaimed successfully: person_id={person_id}, user_id={user_id}")
+        log_info(f"Person profile {person_id} is now available for claiming by other users")
+        
+        return jsonify({
+            'status': 'success',
+            'message': 'Account deleted successfully. Your profile data has been preserved and is now available for others to claim.'
+        }), 200
+        
+    except Exception as e:
+        mysql.connection.rollback()
+        log_error(f"Transaction rolled back for deleting person: {str(e)}")
         return jsonify({'status': 'error', 'message': str(e)}), 500
     finally:
         if cursor:

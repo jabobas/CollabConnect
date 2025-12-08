@@ -378,7 +378,7 @@ const SearchCollab = () => {
 
   useEffect(() => {
     axios
-      .get("http://127.0.0.1:5001/institution/all")
+      .get("http://127.0.0.1:5001/person/all")
       .then((response) => {
         setResearchers(response.data.data);
       })

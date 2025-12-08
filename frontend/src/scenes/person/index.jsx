@@ -21,13 +21,16 @@ import {
   User,
   Briefcase,
   Plus,
-  Edit
+  Edit,
+  Trash2
 } from "lucide-react";
 import axios from "axios";
 import { tokens } from "../../theme";
 import Header from "../../components/Header";
 import AddProjectModal from "../../components/AddProjectModal";
 import EditProjectModal from "../../components/EditProjectModal";
+import EditProfileModal from "../../components/EditProfileModal";
+import DeleteAccountModal from "../../components/DeleteAccountModal";
 
 const Person = () => {
   const { id } = useParams();
@@ -41,6 +44,8 @@ const Person = () => {
   const [error, setError] = useState(null);
   const [showAddProjectModal, setShowAddProjectModal] = useState(false);
   const [showEditProjectModal, setShowEditProjectModal] = useState(false);
+  const [showEditProfileModal, setShowEditProfileModal] = useState(false);
+  const [showDeleteAccountModal, setShowDeleteAccountModal] = useState(false);
   const [selectedProject, setSelectedProject] = useState(null);
   const [isOwnProfile, setIsOwnProfile] = useState(false);
 
@@ -183,11 +188,33 @@ const Person = () => {
         Back to Search
       </button>
 
-      {/* Header */}
-      <Header
-        title={personData.person_name}
-        subtitle={personData.main_field || "Researcher"}
-      />
+      {/* Header with Edit Button */}
+      <Box display="flex" justifyContent="space-between" alignItems="center">
+        <Header
+          title={personData.person_name}
+          subtitle={personData.main_field || "Researcher"}
+        />
+        {isOwnProfile && (
+          <Button
+            variant="contained"
+            startIcon={<Edit />}
+            onClick={() => setShowEditProfileModal(true)}
+            sx={{
+              backgroundColor: colors.blueAccent[600],
+              color: colors.grey[100],
+              fontWeight: 600,
+              px: 3,
+              py: 1.5,
+              borderRadius: '8px',
+              '&:hover': {
+                backgroundColor: colors.blueAccent[700]
+              }
+            }}
+          >
+            Edit Profile
+          </Button>
+        )}
+      </Box>
 
       {/* Main Content Grid */}
       <Box
@@ -381,6 +408,31 @@ const Person = () => {
                   </div>
                 )}
               </div>
+            </Box>
+          )}
+
+          {/* Delete Account Button - Only for own profile */}
+          {isOwnProfile && (
+            <Box mt={3} pt={3} borderTop={`1px solid ${colors.primary[300]}`}>
+              <Button
+                fullWidth
+                variant="outlined"
+                startIcon={<Trash2 size={18} />}
+                onClick={() => setShowDeleteAccountModal(true)}
+                sx={{
+                  color: colors.redAccent[400],
+                  borderColor: colors.redAccent[600],
+                  fontWeight: 600,
+                  py: 1.5,
+                  borderRadius: '8px',
+                  '&:hover': {
+                    backgroundColor: colors.redAccent[900],
+                    borderColor: colors.redAccent[500]
+                  }
+                }}
+              >
+                Delete Account
+              </Button>
             </Box>
           )}
         </Box>
@@ -672,6 +724,40 @@ const Person = () => {
           userId={parseInt(localStorage.getItem('user_id'))}
           onProjectUpdated={handleProjectUpdated}
           onProjectDeleted={handleProjectDeleted}
+        />
+      )}
+
+      {/* Edit Profile Modal */}
+      {isOwnProfile && (
+        <EditProfileModal
+          open={showEditProfileModal}
+          onClose={() => setShowEditProfileModal(false)}
+          person={personData}
+          department={department}
+          institution={institution}
+          onProfileUpdated={async () => {
+            // Refresh person data after update
+            try {
+              const response = await axios.get(`http://127.0.0.1:5001/person/${id}`);
+              setPerson(response.data.data);
+            } catch (err) {
+              console.error('Error refreshing profile:', err);
+            }
+          }}
+        />
+      )}
+
+      {/* Delete Account Modal */}
+      {isOwnProfile && (
+        <DeleteAccountModal
+          open={showDeleteAccountModal}
+          onClose={() => setShowDeleteAccountModal(false)}
+          personId={personData.person_id}
+          personName={personData.person_name}
+          onAccountDeleted={() => {
+            // Redirect to login page after successful account deletion
+            navigate('/login');
+          }}
         />
       )}
     </Box>
