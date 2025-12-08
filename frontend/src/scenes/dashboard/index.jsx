@@ -434,23 +434,24 @@ const Dashboard = () => {
         const projectsData = projectsRes.data?.data || [];
         const institutionsData = institutionsRes.data?.data || [];
 
-        // Calculate unique departments
+        // Calculate unique departments and institutions from people data
         const uniqueDepartments = new Set(
-          institutionsData
-            .map((item) => item.department_id)
+          peopleData
+            .map((person) => person.department_name)
             .filter(Boolean)
         ).size;
 
-        // Process institution statistics
+        // Process institution statistics using people data
         const institutionMap = {};
         
-        institutionsData.forEach((item) => {
-          const instId = item.institution_id;
-          const instName = item.institution_name;
+        peopleData.forEach((person) => {
+          const instName = person.institution_name;
           
-          if (!institutionMap[instId]) {
-            institutionMap[instId] = {
-              id: instId,
+          if (!instName) return; // Skip if no institution
+          
+          if (!institutionMap[instName]) {
+            institutionMap[instName] = {
+              id: instName, // Using name as ID since we don't have institution_id in person data
               name: instName,
               researcherCount: 0,
               projectCount: 0,
@@ -462,33 +463,25 @@ const Dashboard = () => {
           }
           
           // Count unique researchers
-          if (item.person_id) {
-            institutionMap[instId].researchers.add(item.person_id);
-          }
+          institutionMap[instName].researchers.add(person.person_id);
           
           // Count unique departments
-          if (item.department_id) {
-            institutionMap[instId].departments.add(item.department_id);
+          if (person.department_name) {
+            institutionMap[instName].departments.add(person.department_name);
           }
         });
 
         // Count projects per institution by matching researchers
         peopleData.forEach((person) => {
-          // Find which institution this person belongs to
-          const personInst = institutionsData.find(
-            (inst) => inst.person_id === person.person_id
-          );
-          if (personInst) {
-            const instId = personInst.institution_id;
-            if (institutionMap[instId]) {
-              // Count their projects
-              const personProjects = projectsData.filter(
-                (proj) => proj.person_id === person.person_id
-              );
-              personProjects.forEach((proj) => {
-                institutionMap[instId].projects.add(proj.project_id);
-              });
-            }
+          const instName = person.institution_name;
+          if (instName && institutionMap[instName]) {
+            // Count their projects
+            const personProjects = projectsData.filter(
+              (proj) => proj.person_id === person.person_id
+            );
+            personProjects.forEach((proj) => {
+              institutionMap[instName].projects.add(proj.project_id);
+            });
           }
         });
 
@@ -510,7 +503,7 @@ const Dashboard = () => {
           totalResearchers: peopleRes.data?.count || 0,
           totalProjects: projectsRes.data?.count || 0,
           totalInstitutions: new Set(
-            institutionsData.map((item) => item.institution_id)
+            peopleData.map((person) => person.institution_name).filter(Boolean)
           ).size,
           totalDepartments: uniqueDepartments,
         });
@@ -669,11 +662,21 @@ const Dashboard = () => {
               icon={Briefcase}
               color={colors.redAccent[500]}
               onClick={() => {
+                const token = localStorage.getItem("access_token");
+                const userId = localStorage.getItem("user_id");
+                
+                // Check if user is logged in
+                if (!token || !userId) {
+                  navigate("/login");
+                  return;
+                }
+                
+                // If logged in, check if they have a profile
                 const personId = localStorage.getItem("person_id");
                 if (personId) {
                   navigate(`/person/${personId}`);
                 } else {
-                  navigate("/create-profile");
+                  navigate(`/user/${userId}`);
                 }
               }}
             />

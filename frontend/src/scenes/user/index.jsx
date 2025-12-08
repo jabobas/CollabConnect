@@ -103,7 +103,7 @@ const User = () => {
             fontSize: '16px',
             '&:hover': { backgroundColor: colors.blueAccent[800] },
           }}
-          onClick={() => navigate('/people')}
+          onClick={() => navigate('/claim-profile')}
         >
           Search & Claim Profile
         </Button>

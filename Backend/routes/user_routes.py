@@ -142,10 +142,18 @@ def claim_person(user_id, person_id):
             pass
         mysql.connection.commit()
         
+        # Generate new token with person_id included
+        from utils.jwt_utils import generate_access_token
+        user_email = request.current_user.get('email')
+        new_token = generate_access_token(user_id, user_email, person_id)
+        
         return jsonify({
             'status': 'success', 
             'message': 'Profile claimed',
-            'data': {'person_id': person_id}
+            'data': {
+                'person_id': person_id,
+                'access_token': new_token
+            }
         }), 200
     except Exception as e:
         mysql.connection.rollback()
@@ -416,11 +424,20 @@ def create_profile_with_affiliation():
             pass
         mysql.connection.commit()
         
+        # Generate new token with person_id included
+        from utils.jwt_utils import generate_access_token
+        user_email = request.current_user.get('email')
+        new_token = generate_access_token(user_id, user_email, person_id)
+        
         log_info(f"Profile created with affiliation: user_id={user_id}, person_id={person_id}")
         return jsonify({
             'status': 'success',
             'message': 'Profile created',
-            'data': {'person_id': person_id, 'user_id': user_id}
+            'data': {
+                'person_id': person_id,
+                'user_id': user_id,
+                'access_token': new_token
+            }
         }), 201
         
     except Exception as e:

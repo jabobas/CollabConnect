@@ -25,6 +25,8 @@ import DataCollection from "./scenes/data-collection";
 import Faq from "./scenes/faq";
 import Settings from "./scenes/settings";
 import Connections from "./scenes/connections";
+import ClaimProfile from "./scenes/claim-profile";
+import CreateProfile from "./scenes/create-profile";
 function App() {
   const [theme, colorMode] = useMode();
   return (
@@ -50,6 +52,9 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/user/:id" element={<User />} />
+
+              <Route path="/claim-profile" element={<ClaimProfile />} />
+              <Route path="/create-profile" element={<CreateProfile />} />
 
               <Route path="/data-collection" element={<DataCollection />} />
               <Route path="/faq" element={<Faq/>} />

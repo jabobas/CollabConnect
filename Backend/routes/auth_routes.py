@@ -102,7 +102,7 @@ def login():
     cursor.close()
     
     # Generate JWT token for authentication - this is what the frontend will use
-    access_token = generate_access_token(user['user_id'], user['email'])
+    access_token = generate_access_token(user['user_id'], user['email'], user.get('person_id'))
     
     log_info(f"Login successful: user_id={user['user_id']}, email={email}")
     return jsonify({

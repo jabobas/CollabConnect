@@ -6,8 +6,8 @@ Registration page for new users. Creates user account and stores hashed
 password in database. No email verification currently implemented.
 */
 
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Box, Button, TextField, Typography, useTheme, Alert } from "@mui/material";
 import axios from "axios";
 import Header from "../../components/Header";
@@ -17,6 +17,7 @@ const Register = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -24,6 +25,13 @@ const Register = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
+
+  // Check if redirected after account deletion
+  useEffect(() => {
+    if (searchParams.get('deleted') === 'true') {
+      setSuccess('Your account has been successfully deleted. You can create a new account if you wish.');
+    }
+  }, [searchParams]);
 
   const handleRegister = async (e) => {
     e.preventDefault();

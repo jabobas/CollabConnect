@@ -61,7 +61,18 @@ BEGIN
     SELECT COUNT(*) FROM WorkedOn WHERE person_id = p_person_id FOR UPDATE;
     SELECT COUNT(*) FROM WorksIn WHERE person_id = p_person_id FOR UPDATE;
     
-    -- Delete the person and related records
+    -- Delete related records first (WorksIn doesn't have CASCADE)
+    DELETE FROM WorksIn WHERE person_id = p_person_id;
+    
+    -- WorkedOn has CASCADE, so it will be deleted automatically
+    -- But we can explicitly delete it for clarity
+    DELETE FROM WorkedOn WHERE person_id = p_person_id;
+    
+    -- Update User table to set person_id to NULL (it has ON DELETE SET NULL)
+    -- This happens automatically, but we ensure it
+    UPDATE User SET person_id = NULL WHERE person_id = p_person_id;
+    
+    -- Delete the person record
     DELETE FROM Person
     WHERE person_id = p_person_id;
 END;
@@ -69,8 +80,16 @@ END;
 -- 3. Get all people
 CREATE PROCEDURE GetAllPeople()
 BEGIN 
-    SELECT *
-    FROM Person;
+    SELECT 
+        p.*,
+        d.department_name,
+        d.institution_id,
+        i.institution_name,
+        i.city,
+        i.state
+    FROM Person p
+    LEFT JOIN Department d ON p.department_id = d.department_id
+    LEFT JOIN Institution i ON d.institution_id = i.institution_id;
 END;
 
 -- 4. Update person given arguments for fields and new values

@@ -14,7 +14,7 @@ from flask import request, jsonify
 SECRET_KEY = 'collabconnect-secret-key'
 TOKEN_EXPIRY_HOURS = 24
 
-def generate_access_token(user_id, email):
+def generate_access_token(user_id, email, person_id=None):
     """Generate JWT token with user info that expires in 24 hours"""
     now = datetime.now(timezone.utc)
     payload = {
@@ -23,6 +23,8 @@ def generate_access_token(user_id, email):
         'exp': now + timedelta(hours=TOKEN_EXPIRY_HOURS),
         'iat': now
     }
+    if person_id:
+        payload['person_id'] = person_id
     return jwt.encode(payload, SECRET_KEY, algorithm='HS256')
 
 

@@ -6,10 +6,13 @@ Profile claiming page where users can search for existing Person profiles
 from scraped data and claim them to link to their user account.
 */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, TextField, Button, useTheme, CircularProgress, Alert, Chip } from "@mui/material";
-import { Search, User, Mail, Phone, CheckCircle, XCircle } from "lucide-react";
+import { 
+  Box, TextField, Button, useTheme, CircularProgress, 
+  Alert, Chip, Autocomplete, Card, CardContent, Avatar, Divider
+} from "@mui/material";
+import { Search, User, Mail, Phone, CheckCircle, XCircle, Briefcase, MapPin, Sparkles } from "lucide-react";
 import axios from "axios";
 import Header from "../../components/Header";
 import { tokens } from "../../theme";
@@ -20,38 +23,44 @@ const ClaimProfile = () => {
   const navigate = useNavigate();
   
   const [searchName, setSearchName] = useState('');
-  const [searchEmail, setSearchEmail] = useState('');
-  const [results, setResults] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [allPeople, setAllPeople] = useState([]);
+  const [filteredPeople, setFilteredPeople] = useState([]);
+  const [selectedProfile, setSelectedProfile] = useState(null);
   const [error, setError] = useState('');
   const [claimingId, setClaimingId] = useState(null);
+  const [loadingPeople, setLoadingPeople] = useState(true);
 
-  const handleSearch = async () => {
-    if (!searchName && !searchEmail) {
-      setError('Please enter a name or email to search');
-      return;
-    }
-
-    setError('');
-    setLoading(true);
-
+  // Load all people on mount and when component becomes visible
+  const fetchAllPeople = async () => {
+    setLoadingPeople(true);
     try {
-      const response = await axios.get('/user/search-profile', {
-        params: { name: searchName, email: searchEmail }
-      });
-
+      const response = await axios.get('/person/all');
       if (response.data.status === 'success') {
-        setResults(response.data.data);
-        if (response.data.data.length === 0) {
-          setError('No matching profiles found. Try different search terms or create a new profile.');
-        }
+        setAllPeople(response.data.data);
       }
     } catch (err) {
-      setError(err.response?.data?.message || 'Search failed');
+      setError('Failed to load profiles');
     } finally {
-      setLoading(false);
+      setLoadingPeople(false);
     }
   };
+
+  useEffect(() => {
+    fetchAllPeople();
+  }, []);
+
+  // Filter people as user types
+  useEffect(() => {
+    if (searchName.length >= 2) {
+      const filtered = allPeople.filter(person =>
+        person.person_name.toLowerCase().includes(searchName.toLowerCase()) ||
+        person.person_email?.toLowerCase().includes(searchName.toLowerCase())
+      );
+      setFilteredPeople(filtered.slice(0, 50)); // Limit to 50 results
+    } else {
+      setFilteredPeople([]);
+    }
+  }, [searchName, allPeople]);
 
   const handleClaim = async (personId) => {
     const userId = localStorage.getItem('user_id');
@@ -72,10 +81,16 @@ const ClaimProfile = () => {
       );
 
       if (response.data.status === 'success') {
+        const { person_id, access_token } = response.data.data;
         // Store person_id in localStorage for future use
-        localStorage.setItem('person_id', personId);
+        localStorage.setItem('person_id', person_id);
+        // Update token with new one that includes person_id
+        if (access_token) {
+          localStorage.setItem('access_token', access_token);
+          axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
+        }
         // Redirect to the person profile page instead of user page
-        navigate(`/person/${personId}`);
+        navigate(`/person/${person_id}`);
       }
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to claim profile');
@@ -83,118 +98,182 @@ const ClaimProfile = () => {
     }
   };
 
-  const ProfileCard = ({ profile }) => (
-    <Box
-      backgroundColor={colors.primary[400]}
-      borderRadius="8px"
-      border={`1px solid ${colors.primary[300]}`}
-      p="24px"
-      sx={{
-        opacity: profile.is_claimed ? 0.6 : 1,
-        transition: 'all 0.2s'
-      }}
-    >
-      <Box display="flex" justifyContent="space-between" alignItems="start" mb="16px">
-        <Box flex={1}>
-          <h3 style={{ color: colors.grey[100], fontSize: '20px', fontWeight: '600', marginBottom: '8px' }}>
-            {profile.person_name}
-          </h3>
-          
-          {profile.bio && (
-            <p style={{ 
-              color: colors.grey[300], 
-              fontSize: '14px', 
-              marginBottom: '12px',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              display: '-webkit-box',
-              WebkitLineClamp: 2,
-              WebkitBoxOrient: 'vertical'
-            }}>
-              {profile.bio}
-            </p>
-          )}
-        </Box>
+  const ProfileCard = ({ profile }) => {
+    const initials = profile.person_name
+      .split(' ')
+      .map(n => n[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
 
-        <Box ml="16px">
-          {profile.is_claimed ? (
-            <Chip
-              icon={<XCircle size={16} />}
-              label="Already Claimed"
-              size="small"
-              sx={{ 
-                backgroundColor: colors.redAccent[700],
-                color: colors.grey[100]
-              }}
-            />
-          ) : (
-            <Chip
-              icon={<CheckCircle size={16} />}
-              label="Available"
-              size="small"
-              sx={{ 
-                backgroundColor: colors.greenAccent[700],
-                color: colors.grey[100]
-              }}
-            />
-          )}
-        </Box>
-      </Box>
-
-      <Box display="flex" flexDirection="column" gap="8px" mb="16px">
-        {profile.person_email && (
-          <Box display="flex" alignItems="center" gap="8px">
-            <Mail size={16} color={colors.grey[400]} />
-            <span style={{ color: colors.grey[300], fontSize: '14px' }}>{profile.person_email}</span>
-          </Box>
-        )}
-
-        {profile.person_phone && (
-          <Box display="flex" alignItems="center" gap="8px">
-            <Phone size={16} color={colors.grey[400]} />
-            <span style={{ color: colors.grey[300], fontSize: '14px' }}>{profile.person_phone}</span>
-          </Box>
-        )}
-      </Box>
-
-      {profile.expertises && profile.expertises.length > 0 && (
-        <Box display="flex" flexWrap="wrap" gap="8px" mb="16px">
-          {profile.expertises.map((exp, idx) => (
-            <Chip
-              key={idx}
-              label={exp}
-              size="small"
-              sx={{ 
-                backgroundColor: colors.blueAccent[700],
-                color: colors.grey[100],
-                fontSize: '12px'
-              }}
-            />
-          ))}
-        </Box>
-      )}
-
-      <Button
-        variant="contained"
-        fullWidth
-        disabled={profile.is_claimed || claimingId === profile.person_id}
-        onClick={() => handleClaim(profile.person_id)}
+    return (
+      <Card
         sx={{
-          backgroundColor: profile.is_claimed ? colors.grey[700] : colors.greenAccent[600],
-          color: colors.grey[100],
-          '&:hover': { 
-            backgroundColor: profile.is_claimed ? colors.grey[700] : colors.greenAccent[700]
-          },
-          '&:disabled': {
-            backgroundColor: colors.grey[700],
-            color: colors.grey[400]
+          backgroundColor: colors.primary[400],
+          borderRadius: "16px",
+          border: `2px solid ${profile.is_claimed ? colors.redAccent[700] : colors.greenAccent[700]}`,
+          transition: 'all 0.3s ease',
+          '&:hover': {
+            transform: 'translateY(-4px)',
+            boxShadow: `0 8px 24px ${colors.primary[900]}80`
           }
         }}
       >
-        {claimingId === profile.person_id ? 'Claiming...' : profile.is_claimed ? 'Already Claimed' : 'Claim This Profile'}
-      </Button>
-    </Box>
-  );
+        <CardContent sx={{ p: 3 }}>
+          <Box display="flex" gap={3} mb={2}>
+            <Avatar
+              sx={{
+                width: 70,
+                height: 70,
+                backgroundColor: colors.blueAccent[600],
+                fontSize: '24px',
+                fontWeight: 600,
+                border: `3px solid ${colors.blueAccent[700]}`
+              }}
+            >
+              {initials}
+            </Avatar>
+            
+            <Box flex={1}>
+              <Box display="flex" justifyContent="space-between" alignItems="start" mb={1}>
+                <h3 style={{ 
+                  color: colors.grey[100], 
+                  fontSize: '22px', 
+                  fontWeight: '700',
+                  margin: 0
+                }}>
+                  {profile.person_name}
+                </h3>
+                
+                {profile.is_claimed ? (
+                  <Chip
+                    icon={<XCircle size={16} />}
+                    label="Claimed"
+                    size="small"
+                    sx={{ 
+                      backgroundColor: colors.redAccent[700],
+                      color: colors.grey[100],
+                      fontWeight: 600
+                    }}
+                  />
+                ) : (
+                  <Chip
+                    icon={<Sparkles size={16} />}
+                    label="Available"
+                    size="small"
+                    sx={{ 
+                      backgroundColor: colors.greenAccent[700],
+                      color: colors.grey[100],
+                      fontWeight: 600
+                    }}
+                  />
+                )}
+              </Box>
+              
+              {profile.main_field && (
+                <Chip
+                  icon={<Briefcase size={14} />}
+                  label={profile.main_field}
+                  size="small"
+                  sx={{ 
+                    backgroundColor: colors.blueAccent[800],
+                    color: colors.blueAccent[200],
+                    mb: 1
+                  }}
+                />
+              )}
+            </Box>
+          </Box>
+
+          {profile.bio && (
+            <Box mb={2}>
+              <p style={{ 
+                color: colors.grey[300], 
+                fontSize: '14px',
+                lineHeight: '1.6',
+                margin: 0,
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                display: '-webkit-box',
+                WebkitLineClamp: 3,
+                WebkitBoxOrient: 'vertical'
+              }}>
+                {profile.bio}
+              </p>
+            </Box>
+          )}
+
+          <Divider sx={{ borderColor: colors.primary[300], my: 2 }} />
+
+          <Box display="flex" flexDirection="column" gap={1.5} mb={2}>
+            {profile.person_email && (
+              <Box display="flex" alignItems="center" gap={1.5}>
+                <Mail size={18} color={colors.blueAccent[400]} />
+                <span style={{ color: colors.grey[200], fontSize: '14px' }}>{profile.person_email}</span>
+              </Box>
+            )}
+
+            {profile.person_phone && (
+              <Box display="flex" alignItems="center" gap={1.5}>
+                <Phone size={18} color={colors.greenAccent[400]} />
+                <span style={{ color: colors.grey[200], fontSize: '14px' }}>{profile.person_phone}</span>
+              </Box>
+            )}
+
+            {profile.department_name && (
+              <Box display="flex" alignItems="center" gap={1.5}>
+                <MapPin size={18} color={colors.redAccent[400]} />
+                <span style={{ color: colors.grey[200], fontSize: '14px' }}>{profile.department_name}</span>
+              </Box>
+            )}
+          </Box>
+
+          {profile.expertises && profile.expertises.length > 0 && (
+            <Box display="flex" flexWrap="wrap" gap={1} mb={2}>
+              {profile.expertises.slice(0, 3).map((exp, idx) => (
+                <Chip
+                  key={idx}
+                  label={exp}
+                  size="small"
+                  sx={{ 
+                    backgroundColor: colors.primary[600],
+                    color: colors.grey[100],
+                    fontSize: '12px',
+                    fontWeight: 500
+                  }}
+                />
+              ))}
+            </Box>
+          )}
+
+          <Button
+            variant="contained"
+            fullWidth
+            disabled={profile.is_claimed || claimingId === profile.person_id}
+            onClick={() => handleClaim(profile.person_id)}
+            startIcon={claimingId === profile.person_id ? <CircularProgress size={18} /> : <CheckCircle size={18} />}
+            sx={{
+              backgroundColor: profile.is_claimed ? colors.grey[700] : colors.greenAccent[600],
+              color: colors.grey[100],
+              py: 1.5,
+              fontSize: '15px',
+              fontWeight: 600,
+              borderRadius: '8px',
+              '&:hover': { 
+                backgroundColor: profile.is_claimed ? colors.grey[700] : colors.greenAccent[700]
+              },
+              '&:disabled': {
+                backgroundColor: colors.grey[700],
+                color: colors.grey[400]
+              }
+            }}
+          >
+            {claimingId === profile.person_id ? 'Claiming...' : profile.is_claimed ? 'Already Claimed' : 'Claim This Profile'}
+          </Button>
+        </CardContent>
+      </Card>
+    );
+  };
 
   return (
     <Box m="20px">
@@ -203,50 +282,124 @@ const ClaimProfile = () => {
         subtitle="Find your existing profile from our database and claim it"
       />
 
-      <Box 
-        backgroundColor={colors.primary[400]}
-        borderRadius="8px"
-        p="32px"
-        mb="32px"
+      <Card 
+        sx={{
+          backgroundColor: colors.primary[400],
+          borderRadius: "16px",
+          p: 4,
+          mb: 4,
+          boxShadow: `0 4px 20px ${colors.primary[900]}40`
+        }}
       >
-        {error && <Alert severity="error" sx={{ mb: '20px' }}>{error}</Alert>}
-
-        <Box display="flex" gap="16px" mb="20px" flexWrap="wrap">
-          <TextField
-            label="Search by Name"
-            value={searchName}
-            onChange={(e) => setSearchName(e.target.value)}
-            variant="filled"
-            sx={{ flex: 1, minWidth: '250px' }}
-            placeholder="e.g., John Smith"
-            onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-          />
-
-          <TextField
-            label="Search by Email"
-            value={searchEmail}
-            onChange={(e) => setSearchEmail(e.target.value)}
-            variant="filled"
-            sx={{ flex: 1, minWidth: '250px' }}
-            placeholder="e.g., john@example.com"
-            onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-          />
-
-          <Button
-            variant="contained"
-            startIcon={loading ? <CircularProgress size={18} /> : <Search size={18} />}
-            onClick={handleSearch}
-            disabled={loading}
-            sx={{
-              backgroundColor: colors.blueAccent[700],
-              color: colors.grey[100],
-              padding: '14px 32px',
-              '&:hover': { backgroundColor: colors.blueAccent[800] }
+        {error && (
+          <Alert 
+            severity="error" 
+            sx={{ 
+              mb: 3,
+              borderRadius: '8px',
+              backgroundColor: colors.redAccent[800],
+              color: colors.grey[100]
             }}
           >
-            Search
-          </Button>
+            {error}
+          </Alert>
+        )}
+
+        <Box mb={3}>
+          <Autocomplete
+            freeSolo
+            options={filteredPeople}
+            getOptionLabel={(option) => 
+              typeof option === 'string' ? option : option.person_name
+            }
+            value={selectedProfile}
+            onChange={(event, newValue) => {
+              setSelectedProfile(newValue);
+              if (newValue && typeof newValue !== 'string') {
+                setSearchName(newValue.person_name);
+              }
+            }}
+            inputValue={searchName}
+            onInputChange={(event, newInputValue) => {
+              setSearchName(newInputValue);
+            }}
+            loading={loadingPeople}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Search by Name or Email"
+                variant="filled"
+                placeholder="Start typing to see suggestions..."
+                InputProps={{
+                  ...params.InputProps,
+                  startAdornment: <Search size={20} style={{ marginRight: 8, color: colors.blueAccent[400] }} />,
+                  endAdornment: (
+                    <>
+                      {loadingPeople ? <CircularProgress size={20} /> : null}
+                      {params.InputProps.endAdornment}
+                    </>
+                  ),
+                }}
+                sx={{
+                  '& .MuiFilledInput-root': {
+                    backgroundColor: colors.primary[500],
+                    borderRadius: '12px',
+                    fontSize: '16px',
+                    '&:hover': {
+                      backgroundColor: colors.primary[600]
+                    }
+                  }
+                }}
+              />
+            )}
+            renderOption={(props, option) => (
+              <Box
+                component="li"
+                {...props}
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 2,
+                  p: 2,
+                  '&:hover': {
+                    backgroundColor: colors.primary[600]
+                  }
+                }}
+              >
+                <Avatar
+                  sx={{
+                    backgroundColor: colors.blueAccent[600],
+                    width: 40,
+                    height: 40
+                  }}
+                >
+                  {option.person_name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
+                </Avatar>
+                <Box>
+                  <div style={{ fontWeight: 600, color: colors.grey[100] }}>
+                    {option.person_name}
+                  </div>
+                  <div style={{ fontSize: '12px', color: colors.grey[400] }}>
+                    {option.person_email || option.main_field || 'No email'}
+                  </div>
+                </Box>
+                {option.is_claimed && (
+                  <Chip
+                    label="Claimed"
+                    size="small"
+                    sx={{
+                      ml: 'auto',
+                      backgroundColor: colors.redAccent[700],
+                      color: colors.grey[100]
+                    }}
+                  />
+                )}
+              </Box>
+            )}
+          />
         </Box>
+
+        <Divider sx={{ borderColor: colors.primary[300], my: 3 }} />
 
         <Box display="flex" justifyContent="center">
           <Button
@@ -254,47 +407,78 @@ const ClaimProfile = () => {
             startIcon={<User size={18} />}
             onClick={() => navigate('/create-profile')}
             sx={{
-              borderColor: colors.greenAccent[700],
-              color: colors.greenAccent[700],
+              borderColor: colors.greenAccent[600],
+              color: colors.greenAccent[600],
+              px: 3,
+              py: 1.5,
+              borderRadius: '12px',
+              fontSize: '15px',
+              fontWeight: 600,
+              borderWidth: 2,
               '&:hover': { 
-                borderColor: colors.greenAccent[600],
-                backgroundColor: colors.greenAccent[700] + '20'
+                borderColor: colors.greenAccent[500],
+                backgroundColor: colors.greenAccent[700] + '20',
+                borderWidth: 2
               }
             }}
           >
             Or Create New Profile Instead
           </Button>
         </Box>
-      </Box>
+      </Card>
 
-      {loading && (
+      {loadingPeople ? (
         <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
-          <CircularProgress />
+          <CircularProgress size={50} />
         </Box>
-      )}
-
-      {!loading && results.length > 0 && (
+      ) : selectedProfile && typeof selectedProfile !== 'string' ? (
+        <Box>
+          <h3 style={{ 
+            color: colors.grey[100], 
+            fontSize: '24px', 
+            fontWeight: '700',
+            marginBottom: '24px'
+          }}>
+            Selected Profile
+          </h3>
+          <ProfileCard profile={selectedProfile} />
+        </Box>
+      ) : filteredPeople.length > 0 && searchName.length >= 2 ? (
         <>
           <h3 style={{ 
             color: colors.grey[100], 
-            fontSize: '20px', 
-            fontWeight: '600',
-            marginBottom: '20px'
+            fontSize: '24px', 
+            fontWeight: '700',
+            marginBottom: '24px'
           }}>
-            Search Results ({results.length})
+            Matching Profiles ({filteredPeople.length})
           </h3>
 
           <Box 
             display="grid" 
-            gridTemplateColumns="repeat(auto-fill, minmax(400px, 1fr))" 
-            gap="20px"
+            gridTemplateColumns="repeat(auto-fill, minmax(420px, 1fr))" 
+            gap={3}
           >
-            {results.map((profile) => (
+            {filteredPeople.slice(0, 12).map((profile) => (
               <ProfileCard key={profile.person_id} profile={profile} />
             ))}
           </Box>
         </>
-      )}
+      ) : searchName.length >= 2 ? (
+        <Box 
+          display="flex" 
+          flexDirection="column" 
+          alignItems="center" 
+          justifyContent="center" 
+          minHeight="200px"
+          gap={2}
+        >
+          <XCircle size={48} color={colors.grey[500]} />
+          <p style={{ color: colors.grey[400], fontSize: '16px' }}>
+            No profiles found. Try a different search or create a new profile.
+          </p>
+        </Box>
+      ) : null}
     </Box>
   );
 };

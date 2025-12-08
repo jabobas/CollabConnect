@@ -60,7 +60,31 @@ def get_institution(id: int):
         if cursor:
             cursor.close()
         
-@institution_bp.route("/all")
+@institution_bp.route("/all", methods=['GET'])
+def get_all_institutions():
+    """Get all institutions for autocomplete"""
+    from app import mysql
+    cursor = None
+    try:
+        cursor = mysql.connection.cursor()
+        cursor.execute("START TRANSACTION")
+        cursor.execute('''
+            SELECT institution_id, institution_name, institution_type, city, state
+            FROM Institution
+            ORDER BY institution_name
+        ''')
+        results = cursor.fetchall()
+        mysql.connection.commit()
+        return jsonify({'status': 'success', 'data': results, 'count': len(results)})
+    except Exception as e:
+        mysql.connection.rollback()
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+    finally:
+        if cursor:
+            cursor.close()
+
+
+@institution_bp.route("/all-details")
 def get_all_institutions_departments_people():
     
     from app import mysql 

@@ -6,7 +6,7 @@ databases
 *.pytest_cache
 *__pycache__/
 *logs
-
+.github/
 
 # macOS system files
 .DS_Store
