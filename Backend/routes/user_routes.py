@@ -1,9 +1,10 @@
-
 # -- User profile management routes for viewing user info, searching profiles
 # -- to claim, linking user accounts to person profiles, and viewing user projects.
 
 from flask import Blueprint, request, jsonify
 from utils.jwt_utils import token_required
+from utils.authorization import verify_user_access
+from utils.validators import validate_project_data, sanitize_string
 
 user_bp = Blueprint('user', __name__)
 
@@ -97,6 +98,7 @@ def search_profile():
 
 @user_bp.route('/user/<int:user_id>/claim-person/<int:person_id>', methods=['POST'])
 @token_required
+@verify_user_access
 def claim_person(user_id, person_id):
     """Link user account to existing person profile - requires JWT authentication"""
     from app import mysql
@@ -173,17 +175,26 @@ def get_user_projects(user_id):
 
 @user_bp.route('/user/<int:user_id>/projects', methods=['POST'])
 @token_required
+@verify_user_access
 def add_user_project(user_id):
     """Add a new project for the user"""
     from app import mysql
-    
-    if request.current_user['user_id'] != user_id:
-        return jsonify({'status': 'error', 'message': 'Unauthorized'}), 403
     
     data = request.get_json()
     
     if not data.get('project_title'):
         return jsonify({'status': 'error', 'message': 'Project title required'}), 400
+    
+    # Validate input data
+    is_valid, errors = validate_project_data(data)
+    if not is_valid:
+        return jsonify({"status": "error", "message": "Validation failed", "errors": errors}), 400
+    
+    # Sanitize string inputs
+    data['project_title'] = sanitize_string(data.get('project_title'))
+    data['project_description'] = sanitize_string(data.get('project_description'))
+    data['tag_name'] = sanitize_string(data.get('tag_name'))
+    data['project_role'] = sanitize_string(data.get('project_role'))
     
     cursor = mysql.connection.cursor()
     
@@ -249,6 +260,17 @@ def create_profile_with_affiliation():
     
     if not data.get('person_name') or not data.get('person_email'):
         return jsonify({'status': 'error', 'message': 'Name and email required'}), 400
+    
+    # Validate email format
+    from utils.validators import validate_email
+    if not validate_email(data.get('person_email')):
+        return jsonify({'status': 'error', 'message': 'Invalid email format'}), 400
+    
+    # Sanitize string inputs
+    data['person_name'] = sanitize_string(data.get('person_name'))
+    data['person_email'] = sanitize_string(data.get('person_email'))
+    if data.get('bio'):
+        data['bio'] = sanitize_string(data.get('bio'))
     
     cursor = mysql.connection.cursor()
     

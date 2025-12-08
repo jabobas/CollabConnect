@@ -1,10 +1,10 @@
-
 # -- Authentication routes for user registration, login, email verification,
 # -- password reset, and token refresh. Uses JWT for secure authentication.
 
 from flask import Blueprint, request, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 from utils.jwt_utils import generate_access_token, token_required
+from utils.validators import validate_email, validate_password
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -19,6 +19,15 @@ def register():
     
     if not email or not password:
         return jsonify({'status': 'error', 'message': 'Email and password required'}), 400
+    
+    # Validate email format
+    if not validate_email(email):
+        return jsonify({'status': 'error', 'message': 'Invalid email format'}), 400
+    
+    # Validate password strength
+    is_valid, msg = validate_password(password)
+    if not is_valid:
+        return jsonify({'status': 'error', 'message': msg}), 400
     
     try:
         # Hash password for security - never store plain text passwords

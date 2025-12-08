@@ -600,20 +600,30 @@ const Person = () => {
                       </Box>
 
                       <Box display="flex" alignItems="center" gap="8px">
-                        <span
-                          style={{
-                            padding: "2px 8px",
-                            backgroundColor: project.end_date ? colors.grey[700] : colors.greenAccent[800],
-                            color: project.end_date ? colors.grey[300] : colors.greenAccent[200],
-                            borderRadius: "8px",
-                            fontSize: "10px",
-                            fontWeight: "600",
-                            textTransform: "uppercase",
-                            letterSpacing: "0.5px"
-                          }}
-                        >
-                          {project.end_date ? 'Ended' : 'Ongoing'}
-                        </span>
+                        {(() => {
+                          // Determine project status
+                          const hasNoDates = !project.start_date && !project.end_date;
+                          const hasEndDate = project.end_date;
+                          const isPastEndDate = hasEndDate && new Date(project.end_date) < new Date();
+                          const isEnded = hasNoDates || isPastEndDate;
+                          
+                          return (
+                            <span
+                              style={{
+                                padding: "2px 8px",
+                                backgroundColor: isEnded ? colors.grey[700] : colors.greenAccent[800],
+                                color: isEnded ? colors.grey[300] : colors.greenAccent[200],
+                                borderRadius: "8px",
+                                fontSize: "10px",
+                                fontWeight: "600",
+                                textTransform: "uppercase",
+                                letterSpacing: "0.5px"
+                              }}
+                            >
+                              {isEnded ? 'Ended' : 'Ongoing'}
+                            </span>
+                          );
+                        })()}
                         
                         {project.tag_name && (
                           <span

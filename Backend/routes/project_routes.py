@@ -6,6 +6,9 @@ It defines endpoints for creating, updating, deleting, and retrieving projects.
 '''
 from flask import Blueprint, jsonify, request
 from utils.logger import log_info, log_error
+from utils.jwt_utils import token_required
+from utils.authorization import verify_project_ownership
+from utils.validators import validate_project_data, sanitize_string
 
 project_bp = Blueprint("project", __name__, url_prefix="/project")
 
@@ -63,37 +66,52 @@ def create_project():
 
 
 @project_bp.route("/<int:project_id>", methods=["PUT"])
+@token_required
+@verify_project_ownership
 def update_project(project_id: int):
     from app import mysql
     try:
         data = request.get_json(force=True) or {}
-        log_info(f"Update project request: project_id={project_id}, data={data}")
+        log_info(f"Update project request: project_id={project_id}, user={request.current_user['user_id']}")
+        
+        # Validate input data
+        is_valid, errors = validate_project_data(data)
+        if not is_valid:
+            return jsonify({"status": "error", "message": "Validation failed", "errors": errors}), 400
+        
+        # Sanitize string inputs
+        project_title = sanitize_string(data.get("project_title"))
+        project_description = sanitize_string(data.get("project_description"))
+        tag_name = sanitize_string(data.get("tag_name"))
+        
         log_info("Transaction started for project update")
         cursor = mysql.connection.cursor()
         cursor.callproc("UpdateProjectDetails", [
             project_id,
-            data.get("project_title"),
-            data.get("project_description"),
+            project_title,
+            project_description,
+            tag_name,
             data.get("start_date"),
-            data.get("end_date"),
-            data.get("tag_name")
+            data.get("end_date")
         ])
         mysql.connection.commit()
         log_info("Transaction committed for project update")
         cursor.close()
-        log_info(f"Project updated: id={project_id}, title={data.get('project_title')}, description={data.get('project_description')}, start_date={data.get('start_date')}, end_date={data.get('end_date')}, tag_name={data.get('tag_name')}")
+        log_info(f"Project updated: id={project_id}, title={project_title}")
         return jsonify({"status": "success", "message": "Project updated successfully"}), 200
     except Exception as e:
         mysql.connection.rollback()
-        log_error(f"Transaction rolled back for project update: {str(e)} | project_id={project_id}, data={data}")
-        return jsonify({"status": "error", "message": str(e)}), 500
+        log_error(f"Transaction rolled back for project update: {str(e)} | project_id={project_id}")
+        return jsonify({"status": "error", "message": "Failed to update project"}), 500
 
 
 @project_bp.route("/<int:project_id>", methods=["DELETE"])
+@token_required
+@verify_project_ownership
 def delete_project(project_id: int):
     from app import mysql
     try:
-        log_info(f"Delete project request: project_id={project_id}")
+        log_info(f"Delete project request: project_id={project_id}, user={request.current_user['user_id']}")
         log_info("Transaction started for project deletion")
         cursor = mysql.connection.cursor()
         cursor.callproc("DeleteProject", [project_id])
@@ -105,7 +123,7 @@ def delete_project(project_id: int):
     except Exception as e:
         mysql.connection.rollback()
         log_error(f"Transaction rolled back for project deletion: {str(e)} | project_id={project_id}")
-        return jsonify({"status": "error", "message": str(e)}), 500
+        return jsonify({"status": "error", "message": "Failed to delete project"}), 500
 
 
 @project_bp.route("/by-person", methods=["GET"])
