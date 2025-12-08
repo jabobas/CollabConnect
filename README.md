@@ -186,4 +186,21 @@ Wyatt McCurdy (Advanced Feature):
 - Frontend ReactFlow view at `/analytics` with selectable nodes, edge highlighting, isolated-toggle, refresh, and stats chips.
 - Visualizes a network of potential collaborators connected through shared projects, so you can see who has worked together and explore collaboration clusters at a glance.
 
+Aubin: 
+- Advanced database feature – database security:
+  - Designed the authentication system, including secure routes for register and login. 
+  - Added secure password hashing and implemented email verification codes with 15-minute expiry.
+  - Updated the User table and created stored procedures for registration, email verification, resend-code, and last_login tracking.
+  - Added strong input validation and transaction handling to prevent invalid or partial writes.
+
+- Other contributions:
+  - Implemented backend routes and built the frontend department page.
+  - Created user-facing features to add and edit projects.
+  - Implemented account management options (edit and delete account).
+  - Set up the email sender feature for verification, welcome emails, and resend-code flows.
+  - Built pages for register, login, and the 6-digit email verification workflow.
+  - Connected all frontend authentication pages to the backend authentication API.
+  - Added the ability for users to claim scraped researcher profiles or create a new profile from scratch.
+
+
 
