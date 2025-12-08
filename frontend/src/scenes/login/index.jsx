@@ -52,7 +52,17 @@ const Login = () => {
         navigate(`/user/${user_id}`);
       }
     } catch (err) {
-      setError(err.response?.data?.message || 'Login failed. Please try again.');
+      const errorData = err.response?.data;
+      
+      // Handle unverified email case
+      if (errorData?.code === 'EMAIL_NOT_VERIFIED') {
+        setError('Please verify your email before logging in');
+        setTimeout(() => {
+          navigate('/verify-email', { state: { email: errorData.email } });
+        }, 2000);
+      } else {
+        setError(errorData?.message || 'Login failed. Please try again.');
+      }
     } finally {
       setLoading(false);
     }

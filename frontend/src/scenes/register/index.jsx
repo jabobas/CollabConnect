@@ -47,9 +47,14 @@ const Register = () => {
     setLoading(true);
 
     try {
-      await axios.post('/auth/register', { email, password });
-      setSuccess('Account created successfully! Redirecting to login...');
-      setTimeout(() => navigate('/login'), 2000);
+      const response = await axios.post('/auth/register', { email, password });
+      
+      if (response.data.status === 'success') {
+        setSuccess('Account created! Redirecting to verification...');
+        setTimeout(() => {
+          navigate('/verify-email', { state: { email } });
+        }, 1500);
+      }
     } catch (err) {
       setError(err.response?.data?.message || 'Registration failed. Please try again.');
     } finally {

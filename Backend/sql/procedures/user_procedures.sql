@@ -1,13 +1,14 @@
 -- User CRUD procedures
 
--- Insert new user (signup)
+-- Insert new user (signup) with verification code
 CREATE PROCEDURE InsertUser(
     IN p_email VARCHAR(255),
-    IN p_password_hash VARCHAR(255)
+    IN p_password_hash VARCHAR(255),
+    IN p_verification_code VARCHAR(6)
 )
 BEGIN
-    INSERT INTO User (email, password_hash)
-    VALUES (p_email, p_password_hash);
+    INSERT INTO User (email, password_hash, verification_code, verification_code_expires, is_verified)
+    VALUES (p_email, p_password_hash, p_verification_code, DATE_ADD(NOW(), INTERVAL 15 MINUTE), FALSE);
     
     SELECT LAST_INSERT_ID() AS user_id;
 END;
@@ -22,6 +23,7 @@ BEGIN
         person_id,
         email,
         password_hash,
+        is_verified,
         created_at,
         last_login
     FROM User
@@ -160,4 +162,64 @@ BEGIN
     WHERE user_id = p_user_id;
     
     SELECT ROW_COUNT() AS rows_affected;
+END;
+
+-- Verify user email with code
+CREATE PROCEDURE VerifyUserEmail(
+    IN p_email VARCHAR(255),
+    IN p_verification_code VARCHAR(6)
+)
+BEGIN
+    DECLARE user_count INT;
+    
+    -- Check if user exists and code matches and hasn't expired
+    SELECT COUNT(*) INTO user_count
+    FROM User
+    WHERE email = p_email
+      AND verification_code = p_verification_code
+      AND verification_code_expires > NOW()
+      AND is_verified = FALSE
+    FOR UPDATE;
+    
+    IF user_count = 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Invalid or expired verification code';
+    END IF;
+    
+    -- Update user as verified
+    UPDATE User
+    SET is_verified = TRUE,
+        verification_code = NULL,
+        verification_code_expires = NULL
+    WHERE email = p_email;
+    
+    SELECT 'success' AS status;
+END;
+
+-- Resend verification code
+CREATE PROCEDURE UpdateVerificationCode(
+    IN p_email VARCHAR(255),
+    IN p_new_verification_code VARCHAR(6)
+)
+BEGIN
+    DECLARE user_count INT;
+    
+    -- Check if user exists and is not verified
+    SELECT COUNT(*) INTO user_count
+    FROM User
+    WHERE email = p_email AND is_verified = FALSE
+    FOR UPDATE;
+    
+    IF user_count = 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'User not found or already verified';
+    END IF;
+    
+    -- Update verification code and expiry
+    UPDATE User
+    SET verification_code = p_new_verification_code,
+        verification_code_expires = DATE_ADD(NOW(), INTERVAL 15 MINUTE)
+    WHERE email = p_email;
+    
+    SELECT 'success' AS status;
 END;

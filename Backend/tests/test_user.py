@@ -59,6 +59,20 @@ def test_login_user(client):
         'password': 'TestPassword123'
     })
     
+    # Get verification code from database
+    from app import mysql
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT verification_code FROM User WHERE email = 'login@example.com'")
+    result = cursor.fetchone()
+    code = result['verification_code']
+    cursor.close()
+    
+    # Verify email
+    client.post('/auth/verify', json={
+        'email': 'login@example.com',
+        'code': code
+    })
+    
     # Then login
     response = client.post('/auth/login', json={
         'email': 'login@example.com',
@@ -77,6 +91,19 @@ def test_login_invalid_password(client):
     client.post('/auth/register', json={
         'email': 'test2@example.com',
         'password': 'CorrectPassword123'
+    })
+    
+    # Get verification code and verify
+    from app import mysql
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT verification_code FROM User WHERE email = 'test2@example.com'")
+    result = cursor.fetchone()
+    code = result['verification_code']
+    cursor.close()
+    
+    client.post('/auth/verify', json={
+        'email': 'test2@example.com',
+        'code': code
     })
     
     # Try to login with wrong password

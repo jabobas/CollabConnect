@@ -7,6 +7,9 @@ CREATE TABLE IF NOT EXISTS user (
     person_id INT UNIQUE,
     email VARCHAR(255) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
+    is_verified BOOLEAN DEFAULT FALSE,
+    verification_code VARCHAR(6),
+    verification_code_expires TIMESTAMP NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     last_login TIMESTAMP NULL,
     FOREIGN KEY (person_id) REFERENCES person(person_id) ON DELETE SET NULL

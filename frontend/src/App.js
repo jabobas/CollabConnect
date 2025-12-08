@@ -19,6 +19,7 @@ import Department from "./scenes/department";
 import Analytics from "./scenes/analytics";
 import Login from "./scenes/login";
 import Register from "./scenes/register";
+import VerifyEmail from "./scenes/verify-email";
 import User from "./scenes/user";
 import Institution from "./scenes/Institution";
 import DataCollection from "./scenes/data-collection";
@@ -51,6 +52,7 @@ function App() {
 
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
+              <Route path="/verify-email" element={<VerifyEmail />} />
               <Route path="/user/:id" element={<User />} />
 
               <Route path="/claim-profile" element={<ClaimProfile />} />
