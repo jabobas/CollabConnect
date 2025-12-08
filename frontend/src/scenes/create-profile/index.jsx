@@ -1,11 +1,8 @@
 /*
-Author: Aubin Mugisha
-Date: December 1, 2025
-
-Create new researcher profile form. Allows users to manually enter their
-information instead of claiming existing profile. Automatically links
-created profile to their user account.
-*/
+ * Author: Aubin Mugisha & Copilot
+ * Description: profile creation page allowing users to set up their researcher profile
+ *              with basic info, expertise areas, and institutional affiliation.
+ */
 
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -52,11 +49,9 @@ const CreateProfile = () => {
           axios.get('/institution/all')
         ]);
         
-        // Store all departments (with institution_id)
         const allDepts = deptResponse.data.data || [];
         setAllDepartments(allDepts);
         
-        // Deduplicate departments by name for initial display
         const uniqueDepts = [];
         const seenDeptNames = new Set();
         allDepts.forEach(dept => {
@@ -66,7 +61,6 @@ const CreateProfile = () => {
           }
         });
         
-        // Deduplicate institutions by name
         const uniqueInsts = [];
         const seenInstNames = new Set();
         (instResponse.data.data || []).forEach(inst => {
@@ -79,21 +73,18 @@ const CreateProfile = () => {
         setDepartments(uniqueDepts);
         setInstitutions(uniqueInsts);
       } catch (err) {
-        console.error('Error fetching options:', err);
+        // Silent fail - autocomplete will still work with free text
       }
     };
     fetchOptions();
   }, []);
 
-  // Filter departments when institution is selected
   useEffect(() => {
     if (selectedInstitution) {
-      // Filter departments that belong to the selected institution
       const filteredDepts = allDepartments.filter(
         dept => dept.institution_id === selectedInstitution.institution_id
       );
       
-      // Deduplicate filtered departments
       const uniqueFilteredDepts = [];
       const seenNames = new Set();
       filteredDepts.forEach(dept => {
@@ -105,18 +96,13 @@ const CreateProfile = () => {
       
       setDepartments(uniqueFilteredDepts);
       
-      // Clear department selection if it doesn't belong to the new institution
       setFormData(prev => {
         const currentDeptBelongsToInst = filteredDepts.some(
           dept => dept.department_name === prev.department_name
         );
-        if (!currentDeptBelongsToInst) {
-          return { ...prev, department_name: '' };
-        }
-        return prev;
+        return currentDeptBelongsToInst ? prev : { ...prev, department_name: '' };
       });
     } else {
-      // Show all departments if no institution selected
       const uniqueDepts = [];
       const seenDeptNames = new Set();
       allDepartments.forEach(dept => {
@@ -147,10 +133,7 @@ const CreateProfile = () => {
   };
 
   const handleSubmit = async () => {
-    // Don't submit if not on last step
-    if (activeStep < steps.length - 1) {
-      return;
-    }
+    if (activeStep < steps.length - 1) return;
     
     setError('');
     
@@ -171,20 +154,15 @@ const CreateProfile = () => {
         { headers: { 'Authorization': `Bearer ${token}` } }
       );
       
-      if (response.data.status === 'success') {
-        const { person_id, access_token } = response.data.data;
-        // Store person_id in localStorage for future use
-        if (person_id) {
-          localStorage.setItem('person_id', person_id);
-        }
-        // Update token with new one that includes person_id
-        if (access_token) {
-          localStorage.setItem('access_token', access_token);
-          axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
-        }
-        // Navigate to the person profile instead
-        navigate(person_id ? `/person/${person_id}` : `/user/${userId}`);
+      const { person_id, access_token } = response.data.data;
+      if (person_id) {
+        localStorage.setItem('person_id', person_id);
       }
+      if (access_token) {
+        localStorage.setItem('access_token', access_token);
+        axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
+      }
+      navigate(person_id ? `/person/${person_id}` : `/user/${userId}`);
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to create profile');
     } finally {

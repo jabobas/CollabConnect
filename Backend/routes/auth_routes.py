@@ -1,10 +1,12 @@
-# -- Authentication routes for user registration, login, email verification,
-# -- password reset, and token refresh. Uses JWT for secure authentication.
+'''
+Author: Aubin Mugisha & Copilot
+Date: December 8, 2025
+Description: Authentication routes handling user registration, login, and token management with JWT.
+'''
 
 from flask import Blueprint, request, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 from utils.jwt_utils import generate_access_token, token_required
-from utils.logger import log_info, log_error
 from utils.validators import validate_email, validate_password
 
 auth_bp = Blueprint('auth', __name__)
@@ -18,25 +20,18 @@ def register():
     email = data.get('email')
     password = data.get('password')
     
-    log_info(f"Registration attempt for email: {email}")
-    
     if not email or not password:
-        log_error("Registration failed: Missing email or password")
         return jsonify({'status': 'error', 'message': 'Email and password required'}), 400
     
-    # Validate email format
     if not validate_email(email):
         return jsonify({'status': 'error', 'message': 'Invalid email format'}), 400
     
-    # Validate password strength
     is_valid, msg = validate_password(password)
     if not is_valid:
         return jsonify({'status': 'error', 'message': msg}), 400
     
     try:
-        # Hash password for security - never store plain text passwords
         password_hash = generate_password_hash(password)
-        
         cursor = mysql.connection.cursor()
         cursor.execute("START TRANSACTION")
         cursor.callproc('InsertUser', [email, password_hash])
@@ -49,7 +44,6 @@ def register():
         mysql.connection.commit()
         cursor.close()
         
-        log_info(f"User registered successfully: user_id={user_id}, email={email}")
         return jsonify({
             'status': 'success',
             'message': 'Registration successful',
@@ -57,11 +51,8 @@ def register():
         }), 201
     except Exception as e:
         mysql.connection.rollback()
-        # Handle duplicate email error
         if 'Duplicate entry' in str(e):
-            log_error(f"Registration failed: Email already registered - {email}")
             return jsonify({'status': 'error', 'message': 'Email already registered'}), 409
-        log_error(f"Registration failed: {str(e)}")
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
 @auth_bp.route('/auth/login', methods=['POST'])
@@ -73,13 +64,9 @@ def login():
     email = data.get('email')
     password = data.get('password')
     
-    log_info(f"Login attempt for email: {email}")
-    
     if not email or not password:
-        log_error("Login failed: Missing email or password")
         return jsonify({'status': 'error', 'message': 'Email and password required'}), 400
     
-    # Find user by email and update last login in single transaction
     cursor = mysql.connection.cursor()
     cursor.execute("START TRANSACTION")
     cursor.callproc('SelectUserByEmail', [email])
@@ -88,23 +75,19 @@ def login():
     while cursor.nextset():
         pass
     
-    # Verify user exists and password matches
     if not user or not check_password_hash(user['password_hash'], password):
         mysql.connection.rollback()
         cursor.close()
         return jsonify({'status': 'error', 'message': 'Invalid credentials'}), 401
     
-    # Update last login timestamp
     cursor.callproc('UpdateUserLastLogin', [user['user_id']])
     while cursor.nextset():
         pass
     mysql.connection.commit()
     cursor.close()
     
-    # Generate JWT token for authentication - this is what the frontend will use
     access_token = generate_access_token(user['user_id'], user['email'], user.get('person_id'))
     
-    log_info(f"Login successful: user_id={user['user_id']}, email={email}")
     return jsonify({
         'status': 'success',
         'data': {
@@ -121,8 +104,6 @@ def get_current_user():
     from app import mysql
     
     user_id = request.current_user['user_id']
-    log_info(f"[User: {user_id}] Fetching current user profile")
-    
     cursor = mysql.connection.cursor()
     cursor.callproc('SelectUserById', [user_id])
     user = cursor.fetchone()
@@ -132,10 +113,8 @@ def get_current_user():
     cursor.close()
     
     if not user:
-        log_error(f"User not found: user_id={user_id}")
         return jsonify({'status': 'error', 'message': 'User not found'}), 404
     
-    log_info(f"Current user fetched: user_id={user_id}")
     return jsonify({
         'status': 'success',
         'data': {
@@ -156,8 +135,6 @@ def get_current_user():
 def refresh_token():
     user_id = request.current_user['user_id']
     email = request.current_user['email']
-    
-    log_info(f"[User: {user_id}] Refreshing authentication token")
     new_token = generate_access_token(user_id, email)
     
     return jsonify({

@@ -1,8 +1,7 @@
 /*
-Author: Aubin Mugisha
-Date: December 7, 2025
-Description: Modal for editing user profile information
-*/
+ * Author: Aubin Mugisha & Copilot
+ * Description: Modal component for editing user profile information 
+ */
 
 import React, { useState, useEffect } from 'react';
 import {
@@ -47,7 +46,6 @@ const EditProfileModal = ({ open, onClose, person, department, institution, onPr
   const [error, setError] = useState('');
 
   useEffect(() => {
-    // Fetch departments and institutions
     const fetchOptions = async () => {
       try {
         const [deptResponse, instResponse] = await Promise.all([
@@ -55,11 +53,9 @@ const EditProfileModal = ({ open, onClose, person, department, institution, onPr
           axios.get('http://127.0.0.1:5001/institution/all')
         ]);
         
-        // Store all departments (with institution_id)
         const allDepts = deptResponse.data.data || [];
         setAllDepartments(allDepts);
         
-        // Deduplicate departments by name for initial display
         const uniqueDepts = [];
         const seenDeptNames = new Set();
         allDepts.forEach(dept => {
@@ -69,7 +65,6 @@ const EditProfileModal = ({ open, onClose, person, department, institution, onPr
           }
         });
         
-        // Deduplicate institutions by name
         const uniqueInsts = [];
         const seenInstNames = new Set();
         (instResponse.data.data || []).forEach(inst => {
@@ -82,7 +77,7 @@ const EditProfileModal = ({ open, onClose, person, department, institution, onPr
         setDepartments(uniqueDepts);
         setInstitutions(uniqueInsts);
       } catch (err) {
-        console.error('Error fetching options:', err);
+        // Silent fail - autocomplete will still work with free text
       }
     };
     
@@ -92,12 +87,10 @@ const EditProfileModal = ({ open, onClose, person, department, institution, onPr
   // Filter departments when institution is selected
   useEffect(() => {
     if (selectedInstitution) {
-      // Filter departments that belong to the selected institution
       const filteredDepts = allDepartments.filter(
         dept => dept.institution_id === selectedInstitution.institution_id
       );
       
-      // Deduplicate filtered departments
       const uniqueFilteredDepts = [];
       const seenNames = new Set();
       filteredDepts.forEach(dept => {
@@ -109,18 +102,13 @@ const EditProfileModal = ({ open, onClose, person, department, institution, onPr
       
       setDepartments(uniqueFilteredDepts);
       
-      // Clear department selection if it doesn't belong to the new institution
       setFormData(prev => {
         const currentDeptBelongsToInst = filteredDepts.some(
           dept => dept.department_name === prev.department_name
         );
-        if (!currentDeptBelongsToInst) {
-          return { ...prev, department_name: '' };
-        }
-        return prev;
+        return currentDeptBelongsToInst ? prev : { ...prev, department_name: '' };
       });
     } else {
-      // Show all departments if no institution selected
       const uniqueDepts = [];
       const seenDeptNames = new Set();
       allDepartments.forEach(dept => {

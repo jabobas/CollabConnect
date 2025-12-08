@@ -1,10 +1,7 @@
 /*
-Author: Aubin Mugisha
-Date: December 1, 2025
-
-Registration page for new users. Creates user account and stores hashed
-password in database. No email verification currently implemented.
-*/
+ * Author: Aubin Mugisha & Copilot
+ * Description: User registration page with email and password validation for creating new accounts.
+ */
 
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -26,7 +23,6 @@ const Register = () => {
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // Check if redirected after account deletion
   useEffect(() => {
     if (searchParams.get('deleted') === 'true') {
       setSuccess('Your account has been successfully deleted. You can create a new account if you wish.');
@@ -51,12 +47,9 @@ const Register = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post('/auth/register', { email, password });
-      
-      if (response.data.status === 'success') {
-        setSuccess('Account created successfully! Please check your email to verify your account.');
-        setTimeout(() => navigate('/login'), 3000);
-      }
+      await axios.post('/auth/register', { email, password });
+      setSuccess('Account created successfully! Redirecting to login...');
+      setTimeout(() => navigate('/login'), 2000);
     } catch (err) {
       setError(err.response?.data?.message || 'Registration failed. Please try again.');
     } finally {

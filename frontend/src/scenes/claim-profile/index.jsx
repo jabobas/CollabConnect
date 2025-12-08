@@ -1,10 +1,7 @@
 /*
-Author: Aubin Mugisha
-Date: December 2, 2025
-
-Profile claiming page where users can search for existing Person profiles
-from scraped data and claim them to link to their user account.
-*/
+ * Author: Aubin Mugisha & Copilot
+ * Description: Profile claiming page allowing users to link their account to existing researcher profiles.
+ */
 
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -30,7 +27,6 @@ const ClaimProfile = () => {
   const [claimingId, setClaimingId] = useState(null);
   const [loadingPeople, setLoadingPeople] = useState(true);
 
-  // Load all people on mount and when component becomes visible
   const fetchAllPeople = async () => {
     setLoadingPeople(true);
     try {
@@ -49,14 +45,13 @@ const ClaimProfile = () => {
     fetchAllPeople();
   }, []);
 
-  // Filter people as user types
   useEffect(() => {
     if (searchName.length >= 2) {
       const filtered = allPeople.filter(person =>
         person.person_name.toLowerCase().includes(searchName.toLowerCase()) ||
         person.person_email?.toLowerCase().includes(searchName.toLowerCase())
       );
-      setFilteredPeople(filtered.slice(0, 50)); // Limit to 50 results
+      setFilteredPeople(filtered.slice(0, 50));
     } else {
       setFilteredPeople([]);
     }
@@ -80,18 +75,13 @@ const ClaimProfile = () => {
         { headers: { 'Authorization': `Bearer ${token}` } }
       );
 
-      if (response.data.status === 'success') {
-        const { person_id, access_token } = response.data.data;
-        // Store person_id in localStorage for future use
-        localStorage.setItem('person_id', person_id);
-        // Update token with new one that includes person_id
-        if (access_token) {
-          localStorage.setItem('access_token', access_token);
-          axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
-        }
-        // Redirect to the person profile page instead of user page
-        navigate(`/person/${person_id}`);
+      const { person_id, access_token } = response.data.data;
+      localStorage.setItem('person_id', person_id);
+      if (access_token) {
+        localStorage.setItem('access_token', access_token);
+        axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
       }
+      navigate(`/person/${person_id}`);
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to claim profile');
       setClaimingId(null);

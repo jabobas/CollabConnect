@@ -1,9 +1,3 @@
-/*
-Author: Aubin Mugisha
-Date: December 7, 2025
-Description: Modal for confirming account deletion with warning
-*/
-
 import React, { useState } from 'react';
 import {
   Dialog,

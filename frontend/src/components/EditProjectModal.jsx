@@ -1,8 +1,3 @@
-/**
- * Author: Aubin Mugisha
- * EditProjectModal - Modal for editing and deleting projects with ownership verification
- */
-
 import React, { useState, useEffect } from 'react';
 import { Box, Button, TextField, Dialog, DialogTitle, DialogContent, DialogActions, Alert, IconButton } from "@mui/material";
 import { useTheme } from "@mui/material";
@@ -32,11 +27,9 @@ const EditProjectModal = ({ open, onClose, project, userId, onProjectUpdated, on
       const formatDate = (dateStr) => {
         if (!dateStr || dateStr === 'null') return '';
         if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return dateStr;
-        
         try {
           const date = new Date(dateStr);
-          if (isNaN(date.getTime())) return '';
-          return date.toISOString().split('T')[0];
+          return isNaN(date.getTime()) ? '' : date.toISOString().split('T')[0];
         } catch {
           return '';
         }
@@ -71,33 +64,23 @@ const EditProjectModal = ({ open, onClose, project, userId, onProjectUpdated, on
       return;
     }
 
-    if (formData.start_date && formData.end_date) {
-      if (new Date(formData.end_date) < new Date(formData.start_date)) {
-        setError('End date must be after start date');
-        return;
-      }
+    if (formData.start_date && formData.end_date && new Date(formData.end_date) < new Date(formData.start_date)) {
+      setError('End date must be after start date');
+      return;
     }
 
     setLoading(true);
     
     try {
       const token = localStorage.getItem('access_token');
-      const projectData = {
-        ...formData,
-        start_date: formData.start_date || null,
-        end_date: formData.end_date || null
-      };
-      
-      const response = await axios.put(
+      await axios.put(
         `/project/${project.project_id}`,
-        projectData,
+        { ...formData, start_date: formData.start_date || null, end_date: formData.end_date || null },
         { headers: { 'Authorization': `Bearer ${token}` } }
       );
       
-      if (response.data.status === 'success') {
-        onProjectUpdated();
-        onClose();
-      }
+      onProjectUpdated();
+      onClose();
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to update project');
     } finally {
@@ -109,15 +92,13 @@ const EditProjectModal = ({ open, onClose, project, userId, onProjectUpdated, on
     setLoading(true);
     try {
       const token = localStorage.getItem('access_token');
-      const response = await axios.delete(
+      await axios.delete(
         `/project/${project.project_id}`,
         { headers: { 'Authorization': `Bearer ${token}` } }
       );
       
-      if (response.data.status === 'success') {
-        onProjectDeleted();
-        onClose();
-      }
+      onProjectDeleted();
+      onClose();
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to delete project');
     } finally {
