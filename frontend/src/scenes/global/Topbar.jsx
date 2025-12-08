@@ -20,7 +20,7 @@ import {
   ListItemText
 } from "@mui/material";
 import { useContext, useState, useEffect } from "react";
-import { useNavigate, useLocation, useParams } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { ColorModeContext, tokens } from "../../theme";
 import axios from "axios";
 import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
