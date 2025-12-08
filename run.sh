@@ -5,14 +5,26 @@ set -e
 
 ROOT_DIR="$(cd "$(dirname "$0")" && pwd)"
 VENV_DIR="$ROOT_DIR/databases"
-BACKEND_DIR="$ROOT_DIR/Backend"
+BACKEND_DIR="$ROOT_DIR/backend"
 FRONTEND_DIR="$ROOT_DIR/frontend"
 
-source "$VENV_DIR/bin/activate"
+# Activate venv (different paths for Windows vs Unix)
+if [[ -f "$VENV_DIR/Scripts/activate" ]]; then
+  source "$VENV_DIR/Scripts/activate"  # Windows (Git Bash)
+else
+  source "$VENV_DIR/bin/activate"      # Linux/Mac
+fi
+
+# Use correct python path for OS
+if [[ -f "$VENV_DIR/Scripts/python.exe" ]]; then
+  PYTHON_BIN="$VENV_DIR/Scripts/python.exe"  # Windows
+else
+  PYTHON_BIN="$VENV_DIR/bin/python"          # Linux/Mac
+fi
 
 echo "==> Starting Flask backend on http://127.0.0.1:5001"
 pushd "$BACKEND_DIR" >/dev/null
-"$VENV_DIR/bin/python" app.py &
+"$PYTHON_BIN" app.py &
 BACKEND_PID=$!
 popd >/dev/null
 

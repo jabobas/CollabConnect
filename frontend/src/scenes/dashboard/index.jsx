@@ -529,9 +529,9 @@ const Dashboard = () => {
         // Fetch favorite researchers from localStorage
         const favoriteIds = getFavorites();
         if (favoriteIds.length > 0) {
-          // Get full researcher data from institutionsData which includes institution and department
+          // Get full researcher data from peopleData which includes institution and department
           const favoritePeopleMap = {};
-          institutionsData.forEach(item => {
+          peopleData.forEach(item => {
             if (favoriteIds.includes(item.person_id) && !favoritePeopleMap[item.person_id]) {
               favoritePeopleMap[item.person_id] = item;
             }
