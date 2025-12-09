@@ -175,9 +175,12 @@ const Topbar = () => {
     localStorage.removeItem('access_token');
     localStorage.removeItem('user_id');
     localStorage.removeItem('person_id');
+    localStorage.removeItem('email');
     delete axios.defaults.headers.common['Authorization'];
     setIsLoggedIn(false);
     setUserId(null);
+    // Dispatch logout event so other components can react
+    window.dispatchEvent(new Event('logout'));
     navigate('/');
   };
 

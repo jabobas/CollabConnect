@@ -551,6 +551,19 @@ const Dashboard = () => {
     };
 
     fetchDashboardData();
+
+    // Listen for logout events
+    const handleLogout = () => {
+      console.log("Dashboard detected logout event");
+      setUserName("");
+      setUserProfile(null);
+    };
+
+    window.addEventListener('logout', handleLogout);
+
+    return () => {
+      window.removeEventListener('logout', handleLogout);
+    };
   }, []);
 
   return (
