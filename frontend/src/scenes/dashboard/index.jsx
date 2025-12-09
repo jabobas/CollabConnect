@@ -520,7 +520,8 @@ const Dashboard = () => {
         if (personId) {
           try {
             const profileRes = await axios.get(`http://127.0.0.1:5001/person/${personId}`);
-            setUserProfile(profileRes.data?.data);
+            // The API returns nested structure: { data: { person: {...}, department: {...}, institution: {...} } }
+            setUserProfile(profileRes.data?.data?.person);
           } catch (err) {
             console.log("Could not fetch user profile");
           }
